@@ -1,35 +1,35 @@
-import styled from "styled-components";
-import DefaultHeader from "../../components/header/DefaultHeader";
-import I_dnPolWhite from "../../img/icon/I_dnPolWhite.svg";
-import I_starYellowO from "../../img/icon/I_starYellowO.svg";
-import I_qnaWhite from "../../img/icon/I_qnaWhite.svg";
-import I_langWhite from "../../img/icon/I_langWhite.svg";
-import I_dollarWhite from "../../img/icon/I_dollarWhite.svg";
-import I_percentWhite from "../../img/icon/I_percentWhite.svg";
-import I_highArwGreen from "../../img/icon/I_highArwGreen.svg";
-import I_lowArwRed from "../../img/icon/I_lowArwRed.svg";
-import I_plusWhite from "../../img/icon/I_plusWhite.svg";
-import I_timeWhite from "../../img/icon/I_timeWhite.svg";
-import I_barChartWhite from "../../img/icon/I_barChartWhite.svg";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import LiveTradePopup from "../../components/bet/LiveTradePopup";
-import PopupBg from "../../components/common/PopupBg";
-import TokenPopup from "../../components/bet/TokenPopup";
-import { useDispatch, useSelector } from "react-redux";
-import TimePopup from "../../components/bet/TimePopup";
-import DetBox from "../../components/bet/detBox/DetBox";
-import InsufficientPopup from "../../components/bet/InsufficientPopup";
-import MyBalancePopup from "../../components/header/MyBalancePopup";
-import AddPopup from "../../components/header/AddPopup";
-import ReactTradingviewWidget, { Themes } from "react-tradingview-widget";
-import axios from "axios";
-import { API } from "../../configs/api";
-import LoadingBar from "../../components/common/LoadingBar";
-import { D_amountTypeList, D_tokenCategoryList } from "../../data/D_bet";
-import { getDividFromData, setToast } from "../../util/Util";
-import { setBetFlag } from "../../reducers/bet";
-import { socketIo } from "../../util/socket";
-import BetChart from "../../components/bet/BetChart";
+import styled from 'styled-components';
+import DefaultHeader from '../../components/header/DefaultHeader';
+import I_dnPolWhite from '../../img/icon/I_dnPolWhite.svg';
+import I_starYellowO from '../../img/icon/I_starYellowO.svg';
+import I_qnaWhite from '../../img/icon/I_qnaWhite.svg';
+import I_langWhite from '../../img/icon/I_langWhite.svg';
+import I_dollarWhite from '../../img/icon/I_dollarWhite.svg';
+import I_percentWhite from '../../img/icon/I_percentWhite.svg';
+import I_highArwGreen from '../../img/icon/I_highArwGreen.svg';
+import I_lowArwRed from '../../img/icon/I_lowArwRed.svg';
+import I_plusWhite from '../../img/icon/I_plusWhite.svg';
+import I_timeWhite from '../../img/icon/I_timeWhite.svg';
+import I_barChartWhite from '../../img/icon/I_barChartWhite.svg';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import LiveTradePopup from '../../components/bet/LiveTradePopup';
+import PopupBg from '../../components/common/PopupBg';
+import TokenPopup from '../../components/bet/TokenPopup';
+import { useDispatch, useSelector } from 'react-redux';
+import TimePopup from '../../components/bet/TimePopup';
+import DetBox from '../../components/bet/detBox/DetBox';
+import InsufficientPopup from '../../components/bet/InsufficientPopup';
+import MyBalancePopup from '../../components/header/MyBalancePopup';
+import AddPopup from '../../components/header/AddPopup';
+import ReactTradingviewWidget, { Themes } from 'react-tradingview-widget';
+import axios from 'axios';
+import { API } from '../../configs/api';
+import LoadingBar from '../../components/common/LoadingBar';
+import { D_amountTypeList, D_tokenCategoryList } from '../../data/D_bet';
+import { getDividFromData, setToast } from '../../util/Util';
+import { setBetFlag } from '../../reducers/bet';
+import { socketIo, connectSocketIo } from '../../util/socket';
+import BetChart from '../../components/bet/BetChart';
 
 export default function Live() {
   const hoverRef1 = useRef();
@@ -50,7 +50,7 @@ export default function Live() {
   const [insufficientPopup, setInsufficientPopup] = useState(false);
   const [myBalancePopup, setMyBalancePopup] = useState(false);
   const [addPopup, setAddPopup] = useState(false);
-  const [amount, setAmount] = useState("");
+  const [amount, setAmount] = useState('');
   const [amountMode, setAmountMode] = useState(D_amountTypeList[0]);
   const [bookMark, setBookMark] = useState([]);
   const [chartWidth, setChartWidth] = useState(window.innerWidth * 2);
@@ -61,7 +61,7 @@ export default function Live() {
         params: { group: D_tokenCategoryList[1].value },
       })
       .then(({ data }) => {
-        console.log("asset", data.resp);
+        console.log('asset', data.resp);
         setAssetInfo(data.resp[0]);
       })
       .catch((err) => console.error(err));
@@ -84,7 +84,7 @@ export default function Live() {
   }
 
   function chkMinimumBalance() {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     if (!token) {
       setLiveTradePopup(true);
       return;
@@ -104,7 +104,7 @@ export default function Live() {
   }
 
   async function getBalance() {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     if (!token) return;
 
     return axios.get(`${API.USER_BALANCE}`);
@@ -114,18 +114,18 @@ export default function Live() {
     const balance = await getBalance();
 
     switch (amountMode) {
-      case "int":
-        if (amount <= 0) throw "Not Possible Balance";
+      case 'int':
+        if (amount <= 0) throw 'Not Possible Balance';
 
         if (balance.data.respdata.LIVE.avail / 10 ** 6 < amount) {
           setInsufficientPopup(true);
-          throw "Not Balance";
+          throw 'Not Balance';
         }
 
         return amount * 10 ** 6;
 
-      case "percent":
-        if (amount > 100 || amount <= 0) throw "Not Possible Percent";
+      case 'percent':
+        if (amount > 100 || amount <= 0) throw 'Not Possible Percent';
 
         return (balance.data.respdata.LIVE.avail * amount) / 100;
 
@@ -165,11 +165,11 @@ export default function Live() {
 
   function onClickAmountModeBtn() {
     switch (amountMode) {
-      case "int":
-        setAmountMode("percent");
+      case 'int':
+        setAmountMode('percent');
         break;
-      case "percent":
-        setAmountMode("int");
+      case 'percent':
+        setAmountMode('int');
         break;
 
       default:
@@ -189,24 +189,24 @@ export default function Live() {
     _dividList = new Set(_dividList);
 
     socketIo.emit(
-      "dividendrate",
+      'dividendrate',
       [..._dividList],
       (res) => {
         console.log(_dividList);
         console.log(res);
       },
-      (err) => console.error("timeout", err)
+      (err) => console.error('timeout', err)
     );
   }
 
   function getClosed() {
     socketIo.emit(
-      "closed",
+      'closed',
       {},
       (res) => {
-        console.log("closed", res);
+        console.log('closed', res);
       },
-      (err) => console.error("closed", err)
+      (err) => console.error('closed', err)
     );
   }
 
@@ -222,7 +222,7 @@ export default function Live() {
   }
 
   useLayoutEffect(() => {
-    localStorage.setItem("balanceType", "Live");
+    localStorage.setItem('balanceType', 'Live');
   }, []);
 
   useEffect(() => {
@@ -248,6 +248,10 @@ export default function Live() {
       clearInterval(socketInterval);
     };
   }, [socketIo, assetInfo, bookMark, tokenPopupData, openedData]);
+
+  useEffect(() => {
+    // connectSocketIo();
+  }, []);
 
   if (isMobile)
     return (
@@ -315,8 +319,8 @@ export default function Live() {
                             onClick={() => setTimePopup(true)}
                           >
                             <p>
-                              {`${Math.floor(duration / 60)}`.padStart(2, "0")}:
-                              {`${duration % 60}`.padStart(2, "0")}
+                              {`${Math.floor(duration / 60)}`.padStart(2, '0')}:
+                              {`${duration % 60}`.padStart(2, '0')}
                               :00
                             </p>
 
@@ -351,10 +355,10 @@ export default function Live() {
                             className="modeBtn"
                             onClick={onClickAmountModeBtn}
                           >
-                            {amountMode === "int" && (
+                            {amountMode === 'int' && (
                               <img src={I_dollarWhite} alt="" />
                             )}
-                            {amountMode === "percent" && (
+                            {amountMode === 'percent' && (
                               <img src={I_percentWhite} alt="" />
                             )}
                           </button>
@@ -367,7 +371,7 @@ export default function Live() {
                         <button
                           className="highBtn"
                           disabled={!amount}
-                          onClick={() => onClickPayBtn("HIGH")}
+                          onClick={() => onClickPayBtn('HIGH')}
                         >
                           <img src={I_highArwGreen} alt="" />
                           <p>HIGH</p>
@@ -376,11 +380,11 @@ export default function Live() {
                         <p className="rate">
                           {`+${getDividFromData({
                             id: assetInfo?.id,
-                            _case: "highRate",
+                            _case: 'highRate',
                             dataObj: dividObj,
                           })}%  ${getDividFromData({
                             id: assetInfo?.id,
-                            _case: "highAmount",
+                            _case: 'highAmount',
                             dataObj: dividObj,
                           })}`}
                         </p>
@@ -390,7 +394,7 @@ export default function Live() {
                         <button
                           className="lowBtn"
                           disabled={!amount}
-                          onClick={() => onClickPayBtn("LOW")}
+                          onClick={() => onClickPayBtn('LOW')}
                         >
                           <img src={I_lowArwRed} alt="" />
                           <p>LOW</p>
@@ -399,11 +403,11 @@ export default function Live() {
                         <p className="rate">
                           {`+${getDividFromData({
                             id: assetInfo?.id,
-                            _case: "lowRate",
+                            _case: 'lowRate',
                             dataObj: dividObj,
                           })}%  ${getDividFromData({
                             id: assetInfo?.id,
-                            _case: "lowAmount",
+                            _case: 'lowAmount',
                             dataObj: dividObj,
                           })}`}
                         </p>
@@ -415,7 +419,7 @@ export default function Live() {
             </MbetBox>
 
             {detMode && (
-              <DetBox mode={detMode} page={"live"} off={setDetMode} />
+              <DetBox mode={detMode} page={'live'} off={setDetMode} />
             )}
 
             {liveTradePopup && (
@@ -499,7 +503,7 @@ export default function Live() {
                           <p className="value">
                             {getDividFromData({
                               id: v.asset.id,
-                              _case: "totalRate",
+                              _case: 'totalRate',
                               dataObj: dividObj,
                             })}
                             %
@@ -546,8 +550,8 @@ export default function Live() {
                           onClick={() => setTimePopup(true)}
                         >
                           <p>
-                            {`${Math.floor(duration / 60)}`.padStart(2, "0")}:
-                            {`${duration % 60}`.padStart(2, "0")}:00
+                            {`${Math.floor(duration / 60)}`.padStart(2, '0')}:
+                            {`${duration % 60}`.padStart(2, '0')}:00
                           </p>
 
                           <img src={I_timeWhite} alt="" />
@@ -575,10 +579,10 @@ export default function Live() {
 
                           <span className="hoverPopup">
                             <p>
-                              {amountMode === "int" &&
-                                "Specify the exact amount of trade."}
-                              {amountMode === "percent" &&
-                                "Specify the percentage of the trading account balance used calculate your trade amount."}
+                              {amountMode === 'int' &&
+                                'Specify the exact amount of trade.'}
+                              {amountMode === 'percent' &&
+                                'Specify the percentage of the trading account balance used calculate your trade amount.'}
                             </p>
                           </span>
                         </button>
@@ -596,10 +600,10 @@ export default function Live() {
                           className="modeBtn"
                           onClick={onClickAmountModeBtn}
                         >
-                          {amountMode === "int" && (
+                          {amountMode === 'int' && (
                             <img src={I_dollarWhite} alt="" />
                           )}
-                          {amountMode === "percent" && (
+                          {amountMode === 'percent' && (
                             <img src={I_percentWhite} alt="" />
                           )}
                         </button>
@@ -610,7 +614,7 @@ export default function Live() {
                       <button
                         className="highBtn"
                         disabled={!amount}
-                        onClick={() => onClickPayBtn("HIGH")}
+                        onClick={() => onClickPayBtn('HIGH')}
                       >
                         <span className="defaultBox">
                           <img src={I_highArwGreen} alt="" />
@@ -620,13 +624,13 @@ export default function Live() {
                         <span className="hoverBox">
                           <strong className="percent">{`+${getDividFromData({
                             id: assetInfo?.id,
-                            _case: "highRate",
+                            _case: 'highRate',
                             dataObj: dividObj,
                           })}%`}</strong>
                           <p className="amount">
                             {getDividFromData({
                               id: assetInfo?.id,
-                              _case: "highAmount",
+                              _case: 'highAmount',
                               dataObj: dividObj,
                             })}
                           </p>
@@ -634,11 +638,11 @@ export default function Live() {
                           <p className="hoverPopup" ref={hoverRef1}>
                             {`Dividend rate : +${getDividFromData({
                               id: assetInfo?.id,
-                              _case: "highRate",
+                              _case: 'highRate',
                               dataObj: dividObj,
                             })}%  ${getDividFromData({
                               id: assetInfo?.id,
-                              _case: "highAmount",
+                              _case: 'highAmount',
                               dataObj: dividObj,
                             })} USDT`}
                           </p>
@@ -650,7 +654,7 @@ export default function Live() {
                       <button
                         className="lowBtn"
                         disabled={!amount}
-                        onClick={() => onClickPayBtn("LOW")}
+                        onClick={() => onClickPayBtn('LOW')}
                       >
                         <span className="defaultBox">
                           <img src={I_lowArwRed} alt="" />
@@ -660,13 +664,13 @@ export default function Live() {
                         <span className="hoverBox">
                           <strong className="percent">{`+${getDividFromData({
                             id: assetInfo?.id,
-                            _case: "lowRate",
+                            _case: 'lowRate',
                             dataObj: dividObj,
                           })}%`}</strong>
                           <p className="amount">
                             {getDividFromData({
                               id: assetInfo?.id,
-                              _case: "lowAmount",
+                              _case: 'lowAmount',
                               dataObj: dividObj,
                             })}
                           </p>
@@ -674,11 +678,11 @@ export default function Live() {
                           <p className="hoverPopup" ref={hoverRef2}>
                             {`Dividend rate : +${getDividFromData({
                               id: assetInfo?.id,
-                              _case: "lowRate",
+                              _case: 'lowRate',
                               dataObj: dividObj,
                             })}%  ${getDividFromData({
                               id: assetInfo?.id,
-                              _case: "lowAmount",
+                              _case: 'lowAmount',
                               dataObj: dividObj,
                             })} USDT`}
                           </p>
@@ -687,10 +691,10 @@ export default function Live() {
                     </span>
                   </div>
 
-                  <DetBox mode={detMode} page={"live"} off={setDetMode} />
+                  <DetBox mode={detMode} page={'live'} off={setDetMode} />
 
                   <button
-                    className={`${detMode && "on"} plusBtn`}
+                    className={`${detMode && 'on'} plusBtn`}
                     onClick={() => setDetMode(!detMode)}
                   >
                     <img src={I_plusWhite} alt="" />

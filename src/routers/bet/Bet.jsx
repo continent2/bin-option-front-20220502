@@ -1,35 +1,35 @@
-import axios from "axios";
-import { useEffect, useLayoutEffect } from "react";
-import { useDispatch } from "react-redux";
-import { Route, Routes, Navigate } from "react-router";
-import { API } from "../../configs/api";
-import { setBetFlag, setClosedFlag, setDividObj } from "../../reducers/bet";
-import { socketIo, connectSocketIo } from "../../util/socket";
-import { setToast } from "../../util/Util";
-import Demo from "./Demo";
-import Live from "./Live";
+import axios from 'axios';
+import { useEffect, useLayoutEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { Route, Routes, Navigate } from 'react-router';
+import { API } from '../../configs/api';
+import { setBetFlag, setClosedFlag, setDividObj } from '../../reducers/bet';
+import { socketIo, connectSocketIo } from '../../util/socket';
+import { setToast } from '../../util/Util';
+import Demo from './Demo';
+import Live from './Live';
 
 export default function Bet() {
   const dispatch = useDispatch();
-  const token = localStorage.getItem("token");
-  const demoToken = localStorage.getItem("demoToken");
+  const token = localStorage.getItem('token');
+  const demoToken = localStorage.getItem('demoToken');
 
   function getBetSocket() {
     connectSocketIo();
 
-    socketIo.on("dividendrate", (res) => {
-      console.log("dividendrate", res);
+    socketIo.on('dividendrate', (res) => {
+      console.log('dividendrate', res);
       dispatch(setDividObj(res));
     });
 
-    socketIo.on("bet", (res) => {
-      console.log("bet", res);
+    socketIo.on('bet', (res) => {
+      console.log('bet', res);
     });
 
-    socketIo.on("bet_closed", (res) => {
-      console.log("bet_closed", res);
+    socketIo.on('bet_closed', (res) => {
+      console.log('bet_closed', res);
       setToast({
-        type: "closed",
+        type: 'closed',
         assetInfo: { name: res.name },
         amount: res.data.amount / 10 ** 6,
         profit: res.profit,
@@ -47,7 +47,7 @@ export default function Bet() {
       .then(({ data }) => {
         console.log(data.token);
 
-        localStorage.setItem("demoToken", data.token);
+        localStorage.setItem('demoToken', data.token);
         window.location.reload();
       })
       .catch((err) => console.error(err));
@@ -57,31 +57,37 @@ export default function Bet() {
     getDemoToken();
 
     return () => {
-      localStorage.removeItem("demoToken");
+      localStorage.removeItem('demoToken');
 
-      socketIo.disconnect("dividendrate");
-      socketIo.disconnect("bet");
-      socketIo.disconnect("bet_closed");
+      socketIo.disconnect('dividendrate');
+      socketIo.disconnect('bet');
+      socketIo.disconnect('bet_closed');
     };
   }, []);
 
   useEffect(() => {
-    let socketInterval = setInterval(() => {
-      getBetSocket();
+    // let socketInterval = setInterval(() => {
+    //   getBetSocket();
 
-      if (socketIo.connected) {
-        console.log(socketIo.connected);
-        clearInterval(socketInterval);
-      } else {
-        console.log(socketIo.connected);
-      }
-    }, 1000);
+    //   if (socketIo.connected === false) {
+    //     console.log(socketIo.connected);
+    //     clearInterval(socketInterval);
+    //   } else {
+    //     console.log(socketIo.connected);
+    //   }
+    // }, 1000);
 
     getBetSocket();
-
-    return () => {
-      clearInterval(socketInterval);
-    };
+    if (socketIo.connected === false) {
+      console.log(socketIo.connected);
+      // clearInterval(socketInterval);
+      socketIo.connect();
+    } else {
+      console.log(socketIo.connected);
+    }
+    // return () => {
+    //   clearInterval(socketInterval);
+    // };
   }, [socketIo]);
 
   return (
