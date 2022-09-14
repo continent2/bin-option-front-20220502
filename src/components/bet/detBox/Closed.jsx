@@ -5,11 +5,10 @@ import I_lowArwRed from "../../../img/icon/I_lowArwRed.svg";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { API } from "../../../configs/api";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import ClosedChartBox from "./ClosedChart";
 import { useTranslation } from "react-i18next";
-// import cron from 'node-cron'
 
 export default function Closed({ page }) {
   const { t } = useTranslation();
@@ -78,14 +77,8 @@ export default function Closed({ page }) {
   }
 
   useEffect(() => {
-    getMyBets();
-  }, [ closedFlag ]);
-
-/**  useMemo(_=>{
-    cron.schedule ( `2 * * * * *` , _=>{
-      getMyBets();
-    })
-  } , [] )*/ 
+    setTimeout(() => getMyBets(), 2000);
+  }, [closedFlag]);
 
   if (isMobile)
     return (
@@ -123,9 +116,9 @@ export default function Closed({ page }) {
                             </span>
 
                             <p className={`${getPreResult(detV)} benefit`}>
-{(+detV.winamount).toFixed(2)}
-{/** `$${detV.profit_amount? Number(detV.profit_amount).toFixed(2): detV.profit_amount}`}*/}
-</p>
+                              {(+detV.winamount).toFixed(2)}
+                              {/** `$${detV.profit_amount? Number(detV.profit_amount).toFixed(2): detV.profit_amount}`}*/}
+                            </p>
 
                             <p className="time">
                               {moment.unix(detV.starting).format("HH:mm:ss")}
@@ -280,9 +273,9 @@ export default function Closed({ page }) {
                             </span>
 
                             <p className={`${getPreResult(detV)} benefit`}>
-                            {(+detV.winamount).toFixed(2)}
-{/**  `$${detV.profit_amount? Number(detV.profit_amount).toFixed(2): detV.profit_amount}`}*/}
-</p>
+                              {(+detV.winamount).toFixed(2)}
+                              {/**  `$${detV.profit_amount? Number(detV.profit_amount).toFixed(2): detV.profit_amount}`}*/}
+                            </p>
 
                             <p className="time">
                               {moment.unix(detV.starting).format("HH:mm:ss")}

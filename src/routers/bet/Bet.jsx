@@ -3,7 +3,7 @@ import { useEffect, useLayoutEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Routes, Navigate } from "react-router";
 import { io } from "socket.io-client";
-import { API,  URL } from "../../configs/api";
+import { API, URL } from "../../configs/api";
 import { setBetFlag, setClosedFlag, setDividObj } from "../../reducers/bet";
 import { setToast } from "../../util/Util";
 import Demo from "./Demo";
@@ -75,12 +75,12 @@ export default function Bet() {
     socketIo.on("bet_closed", (res) => {
       console.log("bet_closed", res);
 
-      if ( notiOpt.betEnd ) {
+      if (notiOpt.betEnd) {
         res.map((v, i) => {
           setTimeout(() => {
             setToast({
               type: "closed",
-              assetInfo: { name: v.name },
+              assetInfo: { name: v.name, side: v.data.side },
               amount: v.data.amount / 10 ** 6,
               profit: v.profit,
               data: v.data,
@@ -93,7 +93,7 @@ export default function Bet() {
       dispatch(setBetFlag());
     });
 
-    console.log("socketIo",socketIo);
+    console.log("socketIo", socketIo);
   }
 
   function getDemoToken() {

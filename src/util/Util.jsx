@@ -8,7 +8,7 @@ import T_gold from "../img/tier/T_gold.svg";
 import T_dia from "../img/tier/T_dia.svg";
 import axios from "axios";
 import { utils, writeFile } from "xlsx";
-import moment from 'moment'
+import moment from "moment";
 export function strDot(str, startNum = 0, endNum = 0) {
   if (!str?.length) return;
   return `${str.slice(0, startNum)}...${str.slice(-endNum)}`;
@@ -120,7 +120,7 @@ export function onClickCopy(str) {
   document.body.removeChild(textArea);
 }
 
-export function setToast({ type, cont, assetInfo, amount, profit , data }) {
+export function setToast({ type, cont, assetInfo, amount, profit, data }) {
   switch (type) {
     case "HIGH":
       toast(
@@ -184,7 +184,13 @@ export function setToast({ type, cont, assetInfo, amount, profit , data }) {
           <ul className="infoList">
             <li>
               <strong>{assetInfo.name}</strong>
-              <img src={I_highArwGreen} alt="" />
+              <img
+                src={
+                  (assetInfo.side === "HIGH" && I_highArwGreen) ||
+                  (assetInfo.side === "LOW" && I_lowArwRed)
+                }
+                alt=""
+              />
             </li>
             <li>
               <p className="key">Amount</p>
@@ -302,23 +308,32 @@ export function getExcelFile(dataList, docName) {
 }
 
 // custom
-const LOGGER=console.log
-export function getDividFromData({ id, _case, dataObj , duration }) {
-  let dividendrate , _targetData
-  let intendedexpiry = moment().add( 1 + +duration, 'minutes' ).startOf('minutes').unix() 
-//  let intendedexpiry = moment().add( duration, 'minutes' ).endOf('minutes').unix() 
+const LOGGER = console.log;
+export function getDividFromData({ id, _case, dataObj, duration }) {
+  let dividendrate, _targetData;
+  let intendedexpiry = moment()
+    .add(1 + +duration, "minutes")
+    .startOf("minutes")
+    .unix();
+  //  let intendedexpiry = moment().add( duration, 'minutes' ).endOf('minutes').unix()
 
-  LOGGER ('@intendedexpiry' , intendedexpiry)
-  if ( id && _case ){}
-    else { return '0' }
-  if ( dataObj && dataObj [id] && dataObj[ id] [ intendedexpiry ] ){ dividendrate=  dataObj[ id] [intendedexpiry ] ; _targetData = dividendrate }
-  else { return '0' }
-  LOGGER(  '@@dividendrate', dividendrate) 
+  LOGGER("@intendedexpiry", intendedexpiry);
+  if (id && _case) {
+  } else {
+    return "0";
+  }
+  if (dataObj && dataObj[id] && dataObj[id][intendedexpiry]) {
+    dividendrate = dataObj[id][intendedexpiry];
+    _targetData = dividendrate;
+  } else {
+    return "0";
+  }
+  LOGGER("@@dividendrate", dividendrate);
   // let _dividObj = Object.values(dataObj);
   // if (!dataObj) return "";
   // let _targetData = _dividObj.find((e) => e.assetId === id);
   // if (!_targetData) return;
-//  let dividendrate = _targetData.dividendrate;
+  //  let dividendrate = _targetData.dividendrate;
 
   switch (_case) {
     case "HIGH":
@@ -340,7 +355,7 @@ export function getDividFromData({ id, _case, dataObj , duration }) {
     case "lowRate":
       return Math.floor(dividendrate.low_side_dividendrate * 100) / 100;
 
-    case "highAmount":  // return Math.floor(_targetData.high_side_amount * 100) / 100;
+    case "highAmount": // return Math.floor(_targetData.high_side_amount * 100) / 100;
       return Math.floor(_targetData.low_side_amount * 100) / 100;
 
     case "lowAmount": // return Math.floor(_targetData.low_side_amount * 100) / 100;
