@@ -4,6 +4,7 @@ import { gCliId } from "../../configs/setting";
 import { useDispatch } from "react-redux";
 import { setMobile } from "../../reducers/common";
 import axios from "axios";
+import { API } from "../../configs/api";
 
 export default function EventListener() {
   const location = useLocation();
@@ -40,6 +41,21 @@ export default function EventListener() {
   useEffect(() => {
     window.scrollTo(0, 0);
     axios.defaults.headers.Authorization = localStorage.getItem("token");
+  }, [location]);
+
+  useEffect(() => {
+    if (!localStorage.getItem("token")) return;
+
+    setInterval(() => {
+      axios
+        .get(API.AUTH)
+        .then(({ data }) => {})
+        .catch((err) => {
+          console.error(err);
+          localStorage.removeItem("token");
+          window.location.reload();
+        });
+    }, 60000);
   }, [location]);
 
   return <></>;
