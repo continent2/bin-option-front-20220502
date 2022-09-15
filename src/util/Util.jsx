@@ -308,7 +308,6 @@ export function getExcelFile(dataList, docName) {
 }
 
 // custom
-const LOGGER = console.log;
 export function getDividFromData({ id, _case, dataObj, duration }) {
   let dividendrate, _targetData;
   let intendedexpiry = moment()
@@ -317,7 +316,6 @@ export function getDividFromData({ id, _case, dataObj, duration }) {
     .unix();
   //  let intendedexpiry = moment().add( duration, 'minutes' ).endOf('minutes').unix()
 
-  LOGGER("@intendedexpiry", intendedexpiry);
   if (id && _case) {
   } else {
     return "0";
@@ -328,7 +326,7 @@ export function getDividFromData({ id, _case, dataObj, duration }) {
   } else {
     return "0";
   }
-  LOGGER("@@dividendrate", dividendrate);
+
   // let _dividObj = Object.values(dataObj);
   // if (!dataObj) return "";
   // let _targetData = _dividObj.find((e) => e.assetId === id);

@@ -13,6 +13,8 @@ export default function DetBox({ off, mode, page, socket }) {
 
   const [detCategory, setDetCategory] = useState(D_detCategoryList[0]);
 
+  console.log("page", page.toUpperCase());
+
   if (isMobile)
     return (
       <MdetBoxCont>
@@ -28,7 +30,7 @@ export default function DetBox({ off, mode, page, socket }) {
           ))}
         </ul>
 
-        {detCategory === "Opened" && <Opened socket={socket} />}
+        {detCategory === "Opened" && <Opened page={page} socket={socket} />}
         {detCategory === "Closed" && <Closed page={page} />}
 
         <footer>
@@ -55,7 +57,7 @@ export default function DetBox({ off, mode, page, socket }) {
           ))}
         </ul>
 
-        {detCategory === "Opened" && <Opened socket={socket} />}
+        {detCategory === "Opened" && <Opened page={page} socket={socket} />}
         {detCategory === "Closed" && <Closed page={page} />}
       </PdetBoxCont>
     );

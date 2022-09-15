@@ -24,8 +24,7 @@ export default function Closed({ page }) {
     axios
       .get(`${API.MY_BETS}/history`)
       .then(({ data }) => {
-        console.log(data.respdata);
-        console.log(data.respdata[0].value[0].periodData);
+        console.log("closed", data.respdata);
         setData(data.respdata);
       })
       .catch((err) => console.error(err));
@@ -97,140 +96,144 @@ export default function Closed({ page }) {
                 <p className="date">{v.time}</p>
 
                 <ul className="detListByDate">
-                  {v.value.map((detV, i) => (
-                    <li key={i}>
-                      <details>
-                        <summary>
-                          <div className="contBox">
-                            <p className="token">{detV?.asset?.name}</p>
+                  {v.value
+                    .filter((v) => v.type === page.toUpperCase())
+                    .map((detV, i) => (
+                      <li key={i}>
+                        <details>
+                          <summary>
+                            <div className="contBox">
+                              <p className="token">{detV?.asset?.name}</p>
 
-                            <p className="winLose">{detV.outcome}</p>
+                              <p className="winLose">{detV.outcome}</p>
 
-                            <p className="percent">{`${detV.diffRate}%`}</p>
-                          </div>
+                              <p className="percent">{`${detV.diffRate}%`}</p>
+                            </div>
 
-                          <div className="contBox">
-                            <span className="forecast">
-                              <img src={getIcon(detV.side)} alt="" />
-                              <p>{`$${detV.amount / 10 ** 6}`}</p>
-                            </span>
+                            <div className="contBox">
+                              <span className="forecast">
+                                <img src={getIcon(detV.side)} alt="" />
+                                <p>{`$${detV.amount / 10 ** 6}`}</p>
+                              </span>
 
-                            <p className={`${getPreResult(detV)} benefit`}>
-                              {(+detV.winamount).toFixed(2)}
-                              {/** `$${detV.profit_amount? Number(detV.profit_amount).toFixed(2): detV.profit_amount}`}*/}
-                            </p>
+                              <p className={`${getPreResult(detV)} benefit`}>
+                                {(+detV.winamount).toFixed(2)}
+                                {/** `$${detV.profit_amount? Number(detV.profit_amount).toFixed(2): detV.profit_amount}`}*/}
+                              </p>
 
-                            <p className="time">
-                              {moment.unix(detV.starting).format("HH:mm:ss")}
-                            </p>
-                          </div>
-                        </summary>
+                              <p className="time">
+                                {moment.unix(detV.starting).format("HH:mm:ss")}
+                              </p>
+                            </div>
+                          </summary>
 
-                        <div className="openBox">
-                          <div className="timeBox">
-                            <ul className="timeList">
-                              <li>
-                                <p className="key">{t("Open time")}</p>
-                                <p className="value">
-                                  {moment
-                                    .unix(detV.starting)
-                                    .format("hh:mm:ss")}
-                                </p>
-                              </li>
+                          <div className="openBox">
+                            <div className="timeBox">
+                              <ul className="timeList">
+                                <li>
+                                  <p className="key">{t("Open time")}</p>
+                                  <p className="value">
+                                    {moment
+                                      .unix(detV.starting)
+                                      .format("hh:mm:ss")}
+                                  </p>
+                                </li>
 
-                              <li>
-                                <p>
-                                  {t("M")}
-                                  {moment(
-                                    moment
+                                <li>
+                                  <p>
+                                    {t("M")}
+                                    {moment(
+                                      moment
+                                        .unix(detV.expiry)
+                                        .diff(moment.unix(detV.starting))
+                                    ).format("m")}
+                                  </p>
+                                </li>
+
+                                <li>
+                                  <p className="key">{t("Closing Time")}</p>
+                                  <p className="value">
+                                    {moment
                                       .unix(detV.expiry)
-                                      .diff(moment.unix(detV.starting))
-                                  ).format("m")}
-                                </p>
-                              </li>
-
-                              <li>
-                                <p className="key">{t("Closing Time")}</p>
-                                <p className="value">
-                                  {moment.unix(detV.expiry).format("hh:mm:ss")}
-                                </p>
-                              </li>
-                            </ul>
-                          </div>
-
-                          <div className="chartCont">
-                            <ClosedChartBox
-                              price={Number(detV.startingPrice)}
-                              data={detV.periodData}
-                            />
-                          </div>
-
-                          <div className="resBox">
-                            <div className="detResBox">
-                              <ul className="forcastList">
-                                <li>
-                                  <p className="key">{t("Your forecast")}</p>
-                                  <p className="value">
-                                    {getForcast(detV.side)}
+                                      .format("hh:mm:ss")}
                                   </p>
-                                </li>
-                                <li>
-                                  <p className="key">{t("Payout")}</p>
-                                  <p className="value">{`$${
-                                    detV.amount &&
-                                    (detV.amount / 10 ** 6).toFixed(2)
-                                  }`}</p>
-                                </li>
-                                <li>
-                                  <p className="key">{t("Profit")}</p>
-                                  <p className="value">{`$${Number(
-                                    detV.profit_amount
-                                  ).toFixed(2)}`}</p>
-                                </li>
-                              </ul>
-
-                              <ul className="priceList">
-                                <li>
-                                  <p className="key">{t("Open price")}</p>
-
-                                  <p className="value">
-                                    {detV.startingPrice
-                                      ? Number(detV.startingPrice).toFixed(2)
-                                      : "-"}
-                                  </p>
-                                </li>
-                                <li>
-                                  <p className="key">{t("Ending price")}</p>
-
-                                  <p className="value">
-                                    {detV.endingPrice
-                                      ? Number(detV.endingPrice).toFixed(2)
-                                      : "-"}
-                                  </p>
-                                </li>
-                                <li>
-                                  <p className="key">{t("Difference")}</p>
-
-                                  <p
-                                    className={`${
-                                      (detV.endingPrice - detV.startingPrice >
-                                        0 &&
-                                        "plus") ||
-                                      (detV.endingPrice - detV.startingPrice <
-                                        0 &&
-                                        "minus")
-                                    } value point`}
-                                  >{`${Number(
-                                    detV.endingPrice - detV.startingPrice
-                                  ).toFixed(2)} ${t("points")}`}</p>
                                 </li>
                               </ul>
                             </div>
+
+                            <div className="chartCont">
+                              <ClosedChartBox
+                                price={Number(detV.startingPrice)}
+                                data={detV.periodData}
+                              />
+                            </div>
+
+                            <div className="resBox">
+                              <div className="detResBox">
+                                <ul className="forcastList">
+                                  <li>
+                                    <p className="key">{t("Your forecast")}</p>
+                                    <p className="value">
+                                      {getForcast(detV.side)}
+                                    </p>
+                                  </li>
+                                  <li>
+                                    <p className="key">{t("Payout")}</p>
+                                    <p className="value">{`$${
+                                      detV.amount &&
+                                      (detV.amount / 10 ** 6).toFixed(2)
+                                    }`}</p>
+                                  </li>
+                                  <li>
+                                    <p className="key">{t("Profit")}</p>
+                                    <p className="value">{`$${Number(
+                                      detV.profit_amount
+                                    ).toFixed(2)}`}</p>
+                                  </li>
+                                </ul>
+
+                                <ul className="priceList">
+                                  <li>
+                                    <p className="key">{t("Open price")}</p>
+
+                                    <p className="value">
+                                      {detV.startingPrice
+                                        ? Number(detV.startingPrice).toFixed(2)
+                                        : "-"}
+                                    </p>
+                                  </li>
+                                  <li>
+                                    <p className="key">{t("Ending price")}</p>
+
+                                    <p className="value">
+                                      {detV.endingPrice
+                                        ? Number(detV.endingPrice).toFixed(2)
+                                        : "-"}
+                                    </p>
+                                  </li>
+                                  <li>
+                                    <p className="key">{t("Difference")}</p>
+
+                                    <p
+                                      className={`${
+                                        (detV.endingPrice - detV.startingPrice >
+                                          0 &&
+                                          "plus") ||
+                                        (detV.endingPrice - detV.startingPrice <
+                                          0 &&
+                                          "minus")
+                                      } value point`}
+                                    >{`${Number(
+                                      detV.endingPrice - detV.startingPrice
+                                    ).toFixed(2)} ${t("points")}`}</p>
+                                  </li>
+                                </ul>
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      </details>
-                    </li>
-                  ))}
+                        </details>
+                      </li>
+                    ))}
                 </ul>
               </li>
             ))}
@@ -254,140 +257,144 @@ export default function Closed({ page }) {
                 <p className="date">{v.time}</p>
 
                 <ul className="detListByDate">
-                  {v.value.map((detV, i) => (
-                    <li key={i}>
-                      <details>
-                        <summary>
-                          <div className="contBox">
-                            <p className="token">{detV?.asset?.name}</p>
+                  {v.value
+                    .filter((v) => v.type === page.toUpperCase())
+                    .map((detV, i) => (
+                      <li key={i}>
+                        <details>
+                          <summary>
+                            <div className="contBox">
+                              <p className="token">{detV?.asset?.name}</p>
 
-                            <p className="winLose">{detV.outcome}</p>
+                              <p className="winLose">{detV.outcome}</p>
 
-                            <p className="percent">{`${detV.diffRate}%`}</p>
-                          </div>
+                              <p className="percent">{`${detV.diffRate}%`}</p>
+                            </div>
 
-                          <div className="contBox">
-                            <span className="forecast">
-                              <img src={getIcon(detV.side)} alt="" />
-                              <p>{`$${detV.amount / 10 ** 6}`}</p>
-                            </span>
+                            <div className="contBox">
+                              <span className="forecast">
+                                <img src={getIcon(detV.side)} alt="" />
+                                <p>{`$${detV.amount / 10 ** 6}`}</p>
+                              </span>
 
-                            <p className={`${getPreResult(detV)} benefit`}>
-                              {(+detV.winamount).toFixed(2)}
-                              {/**  `$${detV.profit_amount? Number(detV.profit_amount).toFixed(2): detV.profit_amount}`}*/}
-                            </p>
+                              <p className={`${getPreResult(detV)} benefit`}>
+                                {(+detV.winamount).toFixed(2)}
+                                {/**  `$${detV.profit_amount? Number(detV.profit_amount).toFixed(2): detV.profit_amount}`}*/}
+                              </p>
 
-                            <p className="time">
-                              {moment.unix(detV.starting).format("HH:mm:ss")}
-                            </p>
-                          </div>
-                        </summary>
+                              <p className="time">
+                                {moment.unix(detV.starting).format("HH:mm:ss")}
+                              </p>
+                            </div>
+                          </summary>
 
-                        <div className="openBox">
-                          <div className="timeBox">
-                            <ul className="timeList">
-                              <li>
-                                <p className="key">{t("Open time")}</p>
-                                <p className="value">
-                                  {moment
-                                    .unix(detV.starting)
-                                    .format("hh:mm:ss")}
-                                </p>
-                              </li>
+                          <div className="openBox">
+                            <div className="timeBox">
+                              <ul className="timeList">
+                                <li>
+                                  <p className="key">{t("Open time")}</p>
+                                  <p className="value">
+                                    {moment
+                                      .unix(detV.starting)
+                                      .format("hh:mm:ss")}
+                                  </p>
+                                </li>
 
-                              <li>
-                                <p>
-                                  {t("M")}
-                                  {moment(
-                                    moment
+                                <li>
+                                  <p>
+                                    {t("M")}
+                                    {moment(
+                                      moment
+                                        .unix(detV.expiry)
+                                        .diff(moment.unix(detV.starting))
+                                    ).format("m")}
+                                  </p>
+                                </li>
+
+                                <li>
+                                  <p className="key">{t("Closing Time")}</p>
+                                  <p className="value">
+                                    {moment
                                       .unix(detV.expiry)
-                                      .diff(moment.unix(detV.starting))
-                                  ).format("m")}
-                                </p>
-                              </li>
-
-                              <li>
-                                <p className="key">{t("Closing Time")}</p>
-                                <p className="value">
-                                  {moment.unix(detV.expiry).format("hh:mm:ss")}
-                                </p>
-                              </li>
-                            </ul>
-                          </div>
-
-                          <div className="chartCont">
-                            <ClosedChartBox
-                              price={Number(detV.startingPrice)}
-                              data={detV.periodData}
-                            />
-                          </div>
-
-                          <div className="resBox">
-                            <div className="detResBox">
-                              <ul className="forcastList">
-                                <li>
-                                  <p className="key">{t("Your forecast")}</p>
-                                  <p className="value">
-                                    {getForcast(detV.side)}
+                                      .format("hh:mm:ss")}
                                   </p>
-                                </li>
-                                <li>
-                                  <p className="key">{t("Payout")}</p>
-                                  <p className="value">{`$${
-                                    detV.amount &&
-                                    (detV.amount / 10 ** 6).toFixed(2)
-                                  }`}</p>
-                                </li>
-                                <li>
-                                  <p className="key">{t("Profit")}</p>
-                                  <p className="value">{`$${Number(
-                                    detV.profit_amount
-                                  ).toFixed(2)}`}</p>
-                                </li>
-                              </ul>
-
-                              <ul className="priceList">
-                                <li>
-                                  <p className="key">{t("Open price")}</p>
-
-                                  <p className="value">
-                                    {detV.startingPrice
-                                      ? Number(detV.startingPrice).toFixed(2)
-                                      : "-"}
-                                  </p>
-                                </li>
-                                <li>
-                                  <p className="key">{t("Ending price")}</p>
-
-                                  <p className="value">
-                                    {detV.endingPrice
-                                      ? Number(detV.endingPrice).toFixed(2)
-                                      : "-"}
-                                  </p>
-                                </li>
-                                <li>
-                                  <p className="key">{t("Difference")}</p>
-
-                                  <p
-                                    className={`${
-                                      (detV.endingPrice - detV.startingPrice >
-                                        0 &&
-                                        "plus") ||
-                                      (detV.endingPrice - detV.startingPrice <
-                                        0 &&
-                                        "minus")
-                                    } value point`}
-                                  >{`${Number(
-                                    detV.endingPrice - detV.startingPrice
-                                  ).toFixed(2)} ${t("points")}`}</p>
                                 </li>
                               </ul>
                             </div>
+
+                            <div className="chartCont">
+                              <ClosedChartBox
+                                price={Number(detV.startingPrice)}
+                                data={detV.periodData}
+                              />
+                            </div>
+
+                            <div className="resBox">
+                              <div className="detResBox">
+                                <ul className="forcastList">
+                                  <li>
+                                    <p className="key">{t("Your forecast")}</p>
+                                    <p className="value">
+                                      {getForcast(detV.side)}
+                                    </p>
+                                  </li>
+                                  <li>
+                                    <p className="key">{t("Payout")}</p>
+                                    <p className="value">{`$${
+                                      detV.amount &&
+                                      (detV.amount / 10 ** 6).toFixed(2)
+                                    }`}</p>
+                                  </li>
+                                  <li>
+                                    <p className="key">{t("Profit")}</p>
+                                    <p className="value">{`$${Number(
+                                      detV.profit_amount
+                                    ).toFixed(2)}`}</p>
+                                  </li>
+                                </ul>
+
+                                <ul className="priceList">
+                                  <li>
+                                    <p className="key">{t("Open price")}</p>
+
+                                    <p className="value">
+                                      {detV.startingPrice
+                                        ? Number(detV.startingPrice).toFixed(2)
+                                        : "-"}
+                                    </p>
+                                  </li>
+                                  <li>
+                                    <p className="key">{t("Ending price")}</p>
+
+                                    <p className="value">
+                                      {detV.endingPrice
+                                        ? Number(detV.endingPrice).toFixed(2)
+                                        : "-"}
+                                    </p>
+                                  </li>
+                                  <li>
+                                    <p className="key">{t("Difference")}</p>
+
+                                    <p
+                                      className={`${
+                                        (detV.endingPrice - detV.startingPrice >
+                                          0 &&
+                                          "plus") ||
+                                        (detV.endingPrice - detV.startingPrice <
+                                          0 &&
+                                          "minus")
+                                      } value point`}
+                                    >{`${Number(
+                                      detV.endingPrice - detV.startingPrice
+                                    ).toFixed(2)} ${t("points")}`}</p>
+                                  </li>
+                                </ul>
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      </details>
-                    </li>
-                  ))}
+                        </details>
+                      </li>
+                    ))}
                 </ul>
               </li>
             ))}

@@ -11,7 +11,7 @@ import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import { setPrice } from "../../../reducers/bet";
 
-export default function HeikanAshiChart({ assetInfo, chartOpt, socket }) {
+export default function HeikanAshiChart({ assetInfo, chartOpt, socket, page }) {
   const dispatch = useDispatch();
 
   const openedData = useSelector((state) => state.bet.openedData);
@@ -34,12 +34,10 @@ export default function HeikanAshiChart({ assetInfo, chartOpt, socket }) {
         params: {
           barSize: chartOpt.barSize,
           symbol: assetInfo.APISymbol,
-          N: 180,
+          N: 60,
         },
       })
       .then(({ data }) => {
-        console.log("ticker", data);
-
         let _resData = data.list;
 
         let _data = [];
@@ -135,7 +133,7 @@ export default function HeikanAshiChart({ assetInfo, chartOpt, socket }) {
       valueSeries.data.push(pushData);
     }
 
-    console.log(_initPriceList);
+    console.log("_initPriceList", _initPriceList);
     setInitPirceList([..._initPriceList]);
     setApiData([...valueSeries.data]);
 
@@ -436,7 +434,7 @@ export default function HeikanAshiChart({ assetInfo, chartOpt, socket }) {
   useEffect(() => {
     socket.on("get_ticker_price", (res) => {
       if (!res) return;
-
+      console.log("get_ticker_price", res);
       setCurrentPrice(Number(res));
     });
 
@@ -468,26 +466,28 @@ export default function HeikanAshiChart({ assetInfo, chartOpt, socket }) {
   useEffect(() => {
     if (!openedData) return;
 
-    openedData.map((e) => {
-      makeXevent(
-        dateAxis,
-        root,
-        tooltip,
-        Number(moment(e.createdat).format("x")),
-        e.side === "HIGH" ? "H" : "L",
-        am5.color(e.side === "HIGH" ? 0x3fb68b : 0xff5353),
-        Number(e.startingPrice)
-      );
+    openedData
+      .filter((v) => v.type === page.toUpperCase())
+      .map((e) => {
+        makeXevent(
+          dateAxis,
+          root,
+          tooltip,
+          Number(moment(e.createdat).format("x")),
+          e.side === "HIGH" ? "H" : "L",
+          am5.color(e.side === "HIGH" ? 0x3fb68b : 0xff5353),
+          Number(e.startingPrice)
+        );
 
-      makeYevent(
-        valueAxis,
-        root,
-        tooltip,
-        Number(moment(e.createdat).format("x")),
-        am5.color(e.side === "HIGH" ? 0x3fb68b : 0xff5353),
-        Number(e.startingPrice).toFixed(2)
-      );
-    });
+        makeYevent(
+          valueAxis,
+          root,
+          tooltip,
+          Number(moment(e.createdat).format("x")),
+          am5.color(e.side === "HIGH" ? 0x3fb68b : 0xff5353),
+          Number(e.startingPrice).toFixed(2)
+        );
+      });
   }, [dateAxis, root, tooltip, openedData]);
 
   return <AmChartBox id="ChartBox"></AmChartBox>;

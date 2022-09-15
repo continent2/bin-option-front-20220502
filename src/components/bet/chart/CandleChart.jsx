@@ -11,7 +11,7 @@ import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import { setPrice } from "../../../reducers/bet";
 
-export default function CandleChart({ assetInfo, chartOpt, socket }) {
+export default function CandleChart({ assetInfo, chartOpt, socket, page }) {
   const dispatch = useDispatch();
 
   const isMobile = useSelector((state) => state.common.isMobile);
@@ -38,7 +38,6 @@ export default function CandleChart({ assetInfo, chartOpt, socket }) {
         },
       })
       .then(({ data }) => {
-        console.log("ticker", data);
         let _resData = data.list;
 
         let _data = [];
@@ -73,36 +72,26 @@ export default function CandleChart({ assetInfo, chartOpt, socket }) {
       Math.floor(_now / chartOpt.barSize) !==
       Math.floor(_lastIndex.Date / chartOpt.barSize)
     )
-      console.log(
-        "get_ticker_price editChart",
-        "\n",
-        "now",
-        new Date(_now),
-        "\n",
-        "last time",
-        new Date(_lastIndex.Date),
-        "\n"
-      );
-    if (
-      Math.floor(_now / chartOpt.barSize) ===
-      Math.floor(_lastIndex.Date / chartOpt.barSize)
-    ) {
-      if (price > _lastIndex.High) _lastIndex.High = price;
-      else if (price < _lastIndex.Low) _lastIndex.Low = price;
-      _lastIndex.Close = price;
+      if (
+        Math.floor(_now / chartOpt.barSize) ===
+        Math.floor(_lastIndex.Date / chartOpt.barSize)
+      ) {
+        if (price > _lastIndex.High) _lastIndex.High = price;
+        else if (price < _lastIndex.Low) _lastIndex.Low = price;
+        _lastIndex.Close = price;
 
-      valueSeries.data.setIndex(valueSeries.data.length - 1, _lastIndex);
-    } else {
-      pushData = {
-        Date: _now,
-        Open: _lastIndex.Close,
-        High: price,
-        Low: price,
-        Close: price,
-      };
-      valueSeries.data.push(pushData);
-      valueSeries.data.shift();
-    }
+        valueSeries.data.setIndex(valueSeries.data.length - 1, _lastIndex);
+      } else {
+        pushData = {
+          Date: _now,
+          Open: _lastIndex.Close,
+          High: price,
+          Low: price,
+          Close: price,
+        };
+        valueSeries.data.push(pushData);
+        valueSeries.data.shift();
+      }
     setApiData([...valueSeries.data]);
 
     if (currentLabel) {
@@ -416,7 +405,6 @@ export default function CandleChart({ assetInfo, chartOpt, socket }) {
     let _dataInterval = setTimeout(() => {
       socket.emit("get_ticker_price", assetInfo.APISymbol);
       if (currentPrice) getData(currentPrice);
-      console.log("get_ticker_price socket", socket);
     }, 1000);
 
     return () => {
@@ -434,26 +422,28 @@ export default function CandleChart({ assetInfo, chartOpt, socket }) {
   useEffect(() => {
     if (!openedData) return;
 
-    openedData.map((e) => {
-      makeXevent(
-        dateAxis,
-        root,
-        tooltip,
-        Number(moment(e.createdat).format("x")),
-        e.side === "HIGH" ? "H" : "L",
-        am5.color(e.side === "HIGH" ? 0x3fb68b : 0xff5353),
-        Number(e.startingPrice)
-      );
+    openedData
+      .filter((v) => v.type === page.toUpperCase())
+      .map((e) => {
+        makeXevent(
+          dateAxis,
+          root,
+          tooltip,
+          Number(moment(e.createdat).format("x")),
+          e.side === "HIGH" ? "H" : "L",
+          am5.color(e.side === "HIGH" ? 0x3fb68b : 0xff5353),
+          Number(e.startingPrice)
+        );
 
-      makeYevent(
-        valueAxis,
-        root,
-        tooltip,
-        Number(moment(e.createdat).format("x")),
-        am5.color(e.side === "HIGH" ? 0x3fb68b : 0xff5353),
-        Number(e.startingPrice).toFixed(2)
-      );
-    });
+        makeYevent(
+          valueAxis,
+          root,
+          tooltip,
+          Number(moment(e.createdat).format("x")),
+          am5.color(e.side === "HIGH" ? 0x3fb68b : 0xff5353),
+          Number(e.startingPrice).toFixed(2)
+        );
+      });
   }, [dateAxis, root, tooltip, openedData]);
 
   return <AmChartBox id="ChartBox"></AmChartBox>;

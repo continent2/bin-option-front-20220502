@@ -358,6 +358,7 @@ export default function Live({ socket, notiOpt }) {
                         chartOpt={chartOpt}
                         openedData={openedData}
                         socket={socket}
+                        page={"live"}
                       />
                     </div>
                   </div>
@@ -629,6 +630,7 @@ export default function Live({ socket, notiOpt }) {
                       chartOpt={chartOpt}
                       openedData={openedData}
                       socket={socket}
+                      page={"live"}
                     />
                   </div>
 

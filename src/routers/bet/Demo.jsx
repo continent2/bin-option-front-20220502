@@ -335,6 +335,7 @@ export default function Demo({ socket, notiOpt }) {
                         chartOpt={chartOpt}
                         openedData={openedData}
                         socket={socket}
+                        page={"demo"}
                       />
                     </div>
                   </div>
@@ -453,7 +454,7 @@ export default function Demo({ socket, notiOpt }) {
             {detMode && (
               <DetBox
                 mode={detMode}
-                page={"live"}
+                page={"demo"}
                 socket={socket}
                 off={setDetMode}
               />
@@ -599,6 +600,7 @@ export default function Demo({ socket, notiOpt }) {
                       chartOpt={chartOpt}
                       openedData={openedData}
                       socket={socket}
+                      page={"demo"}
                     />
                   </div>
 
@@ -785,7 +787,7 @@ export default function Demo({ socket, notiOpt }) {
 
                   <DetBox
                     mode={detMode}
-                    page={"live"}
+                    page={"demo"}
                     socket={socket}
                     off={setDetMode}
                   />

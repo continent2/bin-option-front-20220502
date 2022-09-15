@@ -7,7 +7,7 @@ import I_highArwGreen from "../../../img/icon/I_highArwGreen.svg";
 import I_lowArwRed from "../../../img/icon/I_lowArwRed.svg";
 import { setOpenedData } from "../../../reducers/bet";
 
-export default function Opened({ socket }) {
+export default function Opened({ page, socket }) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const isMobile = useSelector((state) => state.common.isMobile);
@@ -18,7 +18,7 @@ export default function Opened({ socket }) {
 
   function getLog() {
     socket.emit("bet", {}, (res) => {
-      console.log("@@bet", res);
+      console.log("bet", res);
       setData(res);
       dispatch(setOpenedData(res));
     });
@@ -82,313 +82,319 @@ export default function Opened({ socket }) {
     return (
       <MopenedBox className="detContList">
         {data &&
-          data.map((v, i) => (
-            <Fragment key={i}>
-              {v.expiry > now.getTime() / 1000 && (
-                <li key={i}>
-                  <details>
-                    <summary>
-                      <div className="contBox">
-                        <p className="token">{v.asset.name}</p>
+          data
+            .filter((v) => v.type === page.toUpperCase())
+            .map((v, i) => (
+              <Fragment key={i}>
+                {v.expiry > now.getTime() / 1000 && (
+                  <li key={i}>
+                    <details>
+                      <summary>
+                        <div className="contBox">
+                          <p className="token">{v.asset.name}</p>
 
-                        <p className="price">
-                          {Math.floor(v.startingPrice * 100) / 100}
-                        </p>
+                          <p className="price">
+                            {Math.floor(v.startingPrice * 100) / 100}
+                          </p>
 
-                        <p className="percent">{`${v.diffRate || 0}%`}</p>
-                      </div>
+                          <p className="percent">{`${v.diffRate || 0}%`}</p>
+                        </div>
 
-                      <div className="contBox">
-                        <span className="forecast">
-                          <img src={getIcon(v.side)} alt="" />
-                          <p>{`$${(v.amount / 10 ** 6).toFixed(2)}`}</p>
-                        </span>
+                        <div className="contBox">
+                          <span className="forecast">
+                            <img src={getIcon(v.side)} alt="" />
+                            <p>{`$${(v.amount / 10 ** 6).toFixed(2)}`}</p>
+                          </span>
 
-                        <p className={`${getPreResult(v)} benefit`}>
-                          {v?.winamount
-                            ? (v?.winamount / 10 ** 6).toFixed(2)
-                            : ""}
-                        </p>
+                          <p className={`${getPreResult(v)} benefit`}>
+                            {v?.winamount
+                              ? (v?.winamount / 10 ** 6).toFixed(2)
+                              : ""}
+                          </p>
 
-                        <p className="time">
-                          {`${
-                            moment.unix(v.expiry).diff(now, "hours")
-                              ? `${moment.unix(v.expiry).diff(now, "hours")}:`
-                              : ""
-                          }${`${Math.floor(
-                            moment.unix(v.expiry).diff(now, "minutes") % 60
-                          )}`.padStart(2, "0")}:${`${
-                            moment.unix(v.expiry).diff(now, "seconds") % 60
-                          }`.padStart(2, "0")}`}
-                        </p>
-                      </div>
-                    </summary>
+                          <p className="time">
+                            {`${
+                              moment.unix(v.expiry).diff(now, "hours")
+                                ? `${moment.unix(v.expiry).diff(now, "hours")}:`
+                                : ""
+                            }${`${Math.floor(
+                              moment.unix(v.expiry).diff(now, "minutes") % 60
+                            )}`.padStart(2, "0")}:${`${
+                              moment.unix(v.expiry).diff(now, "seconds") % 60
+                            }`.padStart(2, "0")}`}
+                          </p>
+                        </div>
+                      </summary>
 
-                    <div className="openBox">
-                      <div className="timeBox">
-                        <ul className="timeList">
-                          <li>
-                            <p className="key">{t("Open time")}</p>
-                            <p className="value">
-                              {moment.unix(v.starting).format("hh:mm:ss")}
-                            </p>
-                          </li>
+                      <div className="openBox">
+                        <div className="timeBox">
+                          <ul className="timeList">
+                            <li>
+                              <p className="key">{t("Open time")}</p>
+                              <p className="value">
+                                {moment.unix(v.starting).format("hh:mm:ss")}
+                              </p>
+                            </li>
 
-                          <li>
-                            <p>
-                              {t("M")}
-                              {moment(
-                                moment
-                                  .unix(v.expiry)
-                                  .diff(moment.unix(v.starting))
-                              ).format("m")}
-                            </p>
-                          </li>
+                            <li>
+                              <p>
+                                {t("M")}
+                                {moment(
+                                  moment
+                                    .unix(v.expiry)
+                                    .diff(moment.unix(v.starting))
+                                ).format("m")}
+                              </p>
+                            </li>
 
-                          <li>
-                            <p className="key">{t("Closing Time")}</p>
-                            <p className="value">
-                              {moment.unix(v.expiry).format("hh:mm:ss")}
-                            </p>
-                          </li>
-                        </ul>
+                            <li>
+                              <p className="key">{t("Closing Time")}</p>
+                              <p className="value">
+                                {moment.unix(v.expiry).format("hh:mm:ss")}
+                              </p>
+                            </li>
+                          </ul>
 
-                        <div className="barBox">
-                          <div className="bar">
-                            <div />
+                          <div className="barBox">
+                            <div className="bar">
+                              <div />
+                            </div>
+
+                            <p className="left">{`${t("Time left")} : ${moment(
+                              moment.unix(v.expiry).diff(now)
+                            ).format("mm:ss")}`}</p>
                           </div>
+                        </div>
 
-                          <p className="left">{`${t("Time left")} : ${moment(
-                            moment.unix(v.expiry).diff(now)
-                          ).format("mm:ss")}`}</p>
+                        <div className="resBox">
+                          <div className="detResBox">
+                            <ul className="forcastList">
+                              <li>
+                                <p className="key">{t("Your forecast")}</p>
+                                <p className="value">{getForcast(v.side)}</p>
+                              </li>
+                              <li>
+                                <p className="key">{t("Payout")}</p>
+                                <p className="value">{`$${
+                                  v.amount && (v.amount / 10 ** 6).toFixed(2)
+                                }`}</p>
+                              </li>
+                              <li>
+                                <p className="key">{t("Profit")}</p>
+                                <p className="value">{`$${(
+                                  (v.amount * v.diffRate) /
+                                  10 ** 8
+                                ).toFixed(2)}`}</p>
+                              </li>
+                            </ul>
+
+                            <ul className="priceList">
+                              <li>
+                                <p className="key">{t("Open price")}</p>
+
+                                <p className="value">
+                                  {v.startingPrice
+                                    ? Number(v.startingPrice).toFixed(2)
+                                    : "-"}
+                                </p>
+                              </li>
+                              <li>
+                                <p className="key">{t("Current price")}</p>
+
+                                <p className="value">
+                                  {v.currentPrice
+                                    ? Number(v.currentPrice).toFixed(2)
+                                    : "-"}
+                                </p>
+                              </li>
+                              <li>
+                                <p className="key">{t("Difference")}</p>
+
+                                <p
+                                  className={`${
+                                    (v.currentPrice - v.startingPrice > 0 &&
+                                      "plus") ||
+                                    (v.currentPrice - v.startingPrice < 0 &&
+                                      "minus")
+                                  } value point`}
+                                >{`${Number(
+                                  v.currentPrice - v.startingPrice
+                                ).toFixed(2)} ${t("points")}`}</p>
+                              </li>
+                            </ul>
+                          </div>
                         </div>
                       </div>
-
-                      <div className="resBox">
-                        <div className="detResBox">
-                          <ul className="forcastList">
-                            <li>
-                              <p className="key">{t("Your forecast")}</p>
-                              <p className="value">{getForcast(v.side)}</p>
-                            </li>
-                            <li>
-                              <p className="key">{t("Payout")}</p>
-                              <p className="value">{`$${
-                                v.amount && (v.amount / 10 ** 6).toFixed(2)
-                              }`}</p>
-                            </li>
-                            <li>
-                              <p className="key">{t("Profit")}</p>
-                              <p className="value">{`$${(
-                                (v.amount * v.diffRate) /
-                                10 ** 8
-                              ).toFixed(2)}`}</p>
-                            </li>
-                          </ul>
-
-                          <ul className="priceList">
-                            <li>
-                              <p className="key">{t("Open price")}</p>
-
-                              <p className="value">
-                                {v.startingPrice
-                                  ? Number(v.startingPrice).toFixed(2)
-                                  : "-"}
-                              </p>
-                            </li>
-                            <li>
-                              <p className="key">{t("Current price")}</p>
-
-                              <p className="value">
-                                {v.currentPrice
-                                  ? Number(v.currentPrice).toFixed(2)
-                                  : "-"}
-                              </p>
-                            </li>
-                            <li>
-                              <p className="key">{t("Difference")}</p>
-
-                              <p
-                                className={`${
-                                  (v.currentPrice - v.startingPrice > 0 &&
-                                    "plus") ||
-                                  (v.currentPrice - v.startingPrice < 0 &&
-                                    "minus")
-                                } value point`}
-                              >{`${Number(
-                                v.currentPrice - v.startingPrice
-                              ).toFixed(2)} ${t("points")}`}</p>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  </details>
-                </li>
-              )}
-            </Fragment>
-          ))}
+                    </details>
+                  </li>
+                )}
+              </Fragment>
+            ))}
       </MopenedBox>
     );
   else
     return (
       <PopenedBox className="detContList">
         {data &&
-          data.map((v, i) => (
-            <Fragment key={i}>
-              {v.expiry > now.getTime() / 1000 && (
-                <li>
-                  <details>
-                    <summary>
-                      <div className="contBox">
-                        <p className="token">{v?.asset?.name}</p>
+          data
+            .filter((v) => v.type === page.toUpperCase())
+            .map((v, i) => (
+              <Fragment key={i}>
+                {v.expiry > now.getTime() / 1000 && (
+                  <li>
+                    <details>
+                      <summary>
+                        <div className="contBox">
+                          <p className="token">{v?.asset?.name}</p>
 
-                        <p className="price">
-                          {Math.floor(v.startingPrice * 100) / 100}
-                        </p>
+                          <p className="price">
+                            {Math.floor(v.startingPrice * 100) / 100}
+                          </p>
 
-                        <p className="percent">{`${v.diffRate || 0}%`}</p>
-                      </div>
+                          <p className="percent">{`${v.diffRate || 0}%`}</p>
+                        </div>
 
-                      <div className="contBox">
-                        <span className="forecast">
-                          <img src={getIcon(v.side)} alt="" />
-                          <p>{`$${(v.amount / 10 ** 6).toFixed(2)}`}</p>
-                        </span>
+                        <div className="contBox">
+                          <span className="forecast">
+                            <img src={getIcon(v.side)} alt="" />
+                            <p>{`$${(v.amount / 10 ** 6).toFixed(2)}`}</p>
+                          </span>
 
-                        <p className={`${getPreResult(v)} benefit`}>
-                          {v?.winamount
-                            ? (v?.winamount / 10 ** 6).toFixed(2)
-                            : ""}
-                        </p>
+                          <p className={`${getPreResult(v)} benefit`}>
+                            {v?.winamount
+                              ? (v?.winamount / 10 ** 6).toFixed(2)
+                              : ""}
+                          </p>
 
-                        <p className="time">
-                          {`${
-                            moment.unix(v.expiry).diff(now, "hours")
-                              ? `${moment.unix(v.expiry).diff(now, "hours")}:`
-                              : ""
-                          }${`${Math.floor(
-                            moment.unix(v.expiry).diff(now, "minutes") % 60
-                          )}`.padStart(2, "0")}:${`${
-                            moment.unix(v.expiry).diff(now, "seconds") % 60
-                          }`.padStart(2, "0")}`}
-                        </p>
-                      </div>
-                    </summary>
+                          <p className="time">
+                            {`${
+                              moment.unix(v.expiry).diff(now, "hours")
+                                ? `${moment.unix(v.expiry).diff(now, "hours")}:`
+                                : ""
+                            }${`${Math.floor(
+                              moment.unix(v.expiry).diff(now, "minutes") % 60
+                            )}`.padStart(2, "0")}:${`${
+                              moment.unix(v.expiry).diff(now, "seconds") % 60
+                            }`.padStart(2, "0")}`}
+                          </p>
+                        </div>
+                      </summary>
 
-                    <div className="openBox">
-                      <div className="timeBox">
-                        <ul className="timeList">
-                          <li>
-                            <p className="key">{t("Open time")}</p>
-                            <p className="value">
-                              {moment.unix(v.starting).format("hh:mm:ss")}
-                            </p>
-                          </li>
+                      <div className="openBox">
+                        <div className="timeBox">
+                          <ul className="timeList">
+                            <li>
+                              <p className="key">{t("Open time")}</p>
+                              <p className="value">
+                                {moment.unix(v.starting).format("hh:mm:ss")}
+                              </p>
+                            </li>
 
-                          <li>
-                            <p>
-                              {t("M")}
-                              {moment(
-                                moment
-                                  .unix(v.expiry)
-                                  .diff(moment.unix(v.starting))
-                              ).format("m")}
-                            </p>
-                          </li>
+                            <li>
+                              <p>
+                                {t("M")}
+                                {moment(
+                                  moment
+                                    .unix(v.expiry)
+                                    .diff(moment.unix(v.starting))
+                                ).format("m")}
+                              </p>
+                            </li>
 
-                          <li>
-                            <p className="key">{t("Closing Time")}</p>
-                            <p className="value">
-                              {moment.unix(v.expiry).format("hh:mm:ss")}
-                            </p>
-                          </li>
-                        </ul>
+                            <li>
+                              <p className="key">{t("Closing Time")}</p>
+                              <p className="value">
+                                {moment.unix(v.expiry).format("hh:mm:ss")}
+                              </p>
+                            </li>
+                          </ul>
 
-                        <div className="barBox">
-                          <div className="bar">
-                            <div
-                              style={{
-                                width: `${
-                                  100 -
-                                  (moment.unix(v.expiry).diff(now, "seconds") *
-                                    100) /
-                                    (v.expiry - v.starting)
-                                }%`,
-                              }}
-                            />
+                          <div className="barBox">
+                            <div className="bar">
+                              <div
+                                style={{
+                                  width: `${
+                                    100 -
+                                    (moment
+                                      .unix(v.expiry)
+                                      .diff(now, "seconds") *
+                                      100) /
+                                      (v.expiry - v.starting)
+                                  }%`,
+                                }}
+                              />
+                            </div>
+
+                            <p className="left">{`${t("Time left")} : ${moment(
+                              moment.unix(v.expiry).diff(now)
+                            ).format("mm:ss")}`}</p>
                           </div>
+                        </div>
 
-                          <p className="left">{`${t("Time left")} : ${moment(
-                            moment.unix(v.expiry).diff(now)
-                          ).format("mm:ss")}`}</p>
+                        <div className="resBox">
+                          <div className="detResBox">
+                            <ul className="forcastList">
+                              <li>
+                                <p className="key">{t("Your forecast")}</p>
+                                <p className="value">{t(getForcast(v.side))}</p>
+                              </li>
+                              <li>
+                                <p className="key">{t("Payout")}</p>
+                                <p className="value">{`$${
+                                  v.amount && (v.amount / 10 ** 6).toFixed(2)
+                                }`}</p>
+                              </li>
+                              <li>
+                                <p className="key">{t("Profit")}</p>
+                                <p className="value">{`$${(
+                                  (v.amount * v.diffRate) /
+                                  10 ** 8
+                                ).toFixed(2)}`}</p>
+                              </li>
+                            </ul>
+
+                            <ul className="priceList">
+                              <li>
+                                <p className="key">{t("Open price")}</p>
+
+                                <p className="value">
+                                  {v.startingPrice
+                                    ? Number(v.startingPrice).toFixed(2)
+                                    : "-"}
+                                </p>
+                              </li>
+                              <li>
+                                <p className="key">{t("Current price")}</p>
+
+                                <p className="value">
+                                  {v.currentPrice
+                                    ? Number(v.currentPrice).toFixed(2)
+                                    : "-"}
+                                </p>
+                              </li>
+                              <li>
+                                <p className="key">{t("Difference")}</p>
+
+                                <p
+                                  className={`${
+                                    (v.currentPrice - v.startingPrice > 0 &&
+                                      "plus") ||
+                                    (v.currentPrice - v.startingPrice < 0 &&
+                                      "minus")
+                                  } value point`}
+                                >{`${Number(
+                                  v.currentPrice - v.startingPrice
+                                ).toFixed(2)} ${t("points")}`}</p>
+                              </li>
+                            </ul>
+                          </div>
                         </div>
                       </div>
-
-                      <div className="resBox">
-                        <div className="detResBox">
-                          <ul className="forcastList">
-                            <li>
-                              <p className="key">{t("Your forecast")}</p>
-                              <p className="value">{t(getForcast(v.side))}</p>
-                            </li>
-                            <li>
-                              <p className="key">{t("Payout")}</p>
-                              <p className="value">{`$${
-                                v.amount && (v.amount / 10 ** 6).toFixed(2)
-                              }`}</p>
-                            </li>
-                            <li>
-                              <p className="key">{t("Profit")}</p>
-                              <p className="value">{`$${(
-                                (v.amount * v.diffRate) /
-                                10 ** 8
-                              ).toFixed(2)}`}</p>
-                            </li>
-                          </ul>
-
-                          <ul className="priceList">
-                            <li>
-                              <p className="key">{t("Open price")}</p>
-
-                              <p className="value">
-                                {v.startingPrice
-                                  ? Number(v.startingPrice).toFixed(2)
-                                  : "-"}
-                              </p>
-                            </li>
-                            <li>
-                              <p className="key">{t("Current price")}</p>
-
-                              <p className="value">
-                                {v.currentPrice
-                                  ? Number(v.currentPrice).toFixed(2)
-                                  : "-"}
-                              </p>
-                            </li>
-                            <li>
-                              <p className="key">{t("Difference")}</p>
-
-                              <p
-                                className={`${
-                                  (v.currentPrice - v.startingPrice > 0 &&
-                                    "plus") ||
-                                  (v.currentPrice - v.startingPrice < 0 &&
-                                    "minus")
-                                } value point`}
-                              >{`${Number(
-                                v.currentPrice - v.startingPrice
-                              ).toFixed(2)} ${t("points")}`}</p>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  </details>
-                </li>
-              )}
-            </Fragment>
-          ))}
+                    </details>
+                  </li>
+                )}
+              </Fragment>
+            ))}
       </PopenedBox>
     );
 }
