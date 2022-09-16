@@ -413,12 +413,12 @@ export default function Live({ socket, notiOpt }) {
                       <div className="amountBox contBox">
                         <p className="key">Amount</p>
 
-                        <div className="value">
+                        <div className="valueAsterisk">
                           <p className="unit">$</p>
                           <input
                             value={amount}
                             type="number"
-                            onChange={(e) => setAmount(e.target.value)}
+                            onChange={handleInput}
                             placeholder="0"
                           />
 
@@ -715,16 +715,7 @@ export default function Live({ socket, notiOpt }) {
                         <input
                           value={amount}
                           type="text"
-                          onChange={(e) => {
-                            // if (typeof value == "string") {
-                            //   setAsterisk(true);
-                            //   return;
-                            // }
-                            // console.log(typeof value);
-                            // setAsterisk(true);
-                            // setAmount(value);
-                            handleInput(e);
-                          }}
+                          onChange={handleInput}
                           placeholder="0"
                         />
 
