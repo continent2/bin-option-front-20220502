@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 import SelLngPopup from "./SelLngPopup";
 import { useTranslation } from "react-i18next";
 
-export default function MenuPopup({ off, userData }) {
+export default function MenuPopup({ off, userData, balance }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -23,6 +23,7 @@ export default function MenuPopup({ off, userData }) {
   const balanceType = localStorage.getItem("balanceType");
 
   console.log(userData);
+  console.log("balance",balance);
 
   const [lngPopup, setLngPopup] = useState(false);
   const [profPopup, setProfPopup] = useState(false);
@@ -52,16 +53,16 @@ export default function MenuPopup({ off, userData }) {
                 >
                   {balanceType === "Demo" ? (
                     <>
-                      <strong className="key">Demo</strong>
+                      <strong className="key">{t("Demo")}</strong>
                       <strong className="value">{`$${Number(
-                        userData?.demoAvail || 0
+                        balance?.DEMO?.avail / 10 ** 6 || 0
                       ).toFixed(2)}`}</strong>
                     </>
                   ) : (
                     <>
-                      <strong className="key">Live</strong>
+                      <strong className="key">{t("Live")}</strong>
                       <strong className="value">{`$${Number(
-                        userData?.liveAvail || 0
+                        balance?.LIVE?.avail / 10 ** 6 || 0
                       ).toFixed(2)}`}</strong>
                     </>
                   )}
