@@ -51,18 +51,18 @@
 .Toastify .Toastify__toast-container .Toastify__toast {
   display: flex;
   align-items: center;
-  gap: 40px;
+  gap: 48px;
   max-width: 88.88vw;
-  height: 40px;
-  min-height: 40px;
-  max-height: 40px;
+  height: 48px;
+  min-height: 48px;
+  max-height: 48px;
   padding: 0 16px;
   margin: 0 auto;
-  font-size: 14px;
+  font-size: 16px;
   color: #fff;
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid var(--customColor);
-  border-radius: 20px;
+  border-radius: 24px;
   backdrop-filter: blur(40px);
   -webkit-backdrop-filter: blur(40px);
 }

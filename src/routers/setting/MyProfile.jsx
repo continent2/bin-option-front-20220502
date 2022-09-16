@@ -110,7 +110,7 @@ export default function MyProfile({ userData }) {
       if (data.message === "CHANGED") {
         setToast({ type: "alarm", cont: t("Your changes have been saved.") });
         localStorage.setItem("token", data.jwttoken.tokenId);
-        
+
         setTimeout(() => {
           window.location.reload();
         }, 3000);
@@ -693,7 +693,7 @@ const MmyProfileBox = styled.main`
         gap: 20px;
         font-size: 16px;
 
-        li {
+        & > li {
           display: flex;
           flex-direction: column;
           gap: 8px;
@@ -850,7 +850,7 @@ const PmyProfileBox = styled.main`
         gap: 24px;
         font-size: 16px;
 
-        li {
+        & > li {
           display: flex;
           flex-direction: column;
           gap: 8px;

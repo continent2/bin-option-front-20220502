@@ -1,19 +1,19 @@
 import styled from "styled-components";
 import { keyframes } from "styled-components";
-import LendingFooter from "../../components/footer/LendingFooter";
+import LandingFooter from "../../components/footer/LandingFooter";
 import DefaultHeader from "../../components/header/DefaultHeader";
-import { D_featureList, D_futureList, D_guideList } from "../../data/D_lending";
-import B_lending1 from "../../img/bg/lending/B_lending1.png";
-import B_lending2 from "../../img/bg/lending/B_lending2.png";
-import B_lending3 from "../../img/bg/lending/B_lending3.svg";
-import B_lending4 from "../../img/bg/lending/B_lending4.svg";
-import B_lending5 from "../../img/bg/lending/B_lending5.png";
-import B_float1 from "../../img/bg/lending/B_float1.png";
-import B_float2 from "../../img/bg/lending/B_float2.png";
-import B_float3 from "../../img/bg/lending/B_float3.png";
-import B_float4 from "../../img/bg/lending/B_float4.png";
-import B_shield from "../../img/bg/lending/B_shield.png";
-import B_tradeText from "../../img/bg/lending/B_tradeText.png";
+import { D_featureList, D_futureList, D_guideList } from "../../data/D_landing";
+import B_landing1 from "../../img/bg/landing/B_landing1.png";
+import B_landing2 from "../../img/bg/landing/B_landing2.png";
+import B_landing3 from "../../img/bg/landing/B_landing3.svg";
+import B_landing4 from "../../img/bg/landing/B_landing4.svg";
+import B_landing5 from "../../img/bg/landing/B_landing5.png";
+import B_float1 from "../../img/bg/landing/B_float1.png";
+import B_float2 from "../../img/bg/landing/B_float2.png";
+import B_float3 from "../../img/bg/landing/B_float3.png";
+import B_float4 from "../../img/bg/landing/B_float4.png";
+import B_shield from "../../img/bg/landing/B_shield.png";
+import B_tradeText from "../../img/bg/landing/B_tradeText.png";
 import I_ltArwWhite from "../../img/icon/I_ltArwWhite.svg";
 import I_rtArwWhite from "../../img/icon/I_rtArwWhite.svg";
 import { useSelector } from "react-redux";
@@ -25,7 +25,7 @@ import axios from "axios";
 import { API } from "../../configs/api";
 import { getStyle } from "../../util/Util";
 
-export default function Lending() {
+export default function Landing() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const guideRef = useRef();
@@ -35,35 +35,25 @@ export default function Lending() {
   const [assetList, setAssetList] = useState([]);
   const [guideIndex, setGuideIndex] = useState(0);
 
-  async function getAssetList() {
-    let _assetList = [];
-
-    let _coinRes = await axios.get(`${API.GET_ASSETS}`, {
-      params: { group: "coin" },
-    });
-
-    let _forexRes = await axios.get(`${API.GET_ASSETS}`, {
-      params: { group: "forex" },
-    });
-
-    let _stockRes = await axios.get(`${API.GET_ASSETS}`, {
-      params: { group: "stock" },
-    });
-
-    _assetList = [
-      ..._coinRes.data.resp,
-      ..._forexRes.data.resp,
-      ..._stockRes.data.resp,
-    ];
-
-    _assetList = _assetList.slice(0, 15);
-
-    console.log(_assetList);
-    setAssetList(_assetList);
+  function getAssetList() {
+    axios
+      .get(`${API.GET_ASSETS}`, {
+        params: { group: "coin" },
+      })
+      .then(({ data }) => {
+        console.log("@asset list", data.resp);
+        setAssetList(data.resp.slice(0, 15));
+      })
+      .catch(console.error);
   }
 
   useEffect(() => {
-    getAssetList();
+    let assetInterval = setInterval(() => {
+      getAssetList();
+      //    }, 4000);
+    }, 1300);
+
+    return () => clearInterval(assetInterval);
   }, []);
 
   useEffect(() => {
@@ -85,7 +75,7 @@ export default function Lending() {
     return (
       <>
         <DefaultHeader />
-        <MlendingBox assetListLength={assetList.length}>
+        <MlandingBox assetListLength={assetList.length}>
           <section className="placeSec">
             <article className="contArea">
               <div className="textCont">
@@ -107,7 +97,7 @@ export default function Lending() {
               </button>
             </article>
 
-            <img className="bg" src={B_lending1} alt="" />
+            <img className="bg" src={B_landing1} alt="" />
           </section>
 
           <section className="trendingSec">
@@ -119,7 +109,12 @@ export default function Lending() {
 
               <ul className="slideList assetList">
                 {assetList.map((v, i) => (
-                  <li key={i}>
+                  <li
+                    key={i}
+                    onClick={() =>
+                      window.open(`https://binance.com/en/price/${v.name}`)
+                    }
+                  >
                     <span className="assetImgBox">
                       {v.imgurl ? <img src={v.imgurl} alt="" /> : <></>}
                     </span>
@@ -127,42 +122,40 @@ export default function Lending() {
                     <div className="textBox">
                       <strong className="name">{v.name}</strong>
                       <p className="close">
-                        {v.close && Number(v.close).toLocaleString("eu", "US")}
+                        {`${
+                          (v.close &&
+                            Number(v.close).toLocaleString("eu", "US")) ||
+                          0
+                        } USD`}
                       </p>
-
-                      <strong
-                        className={`${v.change > 0 ? "up" : ""} ${
-                          v.change < 0 ? "dn" : ""
-                        } change`}
-                      >
-                        {v.change &&
-                          `${Math.floor(v.change * 10 ** 2) / 10 ** 2}%`}
-                      </strong>
                     </div>
                   </li>
                 ))}
               </ul>
               <ul className="slideList assetList">
                 {assetList.map((v, i) => (
-                  <li key={i}>
+                  <li
+                    key={i}
+                    onClick={() =>
+                      window.open(`https://binance.com/en/price/${v.name}`)
+                    }
+                  >
                     <span className="assetImgBox">
                       {v.imgurl ? <img src={v.imgurl} alt="" /> : <></>}
                     </span>
 
                     <div className="textBox">
                       <strong className="name">{v.name}</strong>
-                      <p className="close">
-                        {v.close && Number(v.close).toLocaleString("eu", "US")}
-                      </p>
 
-                      <strong
+                      <p
                         className={`${v.change > 0 ? "up" : ""} ${
                           v.change < 0 ? "dn" : ""
                         } change`}
                       >
-                        {v.change &&
-                          `${Math.floor(v.change * 10 ** 2) / 10 ** 2}%`}
-                      </strong>
+                        {`${
+                          v.change && Math.floor(v.change * 10 ** 2) / 10 ** 2
+                        }%`}
+                      </p>
                     </div>
                   </li>
                 ))}
@@ -181,7 +174,7 @@ export default function Lending() {
                 </span>
 
                 <div className="imgBox">
-                  <img src={B_lending4} alt="" />
+                  <img src={B_landing4} alt="" />
                 </div>
               </div>
             </article>
@@ -205,41 +198,101 @@ export default function Lending() {
             </ul>
           </section>
 
-          <section className="rollSec">
-            <p>{t("Lightning quick/Mobile friendly/Fast withdrawals")}</p>
-            <p>{t("Lightning quick/Mobile friendly/Fast withdrawals")}</p>
-          </section>
-
-          <section className="futureSec">
-            <img className="bg" src={B_lending5} alt="" />
-
-            <div className="titleBox">
-              <strong className="title">{t("Start trading on BETBIT")}</strong>
-
-              <strong className="explain">
-                {t("Enjoy incredible accessibility to coin futures")}
+          <section className="trustedOption">
+            <article className="titleArea">
+              <strong className="title">
+                {t("Your trusted binary option")}
               </strong>
+              <p className="explain">
+                {t(
+                  "Here at Betbit, we are committed to user protection with strict protocols and industry-leading technical measures."
+                )}
+              </p>
+            </article>
+
+            <div className="contArea">
+              <ul className="contList">
+                <li>
+                  <strong className="key">Customizable interface</strong>
+                  <p className="value">
+                    Customize the platform to make it fit better to your needs —
+                    from chart type to color theme.
+                  </p>
+                </li>
+
+                <li>
+                  <strong className="key">Convenient withdrawals</strong>
+                  <p className="value">
+                    Withdraw your money in an instant using a wide range of
+                    available payment systems.
+                  </p>
+                </li>
+
+                <li>
+                  <strong className="key">Advanced Data Encryption</strong>
+                  <p className="value">
+                    Your transaction data is secured via end-to-end encryption,
+                    ensuring that only you have access to your personal
+                    information.
+                  </p>
+                </li>
+              </ul>
             </div>
 
-            <ul className="futureList">
-              {D_futureList.map((v, i) => (
-                <li key={i}>
-                  <strong className="key">{t(v.title)}</strong>
-                  <p className="value">{t(v.cont)}</p>
-                </li>
-              ))}
-            </ul>
+            <img className="float float_1" src={B_tradeText} alt="" />
+            <img className="float float_2" src={B_tradeText} alt="" />
           </section>
 
-          <LendingFooter />
-        </MlendingBox>
+          <section className="guideSec">
+            <div className="titleBox">
+              <strong className="title">{t("The Beginner's Guide")}</strong>
+
+              <p className="explain">
+                {t("Begin your seamless crypto trading journey here.")}
+              </p>
+            </div>
+
+            <article className="contArea">
+              <button
+                className="preBtn pageBtn"
+                disabled={guideIndex < 1}
+                onClick={() => setGuideIndex(guideIndex - 1)}
+              >
+                <img src={I_ltArwWhite} alt="" />
+              </button>
+
+              <ul className="guideList" ref={guideRef}>
+                {D_guideList.map((v, i) => (
+                  <li key={i}>
+                    <p className="key">{t(v.title)}</p>
+
+                    <span className="imgBox">
+                      <img className="default" src={v.icon} alt="" />
+                      <span className="bg" />
+                    </span>
+                  </li>
+                ))}
+              </ul>
+
+              <button
+                className="nextBtn pageBtn"
+                disabled={guideIndex >= D_guideList.length - 1}
+                onClick={() => setGuideIndex(guideIndex + 1)}
+              >
+                <img src={I_rtArwWhite} alt="" />
+              </button>
+            </article>
+          </section>
+
+          <LandingFooter />
+        </MlandingBox>
       </>
     );
   else
     return (
       <>
         <DefaultHeader />
-        <PlendingBox assetListLength={assetList.length}>
+        <PlandingBox assetListLength={assetList.length}>
           <section className="placeSec">
             <article className="contArea">
               <div className="textCont">
@@ -261,7 +314,7 @@ export default function Lending() {
               </button>
             </article>
 
-            <img className="bg" src={B_lending1} alt="" />
+            <img className="bg" src={B_landing1} alt="" />
           </section>
 
           <section className="trendingSec">
@@ -270,24 +323,25 @@ export default function Lending() {
 
             <ul className="slideList assetList">
               {assetList.map((v, i) => (
-                <li key={i}>
+                <li
+                  key={i}
+                  onClick={() =>
+                    window.open(`https://binance.com/en/price/${v.name}`)
+                  }
+                >
                   <span className="assetImgBox">
                     {v.imgurl ? <img src={v.imgurl} alt="" /> : <></>}
                   </span>
 
                   <div className="textBox">
                     <strong className="name">{v.name}</strong>
-                    <strong className="close">
-                      {v.close && Number(v.close).toLocaleString("eu", "US")}
-                    </strong>
 
-                    <p
-                      className={`${v.change > 0 ? "up" : ""} ${
-                        v.change < 0 ? "dn" : ""
-                      } change`}
-                    >
-                      {v.change &&
-                        `${Math.floor(v.change * 10 ** 2) / 10 ** 2}%`}
+                    <p className="close">
+                      {`${
+                        (v.close &&
+                          Number(v.close).toLocaleString("eu", "US")) ||
+                        0
+                      } USD`}
                     </p>
                   </div>
                 </li>
@@ -296,24 +350,29 @@ export default function Lending() {
 
             <ul className="slideList assetList">
               {assetList.map((v, i) => (
-                <li key={i}>
+                <li
+                  key={i}
+                  onClick={() =>
+                    window.open(`https://binance.com/en/price/${v.name}`)
+                  }
+                >
                   <span className="assetImgBox">
                     {v.imgurl ? <img src={v.imgurl} alt="" /> : <></>}
                   </span>
 
                   <div className="textBox">
                     <strong className="name">{v.name}</strong>
-                    <strong className="close">
-                      {v.close && Number(v.close).toLocaleString("eu", "US")}
-                    </strong>
 
                     <p
                       className={`${v.change > 0 ? "up" : ""} ${
                         v.change < 0 ? "dn" : ""
                       } change`}
                     >
-                      {v.change &&
-                        `${Math.floor(v.change * 10 ** 2) / 10 ** 2}%`}
+                      {`${
+                        +v.change
+                          ? Math.floor(v.change * 10 ** 2) / 10 ** 2
+                          : "0 "
+                      }%`}
                     </p>
                   </div>
                 </li>
@@ -332,7 +391,7 @@ export default function Lending() {
                 </span>
 
                 <div className="imgBox">
-                  <img src={B_lending2} alt="" />
+                  <img src={B_landing2} alt="" />
                 </div>
               </div>
             </article>
@@ -426,7 +485,6 @@ export default function Lending() {
 
                     <span className="imgBox">
                       <img className="default" src={v.icon} alt="" />
-                      {/* <img className="hover" src={v.iconHover} alt="" /> */}
                       <span className="bg" />
                     </span>
                   </li>
@@ -435,26 +493,15 @@ export default function Lending() {
 
               <button
                 className="nextBtn pageBtn"
-                disabled={guideIndex >= Math.floor(D_guideList.length / 3)}
+                disabled={guideIndex >= Math.floor(D_guideList.length / 3) - 1}
                 onClick={() => setGuideIndex(guideIndex + 1)}
               >
                 <img src={I_rtArwWhite} alt="" />
               </button>
             </article>
           </section>
-
-          <section className="startSec">
-            <strong className="explain">
-              {t("Ready to get free access to the world of investing?")}
-            </strong>
-
-            <button className="startBtn" onClick={() => navigate("/bet/live")}>
-              {t("Start now")}
-            </button>
-          </section>
-
-          <LendingFooter />
-        </PlendingBox>
+          <LandingFooter />
+        </PlandingBox>
       </>
     );
 }
@@ -488,14 +535,14 @@ const pFloat = keyframes`
 
 const mFloat = keyframes`
   0%{
-    transform: translate(0) scale(0.54)
+    transform: translate(0)
   }
   100%{
-    transform: translate(-4px, -10px) scale(0.54)
+    transform: translate(-4px, -10px)
   }
 `;
 
-const MlendingBox = styled.main`
+const MlandingBox = styled.main`
   width: 100%;
   height: 100vh;
   padding: 56px 0 0;
@@ -627,17 +674,19 @@ const MlendingBox = styled.main`
 
         li {
           display: flex;
-          flex-direction: column;
           justify-content: center;
           align-items: center;
-          gap: 12px;
-          min-width: 280px;
-          width: 280px;
-          height: 164px;
-          scroll-snap-align: center;
-          color: #000;
-          background: #fafafc;
-          border-radius: 12px;
+          gap: 14px;
+          min-width: 252px;
+          width: 252px;
+          height: 88px;
+          background: rgba(0, 0, 0, 0.1);
+          box-shadow: 0px 4px 20px rgba(255, 255, 255, 0.04);
+          border-radius: 10px;
+
+          &:hover {
+            background: rgba(255, 255, 255, 0.1);
+          }
 
           .assetImgBox {
             display: flex;
@@ -657,18 +706,19 @@ const MlendingBox = styled.main`
           .textBox {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            gap: 4px;
+            gap: 2px;
 
             .name {
+              font-size: 16px;
             }
 
             .close {
-              font-size: 12px;
-              opacity: 0.4;
+              font-size: 14px;
             }
 
             .change {
+              font-size: 14px;
+
               &.up {
                 color: #3fb68b;
               }
@@ -724,21 +774,25 @@ const MlendingBox = styled.main`
               cubic-bezier(0.6, 0.03, 0.6, 0.91);
 
             &:nth-of-type(1) {
+              width: 32px;
               top: 210px;
               left: -70px;
             }
 
             &:nth-of-type(2) {
+              width: 50px;
               top: -48px;
               left: 14px;
             }
 
             &:nth-of-type(3) {
+              width: 32px;
               top: 4px;
               right: -44px;
             }
 
             &:nth-of-type(4) {
+              width: 36px;
               top: 124px;
               right: -60px;
             }
@@ -912,88 +966,199 @@ const MlendingBox = styled.main`
     }
   }
 
-  .rollSec {
+  .trustedOption {
     display: flex;
-    padding: 140px 0 0 0;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    padding: 190px 0 0;
+    position: relative;
 
-    p {
-      padding: 0 0 0 40px;
-      font-size: 80px;
-      font-family: "Open Sans Hebrew";
-      white-space: nowrap;
+    .titleArea {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      text-align: center;
 
-      &:nth-of-type(1) {
-        animation: ${tranlate} 20s -10s infinite linear;
+      .title {
+        width: 206px;
+        font-size: 30px;
       }
 
-      &:nth-of-type(2) {
-        animation: ${tranlate2} 20s infinite linear;
+      .explain {
+        width: 274px;
+        font-size: 14px;
+        line-height: 22px;
+        opacity: 0.7;
+      }
+    }
+
+    .contArea {
+      .contList {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        padding: 0 40px;
+
+        li {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 18px;
+          width: 280px;
+          height: 144px;
+          padding: 20px;
+          font-size: 14px;
+          text-align: center;
+          background: rgba(255, 255, 255, 0.1);
+          box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.25);
+          backdrop-filter: blur(4px);
+          -webkit-backdrop-filter: blur(4px);
+          border-radius: 20px;
+
+          .key {
+          }
+
+          .value {
+            opacity: 0.6;
+          }
+        }
+      }
+    }
+
+    .float {
+      height: 190px;
+      position: absolute;
+
+      &_1 {
+        top: 8%;
+        left: 32%;
+      }
+
+      &_2 {
+        top: 23%;
+        right: -28%;
       }
     }
   }
 
-  .futureSec {
+  .guideSec {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 28px 20px 0;
-
-    .bg {
-      align-self: flex-end;
-    }
+    gap: 40px;
+    padding: 140px 0 0;
 
     .titleBox {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 10px;
-      margin: 12px 0 0 0;
+      gap: 14px;
       text-align: center;
 
       .title {
-        font-size: 22px;
+        width: 258px;
+        font-size: 24px;
       }
 
       .explain {
+        width: 246px;
         font-size: 14px;
         color: rgba(255, 255, 255, 0.6);
       }
     }
 
-    .futureList {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin: 60px 0 0 0;
+    .contArea {
+      width: 280px;
+      position: relative;
 
-      li {
+      .guideList {
         display: flex;
-        flex-direction: column;
-        gap: 10px;
-        padding: 16px 20px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 10px;
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
+        gap: 18px;
+        overflow-x: scroll;
 
-        .key {
-          font-size: 18px;
+        li {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 30px;
+          min-width: 280px;
+          width: 280px;
+          height: 400px;
+          padding: 40px 32px;
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 14px;
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+
+          .key {
+            height: 44px;
+            font-size: 18px;
+            font-weight: 500;
+            text-align: center;
+          }
+
+          .imgBox {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 230px;
+            height: 230px;
+            border-radius: 50%;
+            position: relative;
+
+            img {
+              width: 96px;
+            }
+
+            .bg {
+              width: 100%;
+              height: 100%;
+              background: rgba(255, 255, 255, 0.2);
+              border-radius: 50%;
+              position: absolute;
+              filter: blur(20px);
+            }
+          }
+        }
+      }
+
+      .pageBtn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 40px;
+        height: 40px;
+        border: 2px solid #fff;
+        border-radius: 50%;
+        top: 50%;
+        position: absolute;
+        z-index: 1;
+        transform: translate(-50%, -50%);
+
+        &:disabled {
+          display: none;
         }
 
-        .value {
-          font-size: 14px;
-          color: rgba(255, 255, 255, 0.6);
+        &.nextBtn {
+          right: -40px;
+        }
+
+        img {
+          width: 12px;
         }
       }
     }
   }
 `;
 
-const PlendingBox = styled.main`
+const PlandingBox = styled.main`
   height: 100vh;
   padding: 60px 0 0;
   color: #fff;
   background: #212121;
+  overflow: hidden;
   overflow-y: scroll;
 
   .placeSec {
@@ -1058,8 +1223,8 @@ const PlendingBox = styled.main`
     }
 
     .bg {
-      width: 740px;
-      right: -18%;
+      width: 535px;
+      right: -10%;
       top: 50%;
       position: absolute;
       transform: translate(0, -50%);
@@ -1105,16 +1270,16 @@ const PlendingBox = styled.main`
 
       li {
         display: flex;
-        flex-direction: column;
         justify-content: center;
         align-items: center;
-        gap: 12px;
-        min-width: 280px;
-        width: 280px;
-        height: 104px;
+        gap: 14px;
+        min-width: 252px;
+        width: 252px;
+        height: 88px;
         background: rgba(0, 0, 0, 0.1);
         box-shadow: 0px 4px 20px rgba(255, 255, 255, 0.04);
-        border-radius: 12px;
+        border-radius: 10px;
+        cursor: pointer;
 
         &:hover {
           background: rgba(255, 255, 255, 0.1);
@@ -1137,16 +1302,20 @@ const PlendingBox = styled.main`
 
         .textBox {
           display: flex;
-          align-items: center;
-          gap: 10px;
+          flex-direction: column;
+          gap: 2px;
 
           .name {
+            font-size: 16px;
           }
 
           .close {
+            font-size: 14px;
           }
 
           .change {
+            font-size: 14px;
+
             &.up {
               color: #3fb68b;
             }
@@ -1211,21 +1380,25 @@ const PlendingBox = styled.main`
               cubic-bezier(0.6, 0.03, 0.6, 0.91);
 
             &:nth-of-type(1) {
+              width: 60px;
               top: 474px;
               left: -152px;
             }
 
             &:nth-of-type(2) {
+              width: 84px;
               top: -66px;
               left: 232px;
             }
 
             &:nth-of-type(3) {
+              width: 44px;
               top: 54px;
               right: -86px;
             }
 
             &:nth-of-type(4) {
+              width: 50px;
               top: 256px;
               right: -188px;
             }
@@ -1248,16 +1421,17 @@ const PlendingBox = styled.main`
     .featureList {
       display: flex;
       justify-content: center;
-      gap: 30px;
+      gap: 40px;
       padding: 60px 0 0 0;
 
       li {
         display: flex;
-        justify-content: center;
+        flex-direction: column;
         align-items: center;
-        width: 460px;
-        height: 264px;
-        padding: 0 80px;
+        gap: 20px;
+        width: 350px;
+        height: 200px;
+        padding: 66px 44px 0;
         background: rgba(255, 255, 255, 0.04);
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 20px;
@@ -1352,24 +1526,24 @@ const PlendingBox = styled.main`
           justify-content: center;
           width: 100%;
           height: 100%;
+          top: 0;
           position: absolute;
           overflow: hidden;
 
           .shadow {
-            width: 270px;
-            height: 120px;
-
-            top: -120px;
+            width: 130px;
+            height: 60px;
+            top: -60px;
             position: absolute;
           }
         }
 
         .iconBox {
-          width: 96px;
-          height: 96px;
+          width: 80px;
+          height: 80px;
           border: 3px solid rgba(255, 255, 255, 0.3);
           border-radius: 24px;
-          top: -60px;
+          top: -40px;
           position: absolute;
 
           .borderBox {
@@ -1383,11 +1557,15 @@ const PlendingBox = styled.main`
             top: -3px;
             left: -3px;
             position: absolute;
+
+            img {
+              height: 44px;
+            }
           }
         }
 
         p {
-          font-size: 22px;
+          font-size: 16px;
           color: rgba(255, 255, 255, 0.7);
           text-align: center;
         }
@@ -1518,7 +1696,7 @@ const PlendingBox = styled.main`
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: 52px;
+          gap: 30px;
           min-width: 350px;
           width: 350px;
           height: 440px;
@@ -1529,6 +1707,7 @@ const PlendingBox = styled.main`
           -webkit-backdrop-filter: blur(20px);
 
           .key {
+            height: 44px;
             font-size: 18px;
             text-align: center;
           }
@@ -1576,33 +1755,6 @@ const PlendingBox = styled.main`
           width: 12px;
         }
       }
-    }
-  }
-
-  .startSec {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 30px;
-    height: 324px;
-    padding: 90px 0 0;
-    margin: 200px 0 0;
-    color: #000;
-    background: #fff;
-
-    .explain {
-      font-size: 40px;
-    }
-
-    .startBtn {
-      width: 200px;
-      height: 50px;
-      font-size: 20px;
-      font-weight: 700;
-      color: #fff;
-      background: #000;
-      box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.25);
-      border-radius: 14px;
     }
   }
 `;

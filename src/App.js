@@ -6,7 +6,7 @@ import GlobalStyle from "./components/common/globalStyle";
 import Auth from "./routers/auth/Auth";
 import Bet from "./routers/bet/Bet";
 import Finance from "./routers/finance/Finance";
-import Lending from "./routers/lending/Lending";
+import Landing from "./routers/landing/Landing";
 import Market from "./routers/market/Market";
 import Position from "./routers/position/Position";
 import Qna from "./routers/qna/Qna";
@@ -50,7 +50,7 @@ export default function App() {
         <EventListener />
 
         <Routes>
-          <Route path="/" element={<Lending />} />
+          <Route path="/" element={<Landing />} />
           <Route path="/auth/*" element={<Auth />} />
           <Route path="/market/*" element={<Market />} />
           <Route path="/bet/*" element={<Bet />} />

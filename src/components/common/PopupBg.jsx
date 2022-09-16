@@ -1,9 +1,6 @@
-import { useDispatch } from "react-redux";
 import styled from "styled-components";
 
 export default function PopupBg({ bg, blur, off, index }) {
-  const dispatch = useDispatch();
-
   function onClickBg() {
     if (off) off();
   }

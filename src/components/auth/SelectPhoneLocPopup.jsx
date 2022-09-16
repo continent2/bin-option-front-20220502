@@ -1,26 +1,19 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
-import { API } from "../../configs/api";
+import CountryList from "country-list-with-dial-code-and-flag";
 
 export default function SelectPhoneLocPopup({ off, setCont }) {
   const isMobile = useSelector((state) => state.common.isMobile);
 
-  const [list, setList] = useState([]);
+  const [list, setList] = useState(CountryList || []);
 
   useEffect(() => {
-    axios
-      .get(`${API.PHONE_COUNTRY_CODE}`)
-      .then(({ data }) => {
-        console.log(data);
-        setList(data.respdata);
-      })
-      .catch((err) => console.error(err));
+    console.log(CountryList);
   }, []);
 
   function onClickCont(v) {
-    if (setCont) setCont(v.dialcode);
+    if (setCont) setCont(v.dial_code);
     if (off) off();
   }
 
@@ -30,11 +23,12 @@ export default function SelectPhoneLocPopup({ off, setCont }) {
         <ul className="contList">
           {list
             .sort((a, b) => {
-              return a.dialcode - b.dialcode;
+              return a.dial_code - b.dial_code;
             })
             .map((v, i) => (
               <li key={i} onClick={() => onClickCont(v)}>
-                <p>{v.dialcode}</p>
+                <p>{v.name}</p>
+                <p>{v.dial_code}</p>
               </li>
             ))}
         </ul>
@@ -46,11 +40,12 @@ export default function SelectPhoneLocPopup({ off, setCont }) {
         <ul className="contList">
           {list
             .sort((a, b) => {
-              return a.dialcode - b.dialcode;
+              return a.dial_code - b.dial_code;
             })
             .map((v, i) => (
               <li key={i} onClick={() => onClickCont(v)}>
-                <p>{v.dialcode}</p>
+                <p>{v.name}</p>
+                <p>{v.dial_code}</p>
               </li>
             ))}
         </ul>
@@ -86,6 +81,7 @@ const MselectPhoneLocPopup = styled.section`
 
     li {
       display: flex;
+      justify-content: space-between;
       align-items: center;
       height: 34px;
       padding: 0 20px;
@@ -94,10 +90,6 @@ const MselectPhoneLocPopup = styled.section`
 
       &:hover {
         color: #f7ab1f;
-      }
-
-      p {
-        width: 100%;
       }
     }
   }
@@ -132,6 +124,7 @@ const PselectPhoneLocPopup = styled.section`
 
     li {
       display: flex;
+      justify-content: space-between;
       align-items: center;
       height: 34px;
       padding: 0 20px;
@@ -140,10 +133,6 @@ const PselectPhoneLocPopup = styled.section`
 
       &:hover {
         color: #f7ab1f;
-      }
-
-      p {
-        width: 100%;
       }
     }
   }

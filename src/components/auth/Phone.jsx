@@ -186,7 +186,7 @@ const MphoneBox = styled.ul`
   flex-direction: column;
   gap: 20px;
 
-  li {
+  & > li {
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -285,7 +285,7 @@ const PphoneBox = styled.ul`
   flex-direction: column;
   gap: 24px;
 
-  li {
+  & > li {
     display: flex;
     flex-direction: column;
     gap: 8px;

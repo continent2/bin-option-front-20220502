@@ -174,6 +174,11 @@ export default function LineChart({ assetInfo, chartOpt, socket }) {
     if (!root) return;
 
     getPreData();
+    let _preInterval = setInterval(() => {
+      getPreData();
+    }, chartOpt.barSize);
+
+    return () => clearInterval(_preInterval);
   }, [root, chartOpt]);
 
   useEffect(() => {
@@ -181,6 +186,8 @@ export default function LineChart({ assetInfo, chartOpt, socket }) {
       if (!res) return;
       setCurrentPrice(Number(res));
     });
+
+    return () => socket.off("get_ticker_price");
   }, []);
 
   useEffect(() => {

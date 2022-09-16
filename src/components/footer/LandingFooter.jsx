@@ -4,7 +4,7 @@ import L_yellow from "../../img/logo/L_yellow.svg";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 
-export default function LendingFooter() {
+export default function LandingFooter() {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -12,36 +12,43 @@ export default function LendingFooter() {
 
   if (isMobile)
     return (
-      <MlendingFooterBox>
+      <MlandingFooterBox>
         <section className="innerBox">
-          <article className="topArea">
-            <ul className="termList">
-              <li>
-                <button className="privacy" onClick={() => {}}>
+          <article className="contArea">
+            <div className="termBox contBox">
+              <p className="key">{t("Privacy and Regulation")}</p>
+
+              <nav>
+                <button className="" onClick={() => {}}>
                   {t("Privacy Policy")}
                 </button>
-              </li>
-              <span className="dot" />
-
-              <li>
-                <button className="terms" onClick={() => {}}>
-                  {t("Terms of Service")}
+                <button className="" onClick={() => {}}>
+                  {t("Terms of Use")}
                 </button>
-              </li>
-            </ul>
+              </nav>
+            </div>
+
+            <div className="supportBox contBox">
+              <p className="key">{t("Support")}</p>
+
+              <nav>
+                <p>Support@betbit.com</p>
+                <p>help@betbit.com</p>
+              </nav>
+            </div>
           </article>
 
-          <article className="btArea">
+          <article className="cpRightArea">
             <p className="copyright">
               {t("© Betbit, 2022. All rights reserved.")}
             </p>
           </article>
         </section>
-      </MlendingFooterBox>
+      </MlandingFooterBox>
     );
   else
     return (
-      <PlendingFooterBox>
+      <PlandingFooterBox>
         <section className="innerBox">
           <article className="leftArea">
             <div className="logoBox">
@@ -51,22 +58,24 @@ export default function LendingFooter() {
                 {t("© Betbit, 2022. All rights reserved.")}
               </p>
             </div>
+          </article>
 
-            <div className="termBox">
-              <p className="key">Privacy and Regulation</p>
+          <article className="rightArea">
+            <div className="termBox contBox">
+              <p className="key">{t("Privacy and Regulation")}</p>
 
               <nav>
                 <button className="" onClick={() => {}}>
-                  Privacy Policy
+                  {t("Privacy Policy")}
                 </button>
                 <button className="" onClick={() => {}}>
-                  Terms of Use
+                  {t("Terms of Use")}
                 </button>
               </nav>
             </div>
 
-            <div className="supportBox">
-              <p className="key">Support</p>
+            <div className="supportBox contBox">
+              <p className="key">{t("Support")}</p>
 
               <nav>
                 <p>Support@betbit.com</p>
@@ -75,73 +84,68 @@ export default function LendingFooter() {
             </div>
           </article>
         </section>
-      </PlendingFooterBox>
+      </PlandingFooterBox>
     );
 }
 
-const MlendingFooterBox = styled.footer`
-  padding: 0 20px 20px;
-  margin: 312px 0 0 0;
+const MlandingFooterBox = styled.footer`
+  padding: 60px 20px 42px;
+  margin: 120px 0 0 0;
 
   .innerBox {
     display: flex;
     flex-direction: column;
-    font-size: 14px;
+    gap: 20px;
 
-    .topArea {
-      padding: 0 0 20px 0;
+    .contArea {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
 
-      .termList {
+      .contBox {
         display: flex;
         flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
+        gap: 14px;
+        font-size: 12px;
+
+        .key {
+          font-size: 14px;
+          font-weight: 500;
+        }
+
+        nav {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 6px;
+          color: rgba(255, 255, 255, 0.4);
+        }
       }
     }
 
-    .btArea {
-      padding: 20px 0 0 0;
-      border-top: 1px solid rgba(255, 255, 255, 0.2);
-
+    .cpRightArea {
       .copyright {
-        font-size: 12px;
-        color: rgba(255, 255, 255, 0.6);
-      }
-
-      .navList {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-
-        button {
-          img {
-            height: 12px;
-          }
-        }
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.4);
       }
     }
   }
 `;
 
-const PlendingFooterBox = styled.footer`
+const PlandingFooterBox = styled.footer`
   display: flex;
   justify-content: center;
-
-  height: 300px;
+  height: 200px;
+  margin: 240px 0 0;
 
   .innerBox {
     display: flex;
     justify-content: space-between;
-
     width: 100%;
-    max-width: 1440px;
-    padding: 102px 0 0 0;
+    max-width: 1260px;
     font-size: 14px;
 
     .leftArea {
-      display: flex;
-      gap: 60px;
-
       .logoBox {
         display: flex;
         flex-direction: column;
@@ -157,9 +161,13 @@ const PlendingFooterBox = styled.footer`
           opacity: 0.4;
         }
       }
+    }
 
-      .termBox,
-      .supportBox {
+    .rightArea {
+      display: flex;
+      gap: 60px;
+
+      .contBox {
         display: flex;
         flex-direction: column;
         gap: 14px;

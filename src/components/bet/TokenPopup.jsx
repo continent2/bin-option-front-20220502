@@ -15,9 +15,9 @@ export default function TokenPopup({ off, setAssetInfo, getBookMark }) {
   const dispatch = useDispatch();
   const isMobile = useSelector((state) => state.common.isMobile);
   const dividObj = useSelector((state) => state.bet.dividObj);
-  const token = localStorage.getItem("token");
 
-  const [category, setCategory] = useState(D_tokenCategoryList[0].value);
+  const [categoryList, setCategoryList] = useState([]);
+  const [category, setCategory] = useState("");
   const [searchMode, setSearchMode] = useState(false);
   const [search, setSearch] = useState("");
   const [listData, setListData] = useState([]);
@@ -57,12 +57,29 @@ export default function TokenPopup({ off, setAssetInfo, getBookMark }) {
     axios
       .get(`${API.GET_ASSETS}`, { params: { group: category } })
       .then(({ data }) => {
-        console.log(data.resp);
+        console.log("assets", data.resp);
         setListData(data.resp || []);
         dispatch(setTokenPopupData(data.resp));
       })
       .catch((err) => console.error(err));
   }
+
+  function getAssetGroup() {
+    axios
+      .get(`${API.GET_ASSETS_GROUP}`)
+      .then(({ data }) => {
+        console.log("group", data.listgroups);
+        setCategory(data.listgroups[0].groupstr);
+        setCategoryList(data.listgroups);
+      })
+      .catch(console.error);
+  }
+
+  console.log("category", category);
+
+  useEffect(() => {
+    getAssetGroup();
+  }, []);
 
   useEffect(() => {
     getAssetList();
@@ -90,10 +107,10 @@ export default function TokenPopup({ off, setAssetInfo, getBookMark }) {
           ) : (
             <>
               <ul className="categoryList">
-                {D_tokenCategoryList.map((v, i) => (
+                {categoryList.map((v, i) => (
                   <li
                     key={i}
-                    className={`${category === v.value && "on"}`}
+                    className={`${category === v.groupstr && "on"}`}
                     onClick={() => {
                       setCategory(v.value);
                       setSearch("");
@@ -171,16 +188,16 @@ export default function TokenPopup({ off, setAssetInfo, getBookMark }) {
       <PtokenPopupBox>
         <article className="topArea">
           <ul className="categoryList">
-            {D_tokenCategoryList.map((v, i) => (
+            {categoryList.map((v, i) => (
               <li
                 key={i}
-                className={`${category === v.value && "on"}`}
+                className={`${category === v.groupstr && "on"}`}
                 onClick={() => {
-                  setCategory(v.value);
+                  setCategory(v.groupstr);
                   setSearch("");
                 }}
               >
-                {v.key}
+                {v.name}
               </li>
             ))}
           </ul>

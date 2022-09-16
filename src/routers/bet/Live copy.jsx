@@ -187,7 +187,7 @@ export default function Live({ socket, notiOpt }) {
     _dividList = new Set(_dividList);
 
     socket.emit(
-      "dividendrate",
+      "dividendrate_0913",
       [..._dividList],
       (res) => {
         console.log(_dividList);

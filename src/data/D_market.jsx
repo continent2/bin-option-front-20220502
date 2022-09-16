@@ -113,6 +113,7 @@ export const D_unBranchTokenList = [
 ];
 
 export const D_branchTokenList = [
+  { icon: T_usdt, type: "USDT_BINOPT", text: "USDT" },
   { icon: T_cny, type: "CNY", text: "CNY", unit: "¥" },
   { icon: T_usd, type: "USD", text: "USD", unit: "$" },
   { icon: T_krw, type: "KRW", text: "KRW", unit: "₩" },

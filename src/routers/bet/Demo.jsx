@@ -84,6 +84,10 @@ export default function Demo({ socket, notiOpt }) {
   }
 
   function getBookMark() {
+    if (localStorage.getItem("token")) {
+    } else {
+      return;
+    }
     axios
       .get(API.BOOKMARKS_MY)
       .then(({ data }) => {
@@ -120,7 +124,10 @@ export default function Demo({ socket, notiOpt }) {
       case "percent":
         if (amount > 100 || amount <= 0) throw "Not Possible Percent";
 
-        return (balance.data.respdata.DEMO.avail * amount) / 100;
+        return (
+          Math.floor((balance.data.respdata.DEMO.avail * amount) / 10 ** 6) *
+          10 ** 4
+        );
 
       default:
         break;
@@ -160,6 +167,11 @@ export default function Demo({ socket, notiOpt }) {
     hoverRef2.current.style.top = `${e.clientY}px`;
   }
 
+  function onChangeAmount(value) {
+    const pattern = /^\d*[.]\d{2}$/;
+    if (!pattern.test(value)) setAmount(value);
+  }
+
   function onClickAmountModeBtn() {
     switch (amountMode) {
       case "int":
@@ -186,7 +198,7 @@ export default function Demo({ socket, notiOpt }) {
     _dividList = new Set(_dividList);
 
     socket.emit(
-      "dividendrate",
+      "dividendrate_0913",
       { assetList: [..._dividList], min: duration },
       () => {},
       (err) => console.error("timeout", err)
@@ -323,6 +335,7 @@ export default function Demo({ socket, notiOpt }) {
                         chartOpt={chartOpt}
                         openedData={openedData}
                         socket={socket}
+                        page={"demo"}
                       />
                     </div>
                   </div>
@@ -367,7 +380,7 @@ export default function Demo({ socket, notiOpt }) {
                           <input
                             value={amount}
                             type={"number"}
-                            onChange={(e) => setAmount(e.target.value)}
+                            onChange={(e) => onChangeAmount(e.target.value)}
                             placeholder="0"
                           />
 
@@ -390,7 +403,7 @@ export default function Demo({ socket, notiOpt }) {
                       <span className="btnBox high">
                         <button
                           className="highBtn"
-                          disabled={!amount}
+                          disabled={amount <= 0}
                           onClick={() => onClickPayBtn("HIGH")}
                         >
                           <img src={I_highArwGreen} alt="" />
@@ -413,7 +426,7 @@ export default function Demo({ socket, notiOpt }) {
                       <span className="btnBox low">
                         <button
                           className="lowBtn"
-                          disabled={!amount}
+                          disabled={amount <= 0}
                           onClick={() => onClickPayBtn("LOW")}
                         >
                           <img src={I_lowArwRed} alt="" />
@@ -441,7 +454,7 @@ export default function Demo({ socket, notiOpt }) {
             {detMode && (
               <DetBox
                 mode={detMode}
-                page={"live"}
+                page={"demo"}
                 socket={socket}
                 off={setDetMode}
               />
@@ -587,6 +600,7 @@ export default function Demo({ socket, notiOpt }) {
                       chartOpt={chartOpt}
                       openedData={openedData}
                       socket={socket}
+                      page={"demo"}
                     />
                   </div>
 
@@ -658,7 +672,7 @@ export default function Demo({ socket, notiOpt }) {
                         <input
                           value={amount}
                           type={"number"}
-                          onChange={(e) => setAmount(e.target.value)}
+                          onChange={(e) => onChangeAmount(e.target.value)}
                           placeholder="0"
                         />
 
@@ -679,7 +693,7 @@ export default function Demo({ socket, notiOpt }) {
                     <span className="btnBox" onMouseMove={onMouseOverBtn}>
                       <button
                         className="highBtn"
-                        disabled={!amount}
+                        disabled={amount <= 0}
                         onClick={() => onClickPayBtn("HIGH")}
                       >
                         <span className="defaultBox">
@@ -719,7 +733,7 @@ export default function Demo({ socket, notiOpt }) {
                     <span className="btnBox" onMouseMove={onMouseOverBtn}>
                       <button
                         className="lowBtn"
-                        disabled={!amount}
+                        disabled={amount <= 0}
                         onClick={() => onClickPayBtn("LOW")}
                       >
                         <span className="defaultBox">
@@ -773,7 +787,7 @@ export default function Demo({ socket, notiOpt }) {
 
                   <DetBox
                     mode={detMode}
-                    page={"live"}
+                    page={"demo"}
                     socket={socket}
                     off={setDetMode}
                   />

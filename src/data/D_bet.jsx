@@ -1555,11 +1555,6 @@ export const D_timeList = [
   { key: "10s", value: 10000 },
   { key: "30s", value: 30000 },
   { key: "1m", value: 60000 },
-  { key: "5m", value: 300000 },
-  { key: "30m", value: 1800000 },
-  { key: "1h", value: 3600000 },
-  { key: "4h", value: 14400000 },
-  { key: "1d", value: 86400000 },
 ];
 
 export const D_tokenCategoryList = [

@@ -3,7 +3,7 @@ import CandleChart from "./CandleChart";
 import HeikanAshiChart from "./HeikanAshiChart";
 import LineChart from "./LineChart";
 
-export default function AmChart({ assetInfo, chartOpt, socket }) {
+export default function AmChart({ assetInfo, chartOpt, socket, page }) {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
@@ -11,7 +11,7 @@ export default function AmChart({ assetInfo, chartOpt, socket }) {
 
     setBusy(true);
     setTimeout(() => setBusy(false), 1);
-  }, [assetInfo,chartOpt]);
+  }, [assetInfo, chartOpt]);
 
   if (busy) return <></>;
   else
@@ -31,6 +31,7 @@ export default function AmChart({ assetInfo, chartOpt, socket }) {
             assetInfo={assetInfo}
             chartOpt={chartOpt}
             socket={socket}
+            page={page}
           />
         ) : (
           <></>
@@ -40,6 +41,7 @@ export default function AmChart({ assetInfo, chartOpt, socket }) {
             assetInfo={assetInfo}
             chartOpt={chartOpt}
             socket={socket}
+            page={page}
           />
         ) : (
           <></>

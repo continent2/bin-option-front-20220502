@@ -1,7 +1,8 @@
 //export const URL = "http://options1.net:30708";
 // export const URL = "http://litriggy.com:30708";
 // export const URL = "https://options1.net:30718";
-export const URL = "https://options1.net:30718";
+// export const URL = "https://options1.net:30718";
+export const URL = "https://binary2.org:34861";
 
 export const API = {
   SIGNUP: URL + "/users/signup", //type
@@ -32,6 +33,7 @@ export const API = {
   GET_TICKERS: URL + "/tickers",
 
   GET_ASSETS: URL + "/assets/list",
+  GET_ASSETS_GROUP: URL + "/assets/groups",
   GET_ASSETS_TICKER_PRICE: URL + "/assets/ticker/price", //:symbol
 
   PHONE_COUNTRY_CODE: URL + "/queries/v1/rows/country_code", //:offset/:limit

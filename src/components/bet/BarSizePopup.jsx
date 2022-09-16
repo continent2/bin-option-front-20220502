@@ -57,7 +57,7 @@ const MbarSizePopupBox = styled.section`
   display: flex;
   flex-direction: column;
   gap: 14px;
-  width: 202px;
+  width: 146px;
   padding: 20px;
   color: rgba(255, 255, 255, 0.4);
   background: #22262e;
@@ -103,7 +103,7 @@ const PbarSizePopupBox = styled.section`
   display: flex;
   flex-direction: column;
   gap: 14px;
-  width: 202px;
+  width: 146px;
   padding: 20px;
   color: rgba(255, 255, 255, 0.4);
   background: #22262e;
