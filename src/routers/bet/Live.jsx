@@ -36,6 +36,7 @@ import { useNavigate } from "react-router-dom";
 import BarSizePopup from "../../components/bet/BarSizePopup";
 import ChartTypePopup from "../../components/bet/ChartTypePopup";
 import AmChart from "../../components/bet/chart/AmChart";
+import ChartOptPopup from "../../components/bet/ChartOptPopup";
 
 export default function Live({ socket, notiOpt }) {
   const hoverRef1 = useRef();
@@ -69,6 +70,7 @@ export default function Live({ socket, notiOpt }) {
     barSize: D_timeList[0].value,
     barSizeStr: D_timeList[0].key,
   });
+  const [chartOptPopup, setChartOptPopup] = useState(false);
   const [barSizePopup, setBarSizePopup] = useState(false);
   const [chartTypePopup, setChartTypePopup] = useState(false);
 
@@ -282,66 +284,44 @@ export default function Live({ socket, notiOpt }) {
                       <ul className="btnList">
                         <li>
                           <button
-                            className="utilBtn"
-                            onClick={() => setBarSizePopup(true)}
+                            className="tokenBtn"
+                            onClick={() => setTokenPopup(true)}
                           >
-                            <p>{chartOpt.barSizeStr}</p>
+                            <p>{assetInfo.name}</p>
+                            <img src={I_dnPolWhite} alt="" />
                           </button>
-
-                          <p className="info">{`Time frames : ${chartOpt.barSizeStr}`}</p>
                         </li>
 
-                        {barSizePopup && (
+                        {tokenPopup && (
                           <>
-                            <BarSizePopup
-                              off={setBarSizePopup}
-                              chartOpt={chartOpt}
-                              setChartOpt={setChartOpt}
+                            <TokenPopup
+                              off={setTokenPopup}
+                              setAssetInfo={setAssetInfo}
+                              getBookMark={getBookMark}
                             />
-                            <PopupBg off={setBarSizePopup} />
+                            <PopupBg off={setTokenPopup} />
                           </>
                         )}
 
                         <li>
                           <button
-                            className="utilBtn"
-                            onClick={() => setChartTypePopup(true)}
+                            className="chartBtn"
+                            onClick={() => setChartOptPopup(true)}
                           >
                             <img src={I_candleChartWhite} alt="" />
                           </button>
-
-                          <p className="info">{`Chart type : ${chartOpt.typeStr}`}</p>
                         </li>
 
-                        {chartTypePopup && (
+                        {chartOptPopup && (
                           <>
-                            <ChartTypePopup
-                              off={setChartTypePopup}
+                            <ChartOptPopup
+                              off={setChartOptPopup}
                               chartOpt={chartOpt}
                               setChartOpt={setChartOpt}
                             />
-                            <PopupBg off={setChartTypePopup} />
+                            <PopupBg off={setChartOptPopup} />
                           </>
                         )}
-
-                        <li>
-                          <span
-                            className={`${
-                              currentPrice - pastPrice > 0 ? "up" : ""
-                            } ${
-                              currentPrice - pastPrice < 0 ? "dn" : ""
-                            } priceBox`}
-                          >
-                            <strong className="price">{currentPrice}</strong>
-                            <strong className="percent">
-                              {Math.floor(
-                                ((currentPrice - pastPrice) * 100000) /
-                                  pastPrice
-                              ) / 1000}
-                              %
-                            </strong>
-                          </span>
-                        </li>
                       </ul>
 
                       <button
@@ -420,6 +400,20 @@ export default function Live({ socket, notiOpt }) {
                           </button>
                         </div>
                       </div>
+                    </div>
+
+                    <div
+                      className={`${currentPrice - pastPrice > 0 ? "up" : ""} ${
+                        currentPrice - pastPrice < 0 ? "dn" : ""
+                      } priceBox`}
+                    >
+                      <strong className="price">{currentPrice}</strong>
+                      <strong className="percent">
+                        {Math.floor(
+                          ((currentPrice - pastPrice) * 100000) / pastPrice
+                        ) / 1000}
+                        %
+                      </strong>
                     </div>
 
                     <div className="btnCont">
@@ -943,68 +937,33 @@ const MbetBox = styled.main`
                 }
               }
 
-              .utilBtn {
+              .tokenBtn {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 16px;
+                min-width: 112px;
+                height: 34px;
+                padding: 0 16px;
+                font-size: 14px;
+                font-weight: 700;
+                border: 1px solid #fff;
+                border-radius: 20px;
+                img {
+                  width: 8px;
+                }
+              }
+
+              .chartBtn {
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                width: 32px;
-                height: 32px;
-                font-size: 16px;
-                font-weight: 700;
-                background: #32323d;
-                border-radius: 6px;
-
-                &:hover {
-                  background: #474751;
-                }
-
+                width: 34px;
+                aspect-ratio: 1;
+                border: 1px solid #fff;
+                border-radius: 50%;
                 img {
-                  width: 23px;
-                }
-              }
-
-              .info {
-                display: none;
-                height: 34px;
-                padding: 0 12px;
-                font-size: 12px;
-                white-space: nowrap;
-                line-height: 34px;
-                background: rgba(255, 255, 255, 0.2);
-                border-radius: 4px;
-                backdrop-filter: blur(10px);
-                -webkit-backdrop-filter: blur(10px);
-                top: 44px;
-                position: absolute;
-              }
-
-              .priceBox {
-                display: flex;
-                align-items: center;
-                gap: 6px;
-                margin: 0 0 0 4px;
-
-                &.up {
-                  .price {
-                    color: #3fb68b;
-                  }
-
-                  .percent {
-                    background: #3fb68b;
-                  }
-                }
-
-                &.dn {
-                  .price {
-                    color: #ff5353;
-                  }
-                }
-
-                .percent {
-                  padding: 3px 8px;
-                  font-size: 12px;
-                  background: #ff5353;
-                  border-radius: 6px;
+                  height: 14px;
                 }
               }
             }
@@ -1092,6 +1051,44 @@ const MbetBox = styled.main`
                 object-fit: contain;
               }
             }
+          }
+        }
+
+        .priceBox {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 6px;
+          height: 24px;
+          font-size: 14px;
+          background: rgba(0, 0, 0, 0.4);
+          border-radius: 8px;
+
+
+          &.up {
+            .price {
+              color: #3fb68b;
+            }
+
+            .percent {
+              background: #3fb68b;
+            }
+          }
+
+          &.dn {
+            .price {
+              color: #ff5353;
+            }
+          }
+
+          .percent {
+            display: flex;
+            align-items: center;
+            height: 20px;
+            padding: 0 8px;
+            font-size: 10px;
+            background: #ff5353;
+            border-radius: 6px;
           }
         }
 
