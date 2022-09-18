@@ -14,7 +14,7 @@ export default function AddPopup({ off }) {
 
   function onClickAddBtn() {
     axios
-      .patch(`${API.TRANS_DEMO_FUND}/${amount * 10 ** 6}`)
+      .patch(API.TRANS_DEMO_FUND(amount * 10 ** 6))
       .then((res) => {
         console.log(res);
         window.location.reload();

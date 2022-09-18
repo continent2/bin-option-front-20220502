@@ -56,7 +56,7 @@ export default function WithDrawal() {
 
     if (jtoken) {
       axios
-        .patch(`${API.TRANS_WITHDRAW}/${amount}`, {
+        .patch(API.TRANS_WITHDRAW(amount), {
           rxaddr: address,
           tokentype: token.type,
         })

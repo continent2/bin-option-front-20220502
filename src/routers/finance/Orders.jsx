@@ -172,7 +172,7 @@ export default function Orders() {
     }
 
     axios
-      .get(`${API.TRANSACTION_BRANCH_LIST}/${(page - 1) * 10}/10`, {
+      .get(API.TRANSACTION_BRANCH_LIST((page - 1) * 10, 10), {
         params,
       })
       .then(({ data }) => {

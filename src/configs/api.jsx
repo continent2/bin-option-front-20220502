@@ -2,7 +2,9 @@
 // export const URL = "http://litriggy.com:30708";
 // export const URL = "https://options1.net:30718";
 // export const URL = "https://options1.net:30718";
+let { nettype } = require("../configs/nettype");
 export const URL = "https://binary2.org:34861";
+const _URL = (args) => `https://binary2.org:34861${args}?nettype=${nettype}`;
 
 export const API = {
   SIGNUP: URL + "/users/signup", //type
@@ -41,14 +43,15 @@ export const API = {
   BETS: URL + "/bets/join", // /:type/:assetId/:amount/:dur/:side
   MY_BETS: URL + "/bets/my", // type
 
-  TRANSACTION_BRANCH_LIST: URL + "/transactions/branch/list",
-  TRANSACTION_BRANCH_TRANSFER: URL + "/transactions/branch/transfer",
+  TRANSACTION_BRANCH_LIST: (offset, limit) =>
+    _URL(`/transactions/branch/list/${offset}/${limit}`),
+  TRANSACTION_BRANCH_TRANSFER: _URL("/transactions/branch/transfer"),
   TRANS_DEPOSIT: URL + "/transactions/live/DEPOSIT", //:amount
-  LISTEN_TRANSACTION: URL + "/transactions/listen",
+  LISTEN_TRANSACTION: (type) => _URL(`/transactions/listen/${type}`),
 
-  TRANS_DEMO_FUND: URL + "/transactions/demo/fund", //:amount
+  TRANS_DEMO_FUND: (amount) => _URL(`/transactions/demo/fund/${amount}`), //:amount
 
-  TRANS_WITHDRAW: URL + "/transactions/live/withdraw", //:amount
+  TRANS_WITHDRAW: (amount) => _URL(`/transactions/live/withdraw/${amount}`), //:amount
   WITHDRAW: URL + "/transactions/withdraw",
 
   BOOKMARKS: URL + "/bookmarks", //:type/:targetId
