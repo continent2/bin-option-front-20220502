@@ -287,7 +287,7 @@ export default function Live({ socket, notiOpt }) {
                             className="tokenBtn"
                             onClick={() => setTokenPopup(true)}
                           >
-                            <p>{assetInfo.name}</p>
+                            <p>{assetInfo?.name}</p>
                             <img src={I_dnPolWhite} alt="" />
                           </button>
                         </li>

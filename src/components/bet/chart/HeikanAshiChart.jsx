@@ -38,7 +38,7 @@ export default function HeikanAshiChart({ assetInfo, chartOpt, socket, page }) {
         },
       })
       .then(({ data }) => {
-        let _resData = data.list;
+        let _resData = data.list || [];
 
         let _data = [];
 
@@ -156,15 +156,15 @@ export default function HeikanAshiChart({ assetInfo, chartOpt, socket, page }) {
     }
   }
 
-  function makeXevent(
+  function makeXevent({
     dateAxis,
     root,
     tooltip,
     date,
     letter,
     color,
-    description
-  ) {
+    description,
+  }) {
     var dataItem = dateAxis.createAxisRange(
       dateAxis.makeDataItem({ value: date })
     );
@@ -188,9 +188,9 @@ export default function HeikanAshiChart({ assetInfo, chartOpt, socket, page }) {
         radius: 10,
         stroke: color,
         fill: am5.color(0x181c25),
-        tooltipText: description,
-        tooltip: tooltip,
-        tooltipY: 0,
+        // tooltipText: description,
+        // tooltip: tooltip,
+        // tooltipY: 0,
       })
     );
 
@@ -215,7 +215,7 @@ export default function HeikanAshiChart({ assetInfo, chartOpt, socket, page }) {
     setTimeout(() => dateAxis.axisRanges.removeValue(dataItem), 10000);
   }
 
-  function makeYevent(dateAxis, root, tooltip, date, color, description) {
+  function makeYevent({ dateAxis, color, description }) {
     if (!dateAxis) return;
 
     var dataItem = dateAxis.createAxisRange(
@@ -469,24 +469,21 @@ export default function HeikanAshiChart({ assetInfo, chartOpt, socket, page }) {
     openedData
       .filter((v) => v.type === page.toUpperCase())
       .map((e) => {
-        makeXevent(
-          dateAxis,
-          root,
-          tooltip,
-          Number(moment(e.createdat).format("x")),
-          e.side === "HIGH" ? "H" : "L",
-          am5.color(e.side === "HIGH" ? 0x3fb68b : 0xff5353),
-          Number(e.startingPrice)
-        );
+        makeXevent({
+          dateAxis: dateAxis,
+          root: root,
+          tooltip: tooltip,
+          date: Number(moment(e.createdat).format("x")),
+          letter: e.side === "HIGH" ? "H" : "L",
+          color: am5.color(e.side === "HIGH" ? 0x3fb68b : 0xff5353),
+          description: Number(e.startingPrice),
+        });
 
-        makeYevent(
-          valueAxis,
-          root,
-          tooltip,
-          Number(moment(e.createdat).format("x")),
-          am5.color(e.side === "HIGH" ? 0x3fb68b : 0xff5353),
-          Number(e.startingPrice).toFixed(2)
-        );
+        makeYevent({
+          dateAxis: valueAxis,
+          color: am5.color(e.side === "HIGH" ? 0x3fb68b : 0xff5353),
+          description: Number(e.startingPrice).toFixed(2),
+        });
       });
   }, [dateAxis, root, tooltip, openedData]);
 

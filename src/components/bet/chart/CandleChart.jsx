@@ -33,12 +33,12 @@ export default function CandleChart({ assetInfo, chartOpt, socket, page }) {
       .get(API.GET_TICKERS, {
         params: {
           barSize: chartOpt.barSize,
-          symbol: assetInfo.APISymbol,
+          symbol: assetInfo?.APISymbol,
           N: 60,
         },
       })
       .then(({ data }) => {
-        let _resData = data.list;
+        let _resData = data.list || [];
 
         let _data = [];
 
@@ -109,15 +109,15 @@ export default function CandleChart({ assetInfo, chartOpt, socket, page }) {
     }
   }
 
-  function makeXevent(
+  function makeXevent({
     dateAxis,
     root,
     tooltip,
     date,
     letter,
     color,
-    description
-  ) {
+    description,
+  }) {
     if (!dateAxis) return;
 
     var dataItem = dateAxis.createAxisRange(
@@ -167,10 +167,12 @@ export default function CandleChart({ assetInfo, chartOpt, socket, page }) {
       })
     );
 
-    setTimeout(() => dateAxis.axisRanges.removeValue(dataItem), 10000);
+    // setTimeout(() => {
+    //   dateAxis.axisRanges.removeValue(dataItem);
+    // }, 10000);
   }
 
-  function makeYevent(dateAxis, root, tooltip, date, color, description) {
+  function makeYevent({ dateAxis, color, description }) {
     if (!dateAxis) return;
 
     var dataItem = dateAxis.createAxisRange(
@@ -187,7 +189,7 @@ export default function CandleChart({ assetInfo, chartOpt, socket, page }) {
       });
     }
 
-    setTimeout(() => dateAxis.axisRanges.removeValue(dataItem), 10000);
+    setTimeout(() => dateAxis.axisRanges.removeValue(dataItem), 1000);
   }
 
   useLayoutEffect(() => {
@@ -425,24 +427,21 @@ export default function CandleChart({ assetInfo, chartOpt, socket, page }) {
     openedData
       .filter((v) => v.type === page.toUpperCase())
       .map((e) => {
-        makeXevent(
-          dateAxis,
-          root,
-          tooltip,
-          Number(moment(e.createdat).format("x")),
-          e.side === "HIGH" ? "H" : "L",
-          am5.color(e.side === "HIGH" ? 0x3fb68b : 0xff5353),
-          Number(e.startingPrice)
-        );
+        makeXevent({
+          dateAxis: dateAxis,
+          root: root,
+          tooltip: tooltip,
+          date: Number(moment(e.createdat).format("x")),
+          letter: e.side === "HIGH" ? "H" : "L",
+          color: am5.color(e.side === "HIGH" ? 0x3fb68b : 0xff5353),
+          description: Number(e.startingPrice),
+        });
 
-        makeYevent(
-          valueAxis,
-          root,
-          tooltip,
-          Number(moment(e.createdat).format("x")),
-          am5.color(e.side === "HIGH" ? 0x3fb68b : 0xff5353),
-          Number(e.startingPrice).toFixed(2)
-        );
+        makeYevent({
+          dateAxis: valueAxis,
+          color: am5.color(e.side === "HIGH" ? 0x3fb68b : 0xff5353),
+          description: Number(e.startingPrice).toFixed(2),
+        });
       });
   }, [dateAxis, root, tooltip, openedData]);
 

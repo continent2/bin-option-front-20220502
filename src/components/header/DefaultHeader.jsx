@@ -141,7 +141,9 @@ export default function DefaultHeader({ white, border, title, demoToken }) {
           </article>
         </MdefaultHeaderBox>
 
-        {menuPopup && <MenuPopup off={setMenuPopup} userData={userData} />}
+        {menuPopup && (
+          <MenuPopup off={setMenuPopup} userData={userData} balance={balance} />
+        )}
 
         {authPopup && <AuthPopup off={setAuthPopup} />}
 
