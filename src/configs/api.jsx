@@ -3,8 +3,8 @@
 // export const URL = "https://options1.net:30718";
 // export const URL = "https://options1.net:30718";
 let { nettype } = require("../configs/nettype");
-export const URL = "https://binary2.org:34861";
-const _URL = (args) => `https://binary2.org:34861${args}?nettype=${nettype}`;
+export const URL = "https://options1.net:34861";
+const _URL = (args) => `https://options1.net:34861${args}?nettype=${nettype}`;
 
 export const API = {
   SIGNUP: URL + "/users/signup", //type

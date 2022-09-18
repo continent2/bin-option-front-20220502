@@ -26,6 +26,7 @@ import {
 import { useTranslation } from "react-i18next";
 import SelectPopup from "../../components/common/SelectPopup";
 import ConfirmUsdt from "../../components/market/deposit/ConfirmUsdt";
+import QRCode from "react-qr-code";
 
 export default function Deposit({ userData }) {
   const { t } = useTranslation();
@@ -589,6 +590,9 @@ export default function Deposit({ userData }) {
                 )}
               </div>
             )}
+            <div style={{ padding: "10px" }}>
+              <QRCode value={walletAddress} size={456} />
+            </div>
           </article>
         </PdepositBox>
 
