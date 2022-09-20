@@ -167,9 +167,9 @@ export default function CandleChart({ assetInfo, chartOpt, socket, page }) {
       })
     );
 
-    // setTimeout(() => {
-    //   dateAxis.axisRanges.removeValue(dataItem);
-    // }, 10000);
+    setTimeout(() => {
+      dateAxis.axisRanges.removeValue(dataItem);
+    }, 1000);
   }
 
   function makeYevent({ dateAxis, color, description }) {
