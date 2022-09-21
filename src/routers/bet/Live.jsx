@@ -134,7 +134,7 @@ export default function Live({ socket, notiOpt }) {
 
     switch (amountMode) {
       case "int":
-        if (amount <= 0) throw "Not Possible Balance";
+        if (amount <= 5) throw "Not Possible Balance";
 
         if (balance.data.respdata.LIVE.avail / 10 ** 6 < amount) {
           setInsufficientPopup(true);

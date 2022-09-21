@@ -425,6 +425,8 @@ export default function ResetPw() {
 }
 
 const MloginBox = styled.main`
+  height: 100vh;
+  overflow-y: scroll;
   padding: 56px 0 0;
 
   .innerBox {
@@ -489,7 +491,7 @@ const MloginBox = styled.main`
             gap: 20px;
             margin: 40px 0 0 0;
 
-            li {
+            & > li {
               display: flex;
               flex-direction: column;
               gap: 8px;
@@ -692,7 +694,7 @@ const PloginBox = styled.main`
             gap: 24px;
             margin: 40px 0 0 0;
 
-            li {
+            & > li {
               display: flex;
               flex-direction: column;
               gap: 8px;

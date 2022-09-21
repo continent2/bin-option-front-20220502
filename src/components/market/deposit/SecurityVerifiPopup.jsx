@@ -18,7 +18,7 @@ export default function SecurityVerifiPopup({ off, setBalancePopup }) {
     return (
       <MsecurityVerifiPopupBox className="defaultPopup">
         <article className="topArea">
-        <p className="title">{t("Security Verification")}</p>
+          <p className="title">{t("Security Verification")}</p>
 
           <button className="exitBtn" onClick={() => off()}>
             <img src={I_xWhite} alt="" />
@@ -33,7 +33,7 @@ export default function SecurityVerifiPopup({ off, setBalancePopup }) {
           </p>
 
           <button className="confirmBtn" onClick={onClickConfirmBtn}>
-          {t("Confirm")}
+            {t("Confirm")}
           </button>
         </article>
       </MsecurityVerifiPopupBox>
@@ -128,11 +128,10 @@ const PsecurityVerifiPopupBox = styled.section`
       font-size: 18px;
     }
 
-    .exitBtn {
-      img {
-        width: 16px;
-        opacity: 0.4;
-      }
+    .blank,
+    .exitBtn img {
+      width: 16px;
+      opacity: 0.4;
     }
   }
 

@@ -23,6 +23,10 @@ export default function Phone({ userData, setUserData }) {
   }
 
   useEffect(() => {
+    setUserData({ ...userData, phoneAlarm: "" });
+  }, [userData.phoneLoc, userData.phone]);
+
+  useEffect(() => {
     if (userData.pw && !validatePw(userData.pw))
       setUserData({
         ...userData,

@@ -10,6 +10,7 @@ export const API = {
   SIGNUP: URL + "/users/signup", //type
   LOGIN: URL + "/users/login",
   AUTH: URL + "/users/auth",
+  
   RESET_PW: URL + "/users/reset/password", //:type
   RESET_VERIFY: URL + "/users/reset/verify", //:type/:code
   CHANGE_PW: URL + "/users/change/password", //:type

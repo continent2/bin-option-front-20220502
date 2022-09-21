@@ -112,7 +112,7 @@ export default function Demo({ socket, notiOpt }) {
 
     switch (amountMode) {
       case "int":
-        if (amount <= 0) throw "Not Possible Percent";
+        if (amount <= 5) throw "Not Possible Percent";
 
         if (balance.data.respdata.DEMO.avail / 10 ** 6 < amount) {
           setInsufficientPopup(true);

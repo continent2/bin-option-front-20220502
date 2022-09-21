@@ -187,12 +187,6 @@ export default function Deposit({ userData }) {
   }
 
   useEffect(() => {
-    axios
-      .get("https://options1.net:30718/queries/rows/infotokens")
-      .then(({ data }) => console.log("res", data.respdata));
-  }, []);
-
-  useEffect(() => {
     if (!userData) return;
 
     let { isbranch } = userData;
@@ -287,25 +281,25 @@ export default function Deposit({ userData }) {
                       className={`${amount === 100 && "on"} optBtn`}
                       onClick={() => setAmount(100)}
                     >
-                      {token.text === "USDT" ? token.unit : "$"}100
+                      {token.text === "USDT" ? "$" : token.unit}100
                     </button>
                     <button
                       className={`${amount === 200 && "on"} optBtn`}
                       onClick={() => setAmount(200)}
                     >
-                      {token.text === "USDT" ? token.unit : "$"}200
+                      {token.text === "USDT" ? "$" : token.unit}200
                     </button>
                     <button
                       className={`${amount === 300 && "on"} optBtn`}
                       onClick={() => setAmount(300)}
                     >
-                      {token.text === "USDT" ? token.unit : "$"}300
+                      {token.text === "USDT" ? "$" : token.unit}300
                     </button>
                     <button
                       className={`${amount === 400 && "on"} optBtn`}
                       onClick={() => setAmount(400)}
                     >
-                      {token.text === "USDT" ? token.unit : "$"}400
+                      {token.text === "USDT" ? "$" : token.unit}400
                     </button>
                   </ul>
                 </li>
@@ -471,25 +465,25 @@ export default function Deposit({ userData }) {
                       className={`${amount === 100 && "on"} optBtn`}
                       onClick={() => setAmount(100)}
                     >
-                      {token.text === "USDT" ? token.unit : "$"}100
+                      {token.text === "USDT" ? "$" : token.unit}100
                     </button>
                     <button
                       className={`${amount === 200 && "on"} optBtn`}
                       onClick={() => setAmount(200)}
                     >
-                      {token.text === "USDT" ? token.unit : "$"}200
+                      {token.text === "USDT" ? "$" : token.unit}200
                     </button>
                     <button
                       className={`${amount === 300 && "on"} optBtn`}
                       onClick={() => setAmount(300)}
                     >
-                      {token.text === "USDT" ? token.unit : "$"}300
+                      {token.text === "USDT" ? "$" : token.unit}300
                     </button>
                     <button
                       className={`${amount === 400 && "on"} optBtn`}
                       onClick={() => setAmount(400)}
                     >
-                      {token.text === "USDT" ? token.unit : "$"}400
+                      {token.text === "USDT" ? "$" : token.unit}400
                     </button>
                   </ul>
                 </li>
