@@ -261,27 +261,13 @@ export function setToast({ type, cont, assetInfo, amount, profit, data }) {
 export function GetTierByLevel(v) {
   switch (v) {
     case 0:
-      return { text: "Diamond", img: T_dia };
-    case 1:
-      return { text: "Gold", img: T_gold };
-    case 2:
-      return { text: "Silver", img: T_silver };
-    case 3:
       return { text: "Bronze", img: T_bronze };
-    default:
-      return null;
-  }
-}
-export function GetTier(v) {
-  switch (v) {
-    case "bronze":
-      return T_bronze;
-    case "silver":
-      return T_silver;
-    case "gold":
-      return T_gold;
-    case "dia":
-      return T_dia;
+    case 1:
+      return { text: "Silver", img: T_silver };
+    case 2:
+      return { text: "Gold", img: T_gold };
+    case 3:
+      return { text: "Diamond", img: T_dia };
     default:
       return null;
   }
@@ -361,21 +347,6 @@ export function getDividFromData({ id, _case, dataObj, duration }) {
     case "betCount":
       return _targetData.bet_count;
 
-    default:
-      break;
-  }
-}
-
-export function getTier(level) {
-  switch (level) {
-    case 0:
-      return "Diamond";
-    case 1:
-      return "Gold";
-    case 2:
-      return "Silver";
-    case 3:
-      return "Bronze";
     default:
       break;
   }

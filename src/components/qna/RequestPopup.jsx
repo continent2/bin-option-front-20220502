@@ -14,16 +14,16 @@ export default function ReqeustPopup({ off }) {
   const [cont, setCont] = useState("");
 
   function onClickSendBtn() {
-    // axios
-    //   .post(`${API.INQUIRY_ENROLL}`, {
-    //     content: cont,
-    //   })
-    //   .then((res) => {
-    //     console.log(res);
-    //     off();
-    setToast({ type: "qna", cont: "문의가 정상적으로 요청되었습니다." });
-    // })
-    // .catch(console.error);
+    axios
+      .post(`${API.INQUIRY_ENROLL}`, {
+        content: cont,
+      })
+      .then((res) => {
+        console.log(res);
+        off();
+        setToast({ type: "qna", cont: "문의가 정상적으로 요청되었습니다." });
+      })
+      .catch(console.error);
   }
 
   if (isMobile)

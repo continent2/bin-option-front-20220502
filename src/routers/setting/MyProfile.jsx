@@ -737,6 +737,7 @@ const MmyProfileBox = styled.main`
           .value {
             display: flex;
             align-items: center;
+            gap: 4px;
             height: 50px;
             padding: 0 18px;
             background: rgba(0, 0, 0, 0.4);

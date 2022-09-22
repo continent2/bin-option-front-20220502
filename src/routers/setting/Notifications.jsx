@@ -45,7 +45,7 @@ export default function Notifications() {
       .patch(API.NOTI_SET, _formData)
       .then((res) => {
         console.log(res);
-        // window.location.reload();
+        window.location.reload();
       })
       .catch(console.error);
   }

@@ -6,7 +6,7 @@ import I_dnPol from "../../../img/icon/I_dnPol.svg";
 import I_chkOrange from "../../../img/icon/I_chkOrange.svg";
 import Phone from "../../../components/auth/Phone";
 import QRCode from "react-qr-code";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 import axios from "axios";
 import { API } from "../../../configs/api";
 import { useSelector } from "react-redux";
@@ -17,6 +17,8 @@ import { useEffect } from "react";
 export default function Signup() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
 
   const isMobile = useSelector((state) => state.common.isMobile);
 
@@ -59,7 +61,7 @@ export default function Signup() {
       .catch((err) => console.error(err));
   }
 
-  useEffect(() => {
+  function getUrlHead() {
     axios
       .get(API.ADMIN_QR)
       .then(({ data }) => {
@@ -67,6 +69,18 @@ export default function Signup() {
         setQrUrl(data.url);
       })
       .catch(console.error);
+  }
+
+  function getReferral() {
+    setUserData({
+      ...userData,
+      referral: params.get("refcode"),
+    });
+  }
+
+  useEffect(() => {
+    getReferral();
+    getUrlHead();
   }, []);
 
   if (isMobile)
@@ -100,7 +114,7 @@ export default function Signup() {
                     <Phone userData={userData} setUserData={setUserData} />
                   )}
 
-                  <details className="referralDet">
+                  <details className="referralDet" open={params.get("refcode")}>
                     <summary>
                       <p>
                         {t("Referral ID")} ({t("Optional")})
@@ -220,7 +234,7 @@ export default function Signup() {
                     <Phone userData={userData} setUserData={setUserData} />
                   )}
 
-                  <details className="referralDet">
+                  <details className="referralDet" open={params.get("refcode")}>
                     <summary>
                       <p>
                         {t("Referral ID")} ({t("Optional")})

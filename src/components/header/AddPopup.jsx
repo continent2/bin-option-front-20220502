@@ -40,6 +40,7 @@ export default function AddPopup({ off }) {
             <p className="key">{t("Add virtual money on Demo account")}</p>
             <div className="value">
               <input
+                type={"number"}
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 placeholder=""
@@ -73,6 +74,7 @@ export default function AddPopup({ off }) {
             <p className="key">{t("Add virtual money on Demo account")}</p>
             <div className="value">
               <input
+                type={"number"}
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 placeholder=""

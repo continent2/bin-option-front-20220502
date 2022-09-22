@@ -54,7 +54,7 @@ export default function DefaultHeader({ white, border, title, demoToken }) {
         headers: { Authorization: token || demoToken },
       })
       .then(async ({ data }) => {
-        console.log(data);
+        console.log("update Balance", data);
         setBalance({ ...data.respdata });
       })
       .catch((err) => {

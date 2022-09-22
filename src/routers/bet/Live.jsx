@@ -73,6 +73,11 @@ export default function Live({ socket, notiOpt }) {
   const [chartOptPopup, setChartOptPopup] = useState(false);
   const [barSizePopup, setBarSizePopup] = useState(false);
   const [chartTypePopup, setChartTypePopup] = useState(false);
+  // const [height, setHeight] = useState(window.innerHeight);
+
+  // function handleTouchEnd() {
+  //   setHeight(window.innerHeight);
+  // }
 
   function getAssetList() {
     axios
@@ -276,7 +281,7 @@ export default function Live({ socket, notiOpt }) {
           <LoadingBar />
         ) : (
           <>
-            <MbetBox>
+            <MbetBox innerHeight={window.innerHeight} >
               <section className="innerBox">
                 <article className="contArea">
                   <div className="chartCont">
@@ -378,7 +383,7 @@ export default function Live({ socket, notiOpt }) {
                       <div className="amountBox contBox">
                         <p className="key">Amount</p>
 
-                        <div className="valueAsterisk">
+                        <div className="value">
                           <p className="unit">$</p>
                           <input
                             value={amount}
@@ -400,20 +405,6 @@ export default function Live({ socket, notiOpt }) {
                           </button>
                         </div>
                       </div>
-                    </div>
-
-                    <div
-                      className={`${currentPrice - pastPrice > 0 ? "up" : ""} ${
-                        currentPrice - pastPrice < 0 ? "dn" : ""
-                      } priceBox`}
-                    >
-                      <strong className="price">{currentPrice}</strong>
-                      <strong className="percent">
-                        {Math.floor(
-                          ((currentPrice - pastPrice) * 100000) / pastPrice
-                        ) / 1000}
-                        %
-                      </strong>
                     </div>
 
                     <div className="btnCont">
@@ -890,7 +881,7 @@ export default function Live({ socket, notiOpt }) {
 }
 
 const MbetBox = styled.main`
-  height: 100vh;
+  height: ${(props) => props.innerHeight}px;
   padding: 56px 0 0;
   color: #fff;
   background: #0a0e17;
@@ -1051,44 +1042,6 @@ const MbetBox = styled.main`
                 object-fit: contain;
               }
             }
-          }
-        }
-
-        .priceBox {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          gap: 6px;
-          height: 24px;
-          font-size: 14px;
-          background: rgba(0, 0, 0, 0.4);
-          border-radius: 8px;
-
-
-          &.up {
-            .price {
-              color: #3fb68b;
-            }
-
-            .percent {
-              background: #3fb68b;
-            }
-          }
-
-          &.dn {
-            .price {
-              color: #ff5353;
-            }
-          }
-
-          .percent {
-            display: flex;
-            align-items: center;
-            height: 20px;
-            padding: 0 8px;
-            font-size: 10px;
-            background: #ff5353;
-            border-radius: 6px;
           }
         }
 

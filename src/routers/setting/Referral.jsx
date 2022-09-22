@@ -9,17 +9,34 @@ import DefaultHeader from "../../components/header/DefaultHeader";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
+import { useEffect } from "react";
+import { API } from "../../configs/api";
 
 export default function Referal({ userData }) {
   const { t } = useTranslation();
   const isMobile = useSelector((state) => state.common.isMobile);
 
   const [category, setCategory] = useState(0);
+  const [urlHead, setUrlHead] = useState("");
 
   function onClickCopyBtn(str) {
     onClickCopy(str);
     setToast({ type: "alarm", cont: "Copied Successfully" });
   }
+
+  function getUrlHead() {
+    axios
+      .get(API.ADMIN_QR)
+      .then(({ data }) => {
+        console.log(data.url);
+        setUrlHead(data.url);
+      })
+      .catch(console.error);
+  }
+
+  useEffect(() => {
+    getUrlHead();
+  }, []);
 
   if (isMobile)
     return (
@@ -57,12 +74,12 @@ export default function Referal({ userData }) {
                     className="value"
                     onClick={() =>
                       onClickCopyBtn(
-                        "https://www.figma.com/file/XJZins1SMnu4X3fiBS8Vu6/betbit?node-id=0%3A1"
+                        `${urlHead}/#/auth/signup?refcode=${userData?.referercode}`
                       )
                     }
                   >
                     <p className="url">
-                      https://www.figma.com/file/XJZins1SMnu4X3fiBS8Vu6/betbit?node-id=0%3A1
+                      {`${urlHead}/#/auth/signup?refcode=${userData?.referercode}`}
                     </p>
                     <img src={I_cpWhite} alt="" />
                   </button>
@@ -125,13 +142,12 @@ export default function Referal({ userData }) {
                     className="value"
                     onClick={() =>
                       onClickCopyBtn(
-                        `https://users.options1.net/#/auth/signup?refcode=${userData?.referercode}`
+                        `${urlHead}/#/auth/signup?refcode=${userData?.referercode}`
                       )
                     }
                   >
                     <p className="url">
-                      https://users.options1.net/#/auth/signup?refcode=
-                      {userData?.referercode}
+                      {`${urlHead}/#/auth/signup?refcode=${userData?.referercode}`}
                     </p>
                     <img src={I_cpWhite} alt="" />
                   </button>

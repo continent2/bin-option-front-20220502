@@ -9,7 +9,7 @@ import I_rtArwWhite from "../../../img/icon/I_rtArwWhite.svg";
 import { D_recommenderListHeader } from "../../../data/D_finance";
 import moment from "moment";
 import { useSelector } from "react-redux";
-import { getExcelFile, getTier } from "../../../util/Util";
+import { getExcelFile, GetTierByLevel } from "../../../util/Util";
 import axios from "axios";
 import { API } from "../../../configs/api";
 import { useTranslation } from "react-i18next";
@@ -118,7 +118,7 @@ export default function Recommender() {
                   <p className="key">{t(D_recommenderListHeader[3])}</p>
 
                   <span className="value">
-                    <p>{t(getTier(v.referral_user.level))}</p>
+                    <p>{t(GetTierByLevel(v.referral_user.level).text)}</p>
                   </span>
                 </div>
 
@@ -270,7 +270,7 @@ export default function Recommender() {
                   </span>
 
                   <span>
-                    <p>{t(getTier(v.referral_user.level))}</p>
+                    <p>{t(GetTierByLevel(v.referral_user.level).text)}</p>
                   </span>
 
                   <span>

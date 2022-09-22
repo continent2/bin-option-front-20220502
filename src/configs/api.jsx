@@ -10,7 +10,7 @@ export const API = {
   SIGNUP: URL + "/users/signup", //type
   LOGIN: URL + "/users/login",
   AUTH: URL + "/users/auth",
-  
+
   RESET_PW: URL + "/users/reset/password", //:type
   RESET_VERIFY: URL + "/users/reset/verify", //:type/:code
   CHANGE_PW: URL + "/users/change/password", //:type
@@ -22,7 +22,7 @@ export const API = {
   USER_SEND_CERTIFICATION: URL + "/users/send/verification", //:type
   USER_VERIFY: URL + "/users/verify", //:type/:code
   USER_QUERY: URL + "/users/query", //tablename/offset/limit
-  USER_BALANCE: URL + "/users/balance", //:type
+  USER_BALANCE: URL + "/users/balance",
   USER_BRANCH: URL + "/users/branch", //:offset/:limit/:orderkey/:orderval
   USER_BRANCH_FEE_LOG: URL + "/users/branch/fee/log", //:offset/:limit/:orderkey/:orderval
   USER_PREDEPOSIT: URL + "/users/predeposit",

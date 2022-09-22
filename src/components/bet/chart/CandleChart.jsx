@@ -118,7 +118,10 @@ export default function CandleChart({ assetInfo, chartOpt, socket, page }) {
     color,
     description,
   }) {
+    if (chartOpt.barSize >= 60000) date = new Date(date).setSeconds(0);
+
     if (!dateAxis) return;
+    console.log("chartOpt.barSize", "\n", new Date(date));
 
     var dataItem = dateAxis.createAxisRange(
       dateAxis.makeDataItem({ value: date })
@@ -443,7 +446,7 @@ export default function CandleChart({ assetInfo, chartOpt, socket, page }) {
           description: Number(e.startingPrice).toFixed(2),
         });
       });
-  }, [dateAxis, root, tooltip, openedData]);
+  }, [dateAxis, root, tooltip, openedData, chartOpt]);
 
   return <AmChartBox id="ChartBox"></AmChartBox>;
 }
