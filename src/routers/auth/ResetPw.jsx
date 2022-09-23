@@ -63,7 +63,7 @@ export default function ResetPw() {
         console.log(data);
 
         if (data.message === "VALID_CODE")
-          navigate("/auth/setpw/123", {
+          navigate(`/auth/setpw/${code}`, {
             state: {
               category: category.value,
               email,

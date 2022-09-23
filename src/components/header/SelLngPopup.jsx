@@ -46,21 +46,24 @@ export default function SelLngPopup({ white, off }) {
 const MselLangPopupBox = styled.ul`
   display: flex;
   flex-direction: column;
-  width: 120px;
-  padding: 6px 0;
+  gap: 10px;
+  padding: 10px 24px 10px 16px;
   background: rgba(255, 255, 255, 0.1);
-  border: 1.4px solid rgba(255, 255, 255, 0.14);
-  border-radius: 14px;
-  backdrop-filter: blur(40px);
-  -webkit-backdrop-filter: blur(40px);
-  box-shadow: inset 0px 3px 3px rgba(255, 255, 255, 0.4),
-    0px 10px 40px rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
   right: 64px;
-  bottom: 20px;
+  bottom: 128px;
   position: fixed;
   z-index: 7;
 
   &.white {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1.4px solid rgba(255, 255, 255, 0.14);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    box-shadow: inset 0px 3px 3px rgba(255, 255, 255, 0.4),
+      0px 10px 40px rgba(0, 0, 0, 0.2);
+    bottom: 20px;
+
     li {
       color: #888;
       cursor: pointer;
@@ -75,9 +78,8 @@ const MselLangPopupBox = styled.ul`
   li {
     display: flex;
     align-items: center;
-    padding: 0 20px;
-    height: 40px;
-    font-size: 16px;
+    font-size: 14px;
+    font-weight: 700;
     color: rgba(255, 255, 255, 0.4);
     cursor: pointer;
 

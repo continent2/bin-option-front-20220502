@@ -1368,7 +1368,7 @@ const PlandingBox = styled.main`
           rgba(255, 255, 255, 0.6) -41.6%,
           rgba(255, 255, 255, 0) 118.76%
         );
-        border-radius: 20px;
+        border-radius: 30px;
         background-origin: border-box;
         background-clip: content-box, border-box;
         position: relative;

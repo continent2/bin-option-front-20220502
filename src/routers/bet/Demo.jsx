@@ -43,6 +43,7 @@ export default function Demo({ socket, notiOpt }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const demoToken = localStorage.getItem("demoToken");
+  const minimumAmount = 5;
 
   const isMobile = useSelector((state) => state.common.isMobile);
   const openedData = useSelector((state) => state.bet.openedData);
@@ -72,6 +73,7 @@ export default function Demo({ socket, notiOpt }) {
   const [chartOptPopup, setChartOptPopup] = useState(false);
   const [barSizePopup, setBarSizePopup] = useState(false);
   const [chartTypePopup, setChartTypePopup] = useState(false);
+  const [height, setHeight] = useState(window.innerHeight);
 
   function getAssetList() {
     axios
@@ -114,7 +116,10 @@ export default function Demo({ socket, notiOpt }) {
 
     switch (amountMode) {
       case "int":
-        if (amount <= 5) throw "Not Possible Percent";
+        if (amount < minimumAmount) {
+          setToast({ type: "alarm", cont: "Not Possible Balance" });
+          throw "Not Possible Balance";
+        }
 
         if (balance.data.respdata.DEMO.avail / 10 ** 6 < amount) {
           setInsufficientPopup(true);
@@ -124,7 +129,19 @@ export default function Demo({ socket, notiOpt }) {
         return amount * 10 ** 6;
 
       case "percent":
-        if (amount > 100 || amount <= 0) throw "Not Possible Percent";
+        if (amount > 100 || amount <= 0) {
+          setToast({ type: "alarm", cont: "Not Possible Percent" });
+          throw "Not Possible Percent";
+        }
+
+        if (
+          Math.floor((balance.data.respdata.DEMO.avail * amount) / 10 ** 6) *
+            10 ** 4 <
+          minimumAmount
+        ) {
+          setToast({ type: "alarm", cont: "Not Possible Balance" });
+          throw "Not Possible Balance";
+        }
 
         return (
           Math.floor((balance.data.respdata.DEMO.avail * amount) / 10 ** 6) *
@@ -253,7 +270,7 @@ export default function Demo({ socket, notiOpt }) {
           <LoadingBar />
         ) : (
           <>
-            <MbetBox innerHeight={window.innerHeight}>
+            <MbetBox innerHeight={height}>
               <section className="innerBox">
                 <article className="contArea">
                   <div className="chartCont">

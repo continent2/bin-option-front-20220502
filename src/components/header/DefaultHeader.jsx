@@ -96,6 +96,16 @@ export default function DefaultHeader({ white, border, title, demoToken }) {
           className={`${white && "white"} ${border && "border"}`}
         >
           <article className="leftArea">
+            <button className="menuBtn" onClick={onClickMenuBtn}>
+              <I_hamburger />
+            </button>
+
+            <button className="logoBtn" onClick={() => navigate("/")}>
+              <img src={L_yellow} alt="" />
+            </button>
+          </article>
+
+          <article className="rightArea">
             {title ? (
               <p className="title">{t(title)}</p>
             ) : token && location.pathname.indexOf("auth") === -1 ? (
@@ -128,16 +138,8 @@ export default function DefaultHeader({ white, border, title, demoToken }) {
                 </button>
               </span>
             ) : (
-              <button className="logoBtn" onClick={() => navigate("/")}>
-                <img src={L_yellow} alt="" />
-              </button>
+              <></>
             )}
-          </article>
-
-          <article className="rightArea">
-            <button className="menuBtn" onClick={onClickMenuBtn}>
-              <I_hamburger />
-            </button>
           </article>
         </MdefaultHeaderBox>
 
@@ -346,7 +348,7 @@ const MdefaultHeaderBox = styled.header`
     border-bottom: none;
     box-shadow: unset;
 
-    .rightArea {
+    .leftArea {
       .menuBtn {
         svg {
           .fill {
@@ -358,8 +360,18 @@ const MdefaultHeaderBox = styled.header`
   }
 
   .leftArea {
-    .title {
-      font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    .menuBtn {
+      svg {
+        height: 18px;
+
+        .fill {
+          fill: #fff;
+        }
+      }
     }
 
     .logoBtn {
@@ -367,8 +379,14 @@ const MdefaultHeaderBox = styled.header`
       align-items: center;
 
       img {
-        height: 20px;
+        height: 18px;
       }
+    }
+  }
+
+  .rightArea {
+    .title {
+      font-size: 16px;
     }
 
     .accountBox {
@@ -405,19 +423,6 @@ const MdefaultHeaderBox = styled.header`
 
         img {
           height: 14px;
-        }
-      }
-    }
-  }
-
-  .rightArea {
-    .menuBtn {
-      svg {
-        width: 20px;
-        height: 20px;
-
-        .fill {
-          fill: #fff;
         }
       }
     }

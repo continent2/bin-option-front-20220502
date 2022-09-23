@@ -18,6 +18,9 @@ export default function DetBox({ off, mode, page, socket }) {
   if (isMobile)
     return (
       <MdetBoxCont>
+        {detCategory === "Opened" && <Opened page={page} socket={socket} />}
+        {detCategory === "Closed" && <Closed page={page} />}
+
         <ul className="detCategoryList">
           {D_detCategoryList.map((v, i) => (
             <li
@@ -29,9 +32,6 @@ export default function DetBox({ off, mode, page, socket }) {
             </li>
           ))}
         </ul>
-
-        {detCategory === "Opened" && <Opened page={page} socket={socket} />}
-        {detCategory === "Closed" && <Closed page={page} />}
 
         <footer>
           <button className="exitBtn" onClick={() => off()}>
@@ -77,6 +77,7 @@ const MdetBoxCont = styled.div`
 
   .detCategoryList {
     display: flex;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
 
     li {
       flex: 1;

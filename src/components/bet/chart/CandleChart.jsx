@@ -121,7 +121,7 @@ export default function CandleChart({ assetInfo, chartOpt, socket, page }) {
     if (chartOpt.barSize >= 60000) date = new Date(date).setSeconds(0);
 
     if (!dateAxis) return;
-    console.log("chartOpt.barSize", "\n", new Date(date));
+    console.log("chartOpt.barSize", "\n", date, "\n", new Date(date));
 
     var dataItem = dateAxis.createAxisRange(
       dateAxis.makeDataItem({ value: date })
@@ -146,9 +146,9 @@ export default function CandleChart({ assetInfo, chartOpt, socket, page }) {
         radius: 10,
         stroke: color,
         fill: am5.color(0x181c25),
-        tooltipText: description,
-        tooltip: tooltip,
-        tooltipY: 0,
+        // tooltipText: description,
+        // tooltip: tooltip,
+        // tooltipY: 0,
       })
     );
 

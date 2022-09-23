@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useNavigate, useLocation } from "react-router";
+import { useNavigate, useLocation, useParams } from "react-router";
 import { useSelector } from "react-redux";
-import { setToast } from "../../util/Util";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
 import { API } from "../../configs/api";
@@ -11,8 +10,7 @@ export default function SetPw() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const state = useLocation().state;
-
-  console.log(state);
+  const param = useParams();
 
   const isMobile = useSelector((state) => state.common.isMobile);
 
@@ -37,11 +35,26 @@ export default function SetPw() {
       })
       .then(({ data }) => {
         console.log(data);
-        
+
         if (data.message === "successfully changed") navigate("/auth/comppw");
       })
       .catch(console.error);
   }
+
+  useEffect(() => {
+    if (!(state?.category && param?.code)) navigate(-1);
+
+    axios
+      .post(`${API.RESET_VERIFY}/${state?.category}/${param?.code}`)
+      .then(({ data }) => {
+        console.log(data);
+        if (data.status !== "OK") navigate(-1);
+      })
+      .catch((err) => {
+        console.error(err);
+        navigate(-1);
+      });
+  }, []);
 
   useEffect(() => {
     if (pw && !validatePw(pw)) {

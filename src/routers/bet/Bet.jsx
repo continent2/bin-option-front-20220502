@@ -32,7 +32,7 @@ export default function Bet() {
 
         _notiOpt.betEnd = _resp.betend;
         _notiOpt.orderRequest = _resp.orderrequest;
-        console.log("resp", _resp);
+
         setNotiOpt({ ..._notiOpt });
       })
       .catch(console.error);

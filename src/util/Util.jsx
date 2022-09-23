@@ -9,6 +9,7 @@ import T_dia from "../img/tier/T_dia.svg";
 import axios from "axios";
 import { utils, writeFile } from "xlsx";
 import moment from "moment";
+
 export function strDot(str, startNum = 0, endNum = 0) {
   if (!str?.length) return;
   return `${str.slice(0, startNum)}...${str.slice(-endNum)}`;
@@ -120,11 +121,21 @@ export function onClickCopy(str) {
   document.body.removeChild(textArea);
 }
 
-export function setToast({ type, cont, assetInfo, amount, profit, data }) {
+export function setToast({
+  type,
+  cont,
+  assetInfo,
+  amount,
+  profit,
+  data,
+  isMobile,
+}) {
+  console.log("isMobile", isMobile);
+
   switch (type) {
     case "HIGH":
       toast(
-        <div className="customBox">
+        <div className={`${isMobile ? "mo" : ""} customBox`}>
           <p className="title">Trade order placed</p>
 
           <ul className="infoList">
@@ -151,7 +162,7 @@ export function setToast({ type, cont, assetInfo, amount, profit, data }) {
       break;
     case "LOW":
       toast(
-        <div className="customBox">
+        <div className={`${isMobile ? "mo" : ""} customBox`}>
           <p className="title">Trade order placed</p>
 
           <ul className="infoList">

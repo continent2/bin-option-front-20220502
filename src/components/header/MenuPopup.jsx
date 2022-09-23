@@ -4,10 +4,10 @@ import AddPopup from "./AddPopup";
 import PopupBg from "../common/PopupBg";
 import ProfPopup from "./ProfPopup";
 import { Fragment, useState } from "react";
-import { D_headerList, D_moreList } from "../../data/D_header";
+import { D_headerList } from "../../data/D_header";
 import I_dnPolWhite from "../../img/icon/I_dnPolWhite.svg";
 import I_xWhite from "../../img/icon/I_xWhite.svg";
-import I_wallet from "../../img/icon/I_wallet.svg";
+import L_yellow from "../../img/logo/L_yellow.svg";
 import I_langWhite from "../../img/icon/I_langWhite.svg";
 import I_quesCircleWhite from "../../img/icon/I_quesCircleWhite.svg";
 import I_defaultProfImg from "../../img/icon/I_defaultProfImg.svg";
@@ -23,20 +23,30 @@ export default function MenuPopup({ off, userData, balance }) {
   const balanceType = localStorage.getItem("balanceType");
 
   console.log(userData);
-  console.log("balance",balance);
+  console.log("balance", balance);
 
   const [lngPopup, setLngPopup] = useState(false);
   const [profPopup, setProfPopup] = useState(false);
   const [myBalancePopup, setMyBalancePopup] = useState(false);
   const [addPopup, setAddPopup] = useState(false);
 
+  function onClickLogoBtn() {
+    navigate("/");
+    off();
+  }
+
   function onClickNav(url) {
     navigate(url);
     off();
   }
 
-  function onClickDepositBtn() {
-    navigate("/market/deposit");
+  function onClickLogOutBtn() {
+    localStorage.removeItem("token");
+    window.location.reload();
+  }
+
+  function onClickLoginBtn() {
+    navigate("/auth");
     off();
   }
 
@@ -44,47 +54,16 @@ export default function MenuPopup({ off, userData, balance }) {
     <>
       <MenuPopupBox>
         <article className="topArea">
+          <button className="logoBtn" onClick={onClickLogoBtn}>
+            <img src={L_yellow} alt="" />
+          </button>
+
           {token ? (
-            <>
-              <span className="accountBox">
-                <button
-                  className="accountBtn"
-                  onClick={() => setMyBalancePopup(true)}
-                >
-                  {balanceType === "Demo" ? (
-                    <>
-                      <strong className="key">{t("Demo")}</strong>
-                      <strong className="value">{`$${Number(
-                        balance?.DEMO?.avail / 10 ** 6 || 0
-                      ).toFixed(2)}`}</strong>
-                    </>
-                  ) : (
-                    <>
-                      <strong className="key">{t("Live")}</strong>
-                      <strong className="value">{`$${Number(
-                        balance?.LIVE?.avail / 10 ** 6 || 0
-                      ).toFixed(2)}`}</strong>
-                    </>
-                  )}
-                </button>
-
-                <button className="depositBtn" onClick={onClickDepositBtn}>
-                  <img src={I_wallet} alt="" />
-                </button>
-              </span>
-
-              <button className="myBtn" onClick={() => setProfPopup(true)}>
-                <img src={I_defaultProfImg} alt="" />
-              </button>
-            </>
+            <button className="myBtn" onClick={() => setProfPopup(true)}>
+              <img src={I_defaultProfImg} alt="" />
+            </button>
           ) : (
-            <>
-              <span />
-
-              <button className="loginBtn" onClick={() => navigate("/auth")}>
-                {t("LOGIN")}
-              </button>
-            </>
+            <></>
           )}
         </article>
 
@@ -138,11 +117,23 @@ export default function MenuPopup({ off, userData, balance }) {
         </article>
 
         <footer>
-          <button className="exitBtn" onClick={() => off()}>
-            <img src={I_xWhite} alt="" />
-          </button>
+          <article className="leftArea">
+            <button className="exitBtn" onClick={() => off()}>
+              <img src={I_xWhite} alt="" />
+            </button>
 
-          <strong className="explain">{t("Menu")}</strong>
+            <strong className="explain">{t("Menu")}</strong>
+          </article>
+
+          {token ? (
+            <button className="authBtn" onClick={onClickLogOutBtn}>
+              Logout
+            </button>
+          ) : (
+            <button className="authBtn" onClick={onClickLoginBtn}>
+              Login
+            </button>
+          )}
         </footer>
       </MenuPopupBox>
 
@@ -197,41 +188,12 @@ const MenuPopupBox = styled.section`
     padding: 0 16px;
     font-size: 14px;
 
-    .accountBox {
+    .logoBtn {
       display: flex;
-      height: 34px;
-      font-size: 14px;
-      background: rgba(247, 171, 31, 0.2);
-      border-radius: 28px;
-      overflow: hidden;
+      align-items: center;
 
-      .accountBtn {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 4px;
-        width: 126px;
-        overflow: hidden;
-
-        .value {
-          overflow: hidden;
-          white-space: nowrap;
-          text-overflow: ellipsis;
-        }
-      }
-
-      .depositBtn {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 34px;
-        aspect-ratio: 1;
-        background: #f7ab1f;
-        border-radius: 50%;
-
-        img {
-          height: 14px;
-        }
+      img {
+        height: 18px;
       }
     }
 
@@ -344,28 +306,44 @@ const MenuPopupBox = styled.section`
 
   footer {
     display: flex;
+    justify-content: space-between;
     align-items: center;
     height: 56px;
+    padding: 0 20px;
     border-top: 1px solid rgba(255, 255, 255, 0.2);
 
-    .exitBtn {
+    .leftArea {
       display: flex;
-      justify-content: center;
       align-items: center;
-      width: 62px;
-      height: 100%;
+      .exitBtn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 20px 0 0;
 
-      img {
-        width: 16px;
+        img {
+          width: 16px;
+        }
+      }
+
+      .explain {
+        padding: 0 20px;
+        margin: 12px 0;
+        font-size: 16px;
+        color: rgba(255, 255, 255, 0.6);
+        border-left: 1px solid rgba(255, 255, 255, 0.2);
       }
     }
 
-    .explain {
-      padding: 0 20px;
-      margin: 12px 0;
-      font-size: 16px;
-      color: rgba(255, 255, 255, 0.6);
-      border-left: 1px solid rgba(255, 255, 255, 0.2);
+    .authBtn {
+      width: 90px;
+      height: 34px;
+      font-size: 14px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.8);
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid #000000;
+      border-radius: 20px;
     }
   }
 `;

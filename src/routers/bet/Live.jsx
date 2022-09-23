@@ -43,6 +43,7 @@ export default function Live({ socket, notiOpt }) {
   const hoverRef2 = useRef();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const minimumAmount = 5;
 
   const isMobile = useSelector((state) => state.common.isMobile);
   const openedData = useSelector((state) => state.bet.openedData);
@@ -73,11 +74,7 @@ export default function Live({ socket, notiOpt }) {
   const [chartOptPopup, setChartOptPopup] = useState(false);
   const [barSizePopup, setBarSizePopup] = useState(false);
   const [chartTypePopup, setChartTypePopup] = useState(false);
-  // const [height, setHeight] = useState(window.innerHeight);
-
-  // function handleTouchEnd() {
-  //   setHeight(window.innerHeight);
-  // }
+  const [height, setHeight] = useState(window.innerHeight);
 
   function getAssetList() {
     axios
@@ -119,7 +116,7 @@ export default function Live({ socket, notiOpt }) {
       .then(async ({ data }) => {
         console.log(data);
 
-        if (data.respdata.LIVE.avail / 10 ** 6 < 5) setLiveTradePopup(true);
+        if (data.respdata.LIVE.avail / 10 ** 6 < 4) setLiveTradePopup(true);
       })
       .catch((err) => {
         console.error(err);
@@ -139,7 +136,10 @@ export default function Live({ socket, notiOpt }) {
 
     switch (amountMode) {
       case "int":
-        if (amount <= 5) throw "Not Possible Balance";
+        if (amount < minimumAmount) {
+          setToast({ type: "alarm", cont: "Not Possible Balance" });
+          throw "Not Possible Balance";
+        }
 
         if (balance.data.respdata.LIVE.avail / 10 ** 6 < amount) {
           setInsufficientPopup(true);
@@ -149,7 +149,19 @@ export default function Live({ socket, notiOpt }) {
         return amount * 10 ** 6;
 
       case "percent":
-        if (amount > 100 || amount <= 0) throw "Not Possible Percent";
+        if (amount > 100 || amount <= 0) {
+          setToast({ type: "alarm", cont: "Not Possible Percent" });
+          throw "Not Possible Percent";
+        }
+
+        if (
+          Math.floor((balance.data.respdata.LIVE.avail * amount) / 10 ** 6) *
+            10 ** 4 <
+          minimumAmount
+        ) {
+          setToast({ type: "alarm", cont: "Not Possible Balance" });
+          throw "Not Possible Balance";
+        }
 
         return (
           Math.floor((balance.data.respdata.LIVE.avail * amount) / 10 ** 6) *
@@ -178,7 +190,7 @@ export default function Live({ socket, notiOpt }) {
 
         dispatch(setBetFlag());
         if (notiOpt.orderRequest) {
-          setToast({ type, assetInfo, amount });
+          setToast({ type, assetInfo, amount, isMobile });
           setAmount("");
           setDetMode(true);
         }
@@ -281,7 +293,7 @@ export default function Live({ socket, notiOpt }) {
           <LoadingBar />
         ) : (
           <>
-            <MbetBox innerHeight={window.innerHeight} >
+            <MbetBox innerHeight={height}>
               <section className="innerBox">
                 <article className="contArea">
                   <div className="chartCont">
@@ -312,6 +324,24 @@ export default function Live({ socket, notiOpt }) {
                           <button
                             className="chartBtn"
                             onClick={() => setChartOptPopup(true)}
+                          >
+                            <img src={I_candleChartWhite} alt="" />
+                          </button>
+                        </li>
+
+                        <li>
+                          <button
+                            className="chartBtn"
+                            onClick={() =>
+                              setToast({
+                                type: "HIGH",
+                                assetInfo: {
+                                  name: "BITCOIN",
+                                },
+                                amount: 1000,
+                                isMobile,
+                              })
+                            }
                           >
                             <img src={I_candleChartWhite} alt="" />
                           </button>
