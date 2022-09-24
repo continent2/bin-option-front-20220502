@@ -584,8 +584,11 @@ export default function Deposit({ userData }) {
                 )}
               </div>
             )}
-            <div style={{ padding: "10px" }}>
-              <QRCode value={walletAddress} size={456} />
+            <div className="value flex" style={{ padding: "10px" }}>
+              <QRCode value={walletAddress} size={310} />
+              <ul className="bodyList">
+                <li>{walletAddress}</li>
+              </ul>
             </div>
           </article>
         </PdepositBox>
@@ -1072,6 +1075,19 @@ const PdepositBox = styled.main`
             font-size: 14px;
             opacity: 0.4;
             list-style-type: disc;
+          }
+        }
+      }
+      .flex {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 20px;
+
+        .bodyList {
+          li {
+            list-style-type: none;
           }
         }
       }
