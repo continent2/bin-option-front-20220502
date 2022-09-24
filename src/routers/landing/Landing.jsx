@@ -35,6 +35,8 @@ export default function Landing() {
   const [assetList, setAssetList] = useState([]);
   const [guideIndex, setGuideIndex] = useState(0);
 
+  const arr = [];
+
   function getAssetList() {
     axios
       .get(`${API.GET_ASSETS}`, {
@@ -42,7 +44,11 @@ export default function Landing() {
       })
       .then(({ data }) => {
         console.log("@asset list", data.resp);
-        setAssetList(data.resp.slice(0, 15));
+        // setAssetList(data.resp.slice(0, 15));
+        data.resp.slice(0, 15).forEach((el) => {
+          arr.push(el);
+        });
+        setAssetList((pre) => [...pre, ...arr]);
       })
       .catch(console.error);
   }
@@ -50,9 +56,7 @@ export default function Landing() {
   useEffect(() => {
     let assetInterval = setInterval(() => {
       getAssetList();
-      //    }, 4000);
     }, 1300);
-
     return () => clearInterval(assetInterval);
   }, []);
 
@@ -1234,7 +1238,7 @@ const PlandingBox = styled.main`
   .trendingSec {
     display: flex;
     position: relative;
-
+    width: 120%;
     .filter {
       width: 120px;
       top: 0;
