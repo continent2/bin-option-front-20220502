@@ -35,8 +35,6 @@ export default function Landing() {
   const [assetList, setAssetList] = useState([]);
   const [guideIndex, setGuideIndex] = useState(0);
 
-  const arr = [];
-
   function getAssetList() {
     axios
       .get(`${API.GET_ASSETS}`, {
@@ -44,11 +42,7 @@ export default function Landing() {
       })
       .then(({ data }) => {
         console.log("@asset list", data.resp);
-        // setAssetList(data.resp.slice(0, 15));
-        data.resp.slice(0, 15).forEach((el) => {
-          arr.push(el);
-        });
-        setAssetList((pre) => [...pre, ...arr]);
+        setAssetList(data.resp.slice(0, 15));
       })
       .catch(console.error);
   }
