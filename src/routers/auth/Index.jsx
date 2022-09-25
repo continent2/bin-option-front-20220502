@@ -16,10 +16,11 @@ export default function Index() {
   const isMobile = useSelector((state) => state.common.isMobile);
 
   function resGLogin(data) {
+    console.log("googlelogindata", data);
     axios
       .post(`${API.LOGIN}/google`, { token: data.tokenId })
       .then(({ data }) => {
-        console.log(data);
+        console.log("googlelogindata", data);
         let { isFirstSocial } = data;
 
         localStorage.setItem("token", data.result.tokenId);

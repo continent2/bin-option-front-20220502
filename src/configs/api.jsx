@@ -7,8 +7,8 @@ export const URL = "https://options1.net:34861";
 const _URL = (args) => `https://options1.net:34861${args}?nettype=${nettype}`;
 
 export const API = {
-  SIGNUP: URL + "/users/signup", //type
-  LOGIN: URL + "/users/login",
+  SIGNUP: URL + "/users/signup", //:type
+  LOGIN: URL + "/users/login", //:type
   AUTH: URL + "/users/auth",
 
   RESET_PW: URL + "/users/reset/password", //:type
