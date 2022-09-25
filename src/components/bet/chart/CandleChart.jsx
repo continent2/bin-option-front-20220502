@@ -71,6 +71,7 @@ export default function CandleChart({ assetInfo, chartOpt, socket, page }) {
     let _lastIndex = _apiData[_apiData.length - 1];
     let _now = new Date().setMilliseconds(0);
 
+    console.log("apiDATA", apiData);
     dispatch(setPrice({ currentPrice: price, pastPrice: _lastIndex.Close }));
 
     if (
@@ -431,6 +432,7 @@ export default function CandleChart({ assetInfo, chartOpt, socket, page }) {
 
   useEffect(() => {
     if (!openedData) return;
+    console.log("OPENEDDATA", openedData);
 
     openedData
       .filter((v) => v.type === page.toUpperCase())
