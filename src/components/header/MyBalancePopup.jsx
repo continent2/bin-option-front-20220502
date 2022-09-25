@@ -26,10 +26,10 @@ export default function MyBalancePopup({ off, setAddPopup }) {
   function onClickConfirmBtn({ nextProc, isNotNavigate }) {
     off();
 
-    if (demoToken) {
-      navigate("/auth");
-      return;
-    }
+    // if (demoToken) {
+    //   navigate("/auth");
+    //   return;
+    // }
 
     if (isNotNavigate) nextProc(true);
     else navigate("/market/deposit");
