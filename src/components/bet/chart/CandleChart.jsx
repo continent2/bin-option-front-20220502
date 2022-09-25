@@ -38,7 +38,9 @@ export default function CandleChart({ assetInfo, chartOpt, socket, page }) {
         },
       })
       .then(({ data }) => {
-        let _resData = data.list || [];
+        let { list } = data;
+        list = list.filter((elem) => elem.show);
+        let _resData = list || [];
 
         let _data = [];
 
