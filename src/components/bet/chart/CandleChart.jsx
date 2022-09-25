@@ -49,7 +49,7 @@ export default function CandleChart({ assetInfo, chartOpt, socket, page }) {
             Date: e.starttime * 1000,
             Open: Number(e.open),
             High: Number(e.high),
-            Low: Number(e.low),
+            Low: Number(e.low) >0? Number(e.low):null ,
             Close: Number(e.close),
           });
         });
