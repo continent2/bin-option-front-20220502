@@ -29,6 +29,7 @@ export default function Landing() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const guideRef = useRef();
+  const alphabetRegex = /[a-zA-Z]+/;
 
   const isMobile = useSelector((state) => state.common.isMobile);
 
@@ -337,6 +338,7 @@ export default function Landing() {
                     <p className="close">
                       {`${
                         (v.close &&
+                          v.close !== "Infinity" &&
                           Number(v.close).toLocaleString("eu", "US")) ||
                         0
                       } USD`}
@@ -367,7 +369,7 @@ export default function Landing() {
                       } change`}
                     >
                       {`${
-                        +v.change
+                        +v.change && v.change !== "Infinity"
                           ? Math.floor(v.change * 10 ** 2) / 10 ** 2
                           : "0 "
                       }%`}

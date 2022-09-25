@@ -44,17 +44,22 @@ export default function CandleChart({ assetInfo, chartOpt, socket, page }) {
 
         _resData.map((e, i) => {
           if (!e) return;
-
           _data.push({
             Date: e.starttime * 1000,
             Open: Number(e.open),
             High: Number(e.high),
-            Low: Number(e.low) >0? Number(e.low):null ,
+            Low:
+              Number(e.low) > 0
+                ? Number(e.low)
+                : (
+                    (Number(e.open) + Number(e.high) + Number(e.close)) /
+                    3
+                  ).toFixed(2),
             Close: Number(e.close),
           });
         });
 
-        console.log(_data);
+        console.log("_candle_data", _data);
         setApiData([..._data]);
       })
       .catch(console.error);
