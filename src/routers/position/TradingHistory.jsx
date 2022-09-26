@@ -739,10 +739,13 @@ const PtradingHistoryBox = styled.main`
             }
 
             &.dateBox {
+              padding: 0;
+
               .dateBtn {
                 display: flex;
                 align-items: center;
                 gap: 8px;
+                padding: 0 22px;
 
                 &.on {
                   color: #fff;
@@ -752,6 +755,10 @@ const PtradingHistoryBox = styled.main`
                   width: 16px;
                   height: 17px;
                 }
+              }
+
+              .react-datepicker-popper {
+                top: 10px !important;
               }
             }
 

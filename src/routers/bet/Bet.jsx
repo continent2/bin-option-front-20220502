@@ -105,12 +105,14 @@ export default function Bet() {
   }
 
   function getDemoToken() {
+    console.log("demoToken", token, demoToken);
     if (token || demoToken) return;
+    console.log("demoToken");
 
     axios
       .get(`${API.USER_DEMO_TOKEN}`)
       .then(({ data }) => {
-        console.log(data.token);
+        console.log("demoToken", data.token);
 
         localStorage.setItem("demoToken", data.token);
         window.location.reload();

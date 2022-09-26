@@ -43,6 +43,7 @@ export default function Live({ socket, notiOpt }) {
   const hoverRef2 = useRef();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const token = localStorage.getItem("token");
   const minimumAmount = 5;
 
   const isMobile = useSelector((state) => state.common.isMobile);
@@ -105,7 +106,6 @@ export default function Live({ socket, notiOpt }) {
   }
 
   function chkMinimumBalance() {
-    const token = localStorage.getItem("token");
     if (!token) {
       setLiveTradePopup(true);
       return;
@@ -257,8 +257,8 @@ export default function Live({ socket, notiOpt }) {
   }, []);
 
   useEffect(() => {
-    localStorage.removeItem("demoToken");
-
+    if (token) localStorage.removeItem("demoToken");
+    
     getAssetList();
 
     getBookMark();
