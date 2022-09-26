@@ -34,7 +34,10 @@ export default function AuthPopup({ off }) {
 
         <article className="contArea">
           <div className="btnBox">
-            <button className="loginBtn" onClick={() => onclickNavBtn("/auth")}>
+            <button
+              className="loginBtn"
+              onClick={() => onclickNavBtn("/auth/login")}
+            >
               {t("Login")}
             </button>
 

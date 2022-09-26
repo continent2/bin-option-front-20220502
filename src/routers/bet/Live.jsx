@@ -257,6 +257,8 @@ export default function Live({ socket, notiOpt }) {
   }, []);
 
   useEffect(() => {
+    localStorage.removeItem("demoToken");
+
     getAssetList();
 
     getBookMark();
@@ -324,24 +326,6 @@ export default function Live({ socket, notiOpt }) {
                           <button
                             className="chartBtn"
                             onClick={() => setChartOptPopup(true)}
-                          >
-                            <img src={I_candleChartWhite} alt="" />
-                          </button>
-                        </li>
-
-                        <li>
-                          <button
-                            className="chartBtn"
-                            onClick={() =>
-                              setToast({
-                                type: "HIGH",
-                                assetInfo: {
-                                  name: "BITCOIN",
-                                },
-                                amount: 1000,
-                                isMobile,
-                              })
-                            }
                           >
                             <img src={I_candleChartWhite} alt="" />
                           </button>

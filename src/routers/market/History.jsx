@@ -87,7 +87,7 @@ export default function History() {
 
   function dateChange(dates) {
     const [start, end] = dates;
-    setStartDate(start);
+    setUseDate(true);
 
     setStartDate(start);
     setEndDate(end);

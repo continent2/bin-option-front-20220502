@@ -189,7 +189,7 @@ export function setToast({
       break;
     case "closed":
       toast(
-        <div className="customBox">
+        <div className={`${isMobile ? "mo" : ""} customBox`}>
           <p className="title">Trade closed</p>
 
           <ul className="infoList">

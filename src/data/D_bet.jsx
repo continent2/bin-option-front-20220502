@@ -1551,8 +1551,8 @@ export const D_chartTypeList = [
 ];
 
 export const D_timeList = [
-  // { key: "5s", value: 5000 },
-  { key: "5s", value: 30000 },
+  { key: "5s", value: 5000 },
+  // { key: "5s", value: 30000 },
   { key: "10s", value: 10000 },
   { key: "30s", value: 30000 },
   { key: "1m", value: 60000 },

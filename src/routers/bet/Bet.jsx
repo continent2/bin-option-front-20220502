@@ -4,7 +4,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { Route, Routes, Navigate } from "react-router";
 import { io } from "socket.io-client";
 import { API, URL } from "../../configs/api";
-import { setBetFlag, setClosedFlag, setDividObj } from "../../reducers/bet";
+import {
+  setBetFlag,
+  setClosedFlag,
+  setDividObj,
+  setOpenedData,
+} from "../../reducers/bet";
 import { setToast } from "../../util/Util";
 import Demo from "./Demo";
 import Live from "./Live";
@@ -15,6 +20,8 @@ export default function Bet() {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const demoToken = localStorage.getItem("demoToken");
+  const isMobile = useSelector((state) => state.common.isMobile);
+  const betFlag = useSelector((state) => state.bet.betFlag);
 
   const [notiOpt, setNotiOpt] = useState("");
   const [socketIo, setSocketIo] = useState("");
@@ -84,6 +91,7 @@ export default function Bet() {
               amount: v.data.amount / 10 ** 6,
               profit: v.profit,
               data: v.data,
+              isMobile,
             });
           }, i * 1000);
         });
@@ -110,10 +118,31 @@ export default function Bet() {
       .catch((err) => console.error(err));
   }
 
+  function getLog() {
+    socketIo.emit("bet", {}, (res) => {
+      console.log("bet", res);
+      dispatch(setOpenedData(res));
+    });
+  }
+
   useLayoutEffect(() => {
     getDemoToken();
     getNotiOpt();
   }, []);
+
+  useEffect(() => {
+    if (!socketIo) return;
+
+    getLog();
+
+    let logInterval = setInterval(() => {
+      getLog();
+    }, 1000);
+
+    return () => {
+      clearInterval(logInterval);
+    };
+  }, [socketIo, betFlag]);
 
   useEffect(() => {
     if (!(socketIo && notiOpt)) return;

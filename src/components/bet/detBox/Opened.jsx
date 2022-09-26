@@ -11,18 +11,9 @@ export default function Opened({ page, socket }) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const isMobile = useSelector((state) => state.common.isMobile);
-  const betFlag = useSelector((state) => state.bet.betFlag);
+  const openedData = useSelector((state) => state.bet.openedData);
 
-  const [data, setData] = useState([]);
   const [now, setNow] = useState(new Date());
-
-  function getLog() {
-    socket.emit("bet", {}, (res) => {
-      console.log("bet", res);
-      setData(res);
-      dispatch(setOpenedData(res));
-    });
-  }
 
   function getIcon(type) {
     switch (type) {
@@ -64,25 +55,16 @@ export default function Opened({ page, socket }) {
       setNow(new Date());
     }, 1000);
 
-    let logInterval = setInterval(() => {
-      getLog();
-    }, 1000);
-
     return () => {
       clearInterval(timeInterval);
-      clearInterval(logInterval);
     };
   }, []);
-
-  useEffect(() => {
-    getLog();
-  }, [betFlag]);
 
   if (isMobile)
     return (
       <MopenedBox className="detContList">
-        {data &&
-          data
+        {openedData &&
+          openedData
             .filter((v) => v.type === page.toUpperCase())
             .map((v, i) => (
               <Fragment key={i}>
@@ -235,8 +217,8 @@ export default function Opened({ page, socket }) {
   else
     return (
       <PopenedBox className="detContList">
-        {data &&
-          data
+        {openedData &&
+          openedData
             .filter((v) => v.type === page.toUpperCase())
             .map((v, i) => (
               <Fragment key={i}>
