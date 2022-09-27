@@ -172,7 +172,7 @@ export default function HeikanAshiChart({ assetInfo, chartOpt, socket, page }) {
     var grid = dataItem.get("grid");
     if (grid) {
       grid.setAll({
-        visible: true,
+        visible: false,
         strokeOpacity: 0.2,
         strokeDasharray: [3, 3],
         stroke: color,
@@ -479,11 +479,11 @@ export default function HeikanAshiChart({ assetInfo, chartOpt, socket, page }) {
           description: Number(e.startingPrice),
         });
 
-        makeYevent({
-          dateAxis: valueAxis,
-          color: am5.color(e.side === "HIGH" ? 0x3fb68b : 0xff5353),
-          description: Number(e.startingPrice).toFixed(2),
-        });
+        // makeYevent({
+        //   dateAxis: valueAxis,
+        //   color: am5.color(e.side === "HIGH" ? 0x3fb68b : 0xff5353),
+        //   description: Number(e.startingPrice).toFixed(2),
+        // });
       });
   }, [dateAxis, root, tooltip, openedData]);
 
