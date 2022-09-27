@@ -584,11 +584,14 @@ export default function Deposit({ userData }) {
                 )}
               </div>
             )}
-            <div className="qrwrap">
-              <div className="qrbox" style={{ padding: "10px" }}>
-                <QRCode value={walletAddress} size={310} />
+
+            <div className="qrCont">
+              <QRCode value={walletAddress} size={220} />
+
+              <div className="addressBox">
+                <p className="key">Your wallet address : </p>
+                <p className="value">{walletAddress}</p>
               </div>
-              <p>Your wallet address: {walletAddress}</p>
             </div>
           </article>
         </PdepositBox>
@@ -1078,27 +1081,30 @@ const PdepositBox = styled.main`
           }
         }
       }
-      .qrwrap {
+
+      .qrCont {
         display: flex;
-        align-items: flex-start;
-        justify-content: flex-start;
         flex-direction: column;
+        align-items: center;
         width: 100%;
-        gap: 20px;
-        .qrbox {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-direction: column;
-          gap: 20px;
-          background: rgba(255, 255, 255, 0.2);
-          border: 2px solid rgba(255, 255, 255, 0.1);
-          box-shadow: inset 0px 3px 3px rgba(255, 255, 255, 0.4),
-            0px 10px 40px rgba(255, 255, 255, 0.2);
-        }
-        p {
-          font-size: 14px;
-          opacity: 0.4;
+        gap: 14px;
+        padding: 28px;
+        background: rgba(255, 255, 255, 0.2);
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        box-shadow: inset 0px 3px 3px rgba(255, 255, 255, 0.4),
+          0px 10px 40px rgba(255, 255, 255, 0.2);
+
+        .addressBox {
+          width: 100%;
+
+          p {
+            font-size: 14px;
+            opacity: 0.4;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+          }
         }
       }
     }
