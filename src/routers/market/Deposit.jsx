@@ -36,7 +36,7 @@ export default function Deposit({ userData }) {
   const [isBranch, setIsBranch] = useState(false);
   const [amount, setAmount] = useState("");
   const [branchData, setBranchData] = useState("");
-  const [confirm, setConfirm] = useState(false);
+  const [confirm, setConfirm] = useState(true);
   const [securityVerifiPopup, setSecurityVerifiPopup] = useState(false);
   const [cashInPersonPopup, setCashInPersonPopupPopup] = useState(false);
   const [tokenPopup, setTokenPopup] = useState(false);
@@ -237,6 +237,8 @@ export default function Deposit({ userData }) {
           {confirm ? (
             <>
               {token.text === "USDT" ? (
+                <ConfirmUsdt amount={amount} token={token} />
+              ) : (
                 <ConfirmCny
                   setConfirm={setConfirm}
                   amount={amount}
@@ -245,8 +247,6 @@ export default function Deposit({ userData }) {
                     e && postLocale();
                   }}
                 />
-              ) : (
-                <ConfirmUsdt amount={amount} token={token} />
               )}
             </>
           ) : (
@@ -549,6 +549,8 @@ export default function Deposit({ userData }) {
             {confirm ? (
               <>
                 {token.text === "USDT" ? (
+                  <ConfirmUsdt amount={amount} token={token} />
+                ) : (
                   <ConfirmCny
                     setConfirm={setConfirm}
                     amount={amount}
@@ -557,8 +559,6 @@ export default function Deposit({ userData }) {
                       e && postLocale();
                     }}
                   />
-                ) : (
-                  <ConfirmUsdt amount={amount} token={token} />
                 )}
               </>
             ) : (
