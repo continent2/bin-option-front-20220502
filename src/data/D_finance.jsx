@@ -196,14 +196,24 @@ export const D_profitHistoryList = [
   },
 ];
 
+// export const D_ordersListHeader = [
+//   "Account",
+//   "User Level",
+//   "Date",
+//   "Deposit amount",
+//   "Cumulative USDT",
+//   "Deposit account",
+//   "Using",
+// ];
+
 export const D_ordersListHeader = [
-  "Account",
-  "User Level",
-  "Date",
-  "Deposit amount",
-  "Cumulative USDT",
-  "Deposit account",
-  "Using",
+  "uid",
+  "sendername",
+  "useractiontimeunix",
+  "amount",
+  "amountunit",
+  "환율적용결과",
+  "txmemo",
 ];
 
 export const D_ordersList = [

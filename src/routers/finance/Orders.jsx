@@ -22,6 +22,9 @@ import { metaMaskLink } from "../../configs/metaMask";
 import { io } from "socket.io-client";
 import { useTranslation } from "react-i18next";
 import ReactTooltip from "react-tooltip";
+import AddPopup from "../../components/header/AddPopup";
+import PopupBg from "../../components/common/PopupBg";
+import OrderPopup from "../../components/finance/data/OrderPopup";
 
 export default function Orders() {
   registerLocale("ko", ko);
@@ -38,6 +41,11 @@ export default function Orders() {
   const [tblData, setTblData] = useState([]);
   const [total, setTotal] = useState(0);
   const [loader, setLoader] = useState("");
+  const [userData, setUserData] = useState({});
+  const [orderPopup, setOrderPopup] = useState(false);
+  const [kvsForex, setKvsForex] = useState({});
+  const [uuids, setUuids] = useState([]);
+  const [totalQuantity, setTotalQuantity] = useState(0);
 
   const CustomInput = forwardRef(({ value, onClick }, ref) => (
     <button
@@ -144,6 +152,30 @@ export default function Orders() {
       .catch((err) => console.error(err));
   }
 
+  async function getKvsForex() {
+    try {
+      const result = await axios.get(API.GET_QUERIES_FOREX);
+      setKvsForex(result.data.list);
+      console.log(result);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  async function getTxRequests() {
+    try {
+      const result = await axios.get(
+        `${API.GET_TXREQUEST}/${userData.id}/${(page - 1) * 10}/10/id/DESC`
+      );
+      console.log(result);
+      console.log(result.data.list);
+      setTotal(result.data.payload.count);
+      setTblData(result.data.list);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
   async function onClickDepositBtn(data, i) {
     let forex;
 
@@ -199,9 +231,68 @@ export default function Orders() {
     setPage(page + 1);
   }
 
+  function onClickOrder() {
+    setOrderPopup(true);
+  }
+
+  function onClickAllCheckbox(e) {
+    if (e.target.checked) {
+      const newUuids = tblData.map((v, i) => {
+        return v.uuid;
+      });
+      console.log(newUuids);
+      setUuids(newUuids);
+    } else {
+      const newUUids = [];
+      setUuids(newUUids);
+    }
+  }
+
+  function onClickCheckbox(uuid) {
+    if (uuids.includes(uuid)) {
+      const newUuids = uuids.filter((v, i) => {
+        return v !== uuid;
+      });
+      setUuids(newUuids);
+    } else {
+      const newUuids = uuids.concat(uuid);
+      setUuids(newUuids);
+    }
+  }
+
+  useEffect(() => {
+    axios.get(`${API.AUTH}`).then(({ data }) => {
+      console.log(data.result);
+      setUserData(data.result);
+    });
+  }, []);
+
   useEffect(() => {
     getData();
   }, [page]);
+
+  useEffect(() => {
+    getKvsForex();
+    getTxRequests();
+  }, [userData]);
+
+  useEffect(() => {
+    console.log(uuids);
+  }, [uuids]);
+
+  useEffect(() => {
+    const checkedTblData = tblData.map((v, i) => {
+      if (uuids.includes(v.uuid)) {
+        return (v.amount / kvsForex[`USD/${v.amountunit}`]).toLocaleString();
+      } else {
+        return 0;
+      }
+    });
+    const totalQuantity = checkedTblData.reduce((a, b) => a + Number(b), 0);
+    console.log(checkedTblData);
+    console.log(totalQuantity);
+    setTotalQuantity(totalQuantity);
+  }, [uuids]);
 
   if (isMobile)
     return (
@@ -408,6 +499,12 @@ export default function Orders() {
                     <p>{t(v)}</p>
                   </li>
                 ))}
+                <li>
+                  <input
+                    type="checkbox"
+                    onClick={(e) => onClickAllCheckbox(e)}
+                  />
+                </li>
               </ul>
 
               <ul className="list">
@@ -415,36 +512,51 @@ export default function Orders() {
                   <li key={i}>
                     <span>
                       <p>
-                        {v.user.email || (v.user.phone && `0${v.user.phone}`)}
+                        {v.uid}
+
+                        {/* {v.user.email || (v.user.phone && `0${v.user.phone}`)} */}
                       </p>
                     </span>
 
                     <span>
-                      <p>{`${v.user.level} Level`}</p>
+                      {/* <p>{`${v.user.level} Level`}</p> */}
+                      <p> {v.sendername}</p>
                     </span>
 
                     <span>
-                      <p>{moment(v.createdat).format("YYYY-MM-DD")}</p>
+                      {/* <p>{moment(v.createdat).format("YYYY-MM-DD")}</p> */}
+                      <p>{v.useractiontimeunix}</p>
                     </span>
 
                     <span>
-                      {`¥${(v?.localeAmount / 10 ** 6)?.toLocaleString(
+                      {v.amount}
+                      {/* {`¥${(v?.localeAmount / 10 ** 6)?.toLocaleString(
                         "cn",
                         "CN"
-                      )}`}
+                      )}`} */}
                     </span>
 
                     <span>
-                      <p>{`${v?.cumulAmount?.toLocaleString(
+                      {/* <p>{`${v?.cumulAmount?.toLocaleString(
                         "eu",
                         "US"
-                      )}USDT`}</p>
+                      )}USDT`}</p> */}
+                      {v.amountunit}
                     </span>
 
                     <span>
-                      <p>{`${v.name || "-"}/${v.cardNum || "-"}`}</p>
+                      {/* {(
+                        v.amount / kvsForex[`USD/${v.amountunit}`]
+                      ).toLocaleString()} */}
+                      {(
+                        v.amount / kvsForex[`USD/${v.amountunit}`]
+                      ).toLocaleString()}
                     </span>
-
+                    <span>
+                      {/* <p>{`${v.name || "-"}/${v.cardNum || "-"}`}</p> */}
+                      <p>{v.txmemo}</p>
+                    </span>
+                    {/* 
                     <span>
                       <button
                         className={`${loader === i && "loading"} depositBtn`}
@@ -455,10 +567,20 @@ export default function Orders() {
 
                         <img className="loader" src={L_loader} alt="" />
                       </button>
+                    </span> */}
+                    <span>
+                      <input
+                        type="checkbox"
+                        onClick={() => onClickCheckbox(v.uuid)}
+                        checked={uuids.includes(v.uuid)}
+                      />
                     </span>
                   </li>
                 ))}
               </ul>
+            </div>
+            <div className="orderBtn" onClick={onClickOrder}>
+              <button>{t("처리하기")}</button>
             </div>
 
             <div className="pageBox">
@@ -497,6 +619,17 @@ export default function Orders() {
             </div>
           </article>
         </section>
+
+        {orderPopup && (
+          <>
+            <OrderPopup
+              off={setOrderPopup}
+              totalQuantity={totalQuantity}
+              uuids={uuids}
+            />
+            <PopupBg off={setOrderPopup} />
+          </>
+        )}
       </PordersBox>
     );
 }
@@ -865,39 +998,51 @@ const PordersBox = styled.main`
           }
 
           &:nth-of-type(1) {
-            width: 238px;
-            min-width: 238px;
+            max-width: 138px;
+            width: 100%;
           }
 
           &:nth-of-type(2) {
-            width: 164px;
-            min-width: 164px;
+            max-width: 188px;
+            width: 100%;
           }
 
           &:nth-of-type(3) {
-            width: 150px;
-            min-width: 150px;
+            max-width: 238px;
+            width: 100%;
           }
 
           &:nth-of-type(4) {
-            width: 158px;
-            min-width: 158px;
+            max-width: 108px;
+            width: 100%;
           }
 
           &:nth-of-type(5) {
-            width: 158px;
-            min-width: 158px;
+            max-width: 168px;
+            width: 100%;
           }
 
           &:nth-of-type(6) {
-            width: 240px;
-            min-width: 240px;
+            max-width: 168px;
+            width: 100%;
           }
 
           &:nth-of-type(7) {
             flex: 1;
-            width: 84px;
-            min-width: 84px;
+          }
+
+          &:nth-of-type(8) {
+            width: 48px;
+          }
+        }
+
+        .listHeader li {
+          &:nth-of-type(8) {
+            input {
+              width: 18px;
+              height: 18px;
+              margin-left: -3px;
+            }
           }
         }
       }
@@ -951,6 +1096,18 @@ const PordersBox = styled.main`
           }
         }
       }
+    }
+  }
+  .orderBtn {
+    display: flex;
+    justify-content: flex-end;
+    button {
+      width: 120px;
+      height: 40px;
+      font-size: 14px;
+      font-weight: 700;
+      border: 1px solid #3b3e45;
+      border-radius: 20px;
     }
   }
 `;
