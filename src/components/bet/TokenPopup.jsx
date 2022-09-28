@@ -100,7 +100,10 @@ export default function TokenPopup({ off, setAssetInfo, getBookMark }) {
 
               <input
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  getAssetWithSearch(e.target.value);
+                }}
                 placeholder="e.g. “ETH” or “Ethereum”"
               />
             </div>
@@ -112,11 +115,11 @@ export default function TokenPopup({ off, setAssetInfo, getBookMark }) {
                     key={i}
                     className={`${category === v.groupstr && "on"}`}
                     onClick={() => {
-                      setCategory(v.value);
+                      setCategory(v.groupstr);
                       setSearch("");
                     }}
                   >
-                    {v.key}
+                    {v.name}
                   </li>
                 ))}
               </ul>
@@ -280,6 +283,7 @@ export default function TokenPopup({ off, setAssetInfo, getBookMark }) {
 const MtokenPopupBox = styled.section`
   display: flex;
   flex-direction: column;
+  color: #fff;
   background: #181c25;
   top: 0;
   right: 0;
@@ -319,6 +323,10 @@ const MtokenPopupBox = styled.section`
           width: 16px;
           opacity: 0.4;
         }
+      }
+
+      input {
+        flex: 1;
       }
     }
 

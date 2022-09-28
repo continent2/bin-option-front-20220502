@@ -56,6 +56,19 @@ export default function ResetPw() {
       .catch(console.error);
   }
 
+  function disableContBtn() {
+    switch (category) {
+      case D_loginCategoryList[0]:
+        return !(email && code);
+
+      case D_loginCategoryList[1]:
+        return !(phoneLoc && phone && code);
+
+      default:
+        break;
+    }
+  }
+
   function onClickContBtn() {
     axios
       .post(`${API.RESET_VERIFY}/${category.value}/${code}`)
@@ -238,7 +251,11 @@ export default function ResetPw() {
                 </div>
 
                 <div className="btnBox">
-                  <button className="loginBtn" onClick={onClickContBtn}>
+                  <button
+                    className="continueBtn"
+                    disabled={disableContBtn()}
+                    onClick={onClickContBtn}
+                  >
                     {t("Continue")}
                   </button>
                 </div>
@@ -389,7 +406,11 @@ export default function ResetPw() {
                 </div>
 
                 <div className="btnBox">
-                  <button className="loginBtn" onClick={onClickContBtn}>
+                  <button
+                    className="continueBtn"
+                    disabled={disableContBtn()}
+                    onClick={onClickContBtn}
+                  >
                     {t("Continue")}
                   </button>
                 </div>
@@ -604,7 +625,7 @@ const MloginBox = styled.main`
             font-size: 16px;
             border-radius: 8px;
 
-            &.loginBtn {
+            &.continueBtn {
               font-weight: 700;
               color: #fff;
               background: #2a2a2a;
@@ -803,18 +824,10 @@ const PloginBox = styled.main`
             font-size: 18px;
             border-radius: 8px;
 
-            &.loginBtn {
+            &.continueBtn {
               font-weight: 700;
               color: #fff;
               background: #2a2a2a;
-            }
-
-            &.googleBtn {
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              gap: 14px;
-              border: 1px solid #e6e6e6;
             }
           }
 

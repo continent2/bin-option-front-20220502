@@ -235,6 +235,7 @@ const MsecurityBox = styled.main`
     flex-direction: column;
     gap: 40px;
     height: 100%;
+    padding: 0 0 20px;
     overflow-y: scroll;
 
     .contArea {
