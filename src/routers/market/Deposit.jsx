@@ -48,6 +48,8 @@ export default function Deposit({ userData }) {
   const [minDepositPopup, setMinDepositPopup] = useState(false);
   const [enableMeta, setEnableMeta] = useState(true);
 
+  const [bankList, setBankList] = useState([]);
+
   function getPreDepositReq() {
     axios
       .get(API.USER_PREDEPOSIT)
@@ -191,6 +193,7 @@ export default function Deposit({ userData }) {
 
     let { isbranch } = userData;
 
+    console.log(userData);
     setIsBranch(isbranch);
 
     if (isbranch === 1) setToken(D_branchTokenList[0]);
@@ -206,6 +209,23 @@ export default function Deposit({ userData }) {
     }
 
     return () => io(URL).disconnect();
+  }, []);
+
+  useEffect(() => {
+    try {
+      axios
+        .get(API.GET_RECEIVE_AGENTS, {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        })
+        .then((res) => {
+          console.log(res);
+          setBankList(res.data.list);
+        });
+    } catch (e) {
+      console.error(e);
+    }
   }, []);
 
   if (isMobile)

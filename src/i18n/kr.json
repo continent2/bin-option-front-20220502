@@ -323,5 +323,10 @@
   "Got it": "Got it",
   "Submit a request": "요청 제출",
   "Send request": "요청 보내기",
-  "Confirm withdrawal of":"출금 신청"
+  "Confirm withdrawal of": "출금 신청",
+  "account": "account",
+  "Make a request": "요청하기",
+  "Quantity": "수량",
+  "처리하기": "처리하기",
+  "Confirm": "Confirm"
 }
