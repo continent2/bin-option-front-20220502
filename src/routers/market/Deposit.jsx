@@ -36,7 +36,7 @@ export default function Deposit({ userData }) {
   const [isBranch, setIsBranch] = useState(false);
   const [amount, setAmount] = useState("");
   const [branchData, setBranchData] = useState("");
-  const [confirm, setConfirm] = useState(true);
+  const [confirm, setConfirm] = useState(false);
   const [securityVerifiPopup, setSecurityVerifiPopup] = useState(false);
   const [cashInPersonPopup, setCashInPersonPopupPopup] = useState(false);
   const [tokenPopup, setTokenPopup] = useState(false);
