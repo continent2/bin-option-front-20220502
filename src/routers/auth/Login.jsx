@@ -172,7 +172,11 @@ export default function Login() {
                 </div>
 
                 <div className="btnBox">
-                  <button className="loginBtn" onClick={onClickLoginBtn}>
+                  <button
+                    className="loginBtn"
+                    disabled={disableLoginBtn()}
+                    onClick={onClickLoginBtn}
+                  >
                     {t("Login")}
                   </button>
 

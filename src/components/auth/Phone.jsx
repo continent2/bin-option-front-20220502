@@ -43,41 +43,44 @@ export default function Phone({ userData, setUserData }) {
           <li className="phoneNumBox">
             <p className="key">{t("Phone Number")}</p>
             <div className="value">
-              <div className="selectBox local">
-                <button
-                  className="selectBtn"
-                  onClick={() => setSelLocPopup(true)}
-                >
-                  <p>{userData?.phoneLoc}</p>
+              <div className="inputCont">
+                <div className="selectBox local">
+                  <button
+                    className="selectBtn"
+                    onClick={() => setSelLocPopup(true)}
+                  >
+                    <p>{userData?.phoneLoc}</p>
 
-                  <img src={I_dnPol} alt="" />
-                </button>
+                    <img src={I_dnPol} alt="" />
+                  </button>
 
-                {selLocPopup && (
-                  <>
-                    <SelectPhoneLocPopup
-                      setCont={(v) =>
-                        setUserData({
-                          ...userData,
-                          phoneLoc: v,
-                        })
-                      }
-                      off={setSelLocPopup}
-                    />
-                    <PopupBg off={setSelLocPopup} />
-                  </>
-                )}
-              </div>
-              <div className="inputBox">
-                <input
-                  type="number"
-                  value={userData?.phone}
-                  onChange={(e) =>
-                    setUserData({ ...userData, phone: e.target.value })
-                  }
-                  onBlur={onBlurPhone}
-                  placeholder=""
-                />
+                  {selLocPopup && (
+                    <>
+                      <SelectPhoneLocPopup
+                        setCont={(v) =>
+                          setUserData({
+                            ...userData,
+                            phoneLoc: v,
+                          })
+                        }
+                        off={setSelLocPopup}
+                      />
+                      <PopupBg off={setSelLocPopup} />
+                    </>
+                  )}
+                </div>
+
+                <div className={`${userData.phoneAlarm && "alarm"} inputBox`}>
+                  <input
+                    type="number"
+                    value={userData?.phone}
+                    onChange={(e) =>
+                      setUserData({ ...userData, phone: e.target.value })
+                    }
+                    onBlur={onBlurPhone}
+                    placeholder=""
+                  />
+                </div>
               </div>
 
               {userData.phoneAlarm && (
@@ -198,37 +201,39 @@ const MphoneBox = styled.ul`
 
     &.phoneNumBox {
       .value {
-        display: flex;
-        flex-direction: row;
-        gap: 10px;
+        .inputCont {
+          display: flex;
+          flex-direction: row;
+          gap: 10px;
 
-        .selectBox {
-          width: 90px;
-          border-radius: 8px;
-          border: 1px solid #ddd;
-          position: relative;
+          .selectBox {
+            width: 90px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            position: relative;
 
-          &:focus-within {
-            border-color: #f7ab1f;
-          }
+            &:focus-within {
+              border-color: #f7ab1f;
+            }
 
-          .selectBtn {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            height: 100%;
-            padding: 0 16px;
-            font-size: 14px;
+            .selectBtn {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              width: 100%;
+              height: 100%;
+              padding: 0 16px;
+              font-size: 14px;
 
-            img {
-              width: 8px;
+              img {
+                width: 8px;
+              }
             }
           }
-        }
 
-        .inputBox {
-          flex: 1;
+          .inputBox {
+            flex: 1;
+          }
         }
       }
     }

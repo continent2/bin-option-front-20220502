@@ -79,7 +79,6 @@ const MliveTradePopupBox = styled.section`
 
   .buttonBox {
     display: flex;
-    gap: 16px;
     border-top: 1px solid rgba(255, 255, 255, 0.2);
 
     button {
@@ -88,7 +87,10 @@ const MliveTradePopupBox = styled.section`
       font-size: 18px;
       font-weight: 700;
       color: #f7ab1f;
-      border-radius: 12px;
+
+      &:nth-of-type(n + 2) {
+        border-left: 1px solid rgba(255, 255, 255, 0.2);
+      }
     }
   }
 `;

@@ -10,7 +10,7 @@ import I_highArwGreen from "../../img/icon/I_highArwGreen.svg";
 import I_lowArwRed from "../../img/icon/I_lowArwRed.svg";
 import I_plusWhite from "../../img/icon/I_plusWhite.svg";
 import I_timeWhite from "../../img/icon/I_timeWhite.svg";
-import I_barChartWhite from "../../img/icon/I_barChartWhite.svg";
+import I_hArw_white from "../../img/icon/I_hArw_white.svg";
 import I_candleChartWhite from "../../img/icon/I_candleChartWhite.svg";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import LiveTradePopup from "../../components/bet/LiveTradePopup";
@@ -52,6 +52,8 @@ export default function Live({ socket, notiOpt }) {
   const currentPrice = useSelector((state) => state.bet.currentPrice) || 1;
   const pastPrice = useSelector((state) => state.bet.pastPrice) || 1;
   const dividObj = useSelector((state) => state.bet.dividObj);
+
+  console.log("openedDatalen", openedData.length);
 
   const [assetInfo, setAssetInfo] = useState();
   const [loading, setLoading] = useState(true);
@@ -258,7 +260,7 @@ export default function Live({ socket, notiOpt }) {
 
   useEffect(() => {
     if (token) localStorage.removeItem("demoToken");
-    
+
     getAssetList();
 
     getBookMark();
@@ -311,17 +313,6 @@ export default function Live({ socket, notiOpt }) {
                           </button>
                         </li>
 
-                        {tokenPopup && (
-                          <>
-                            <TokenPopup
-                              off={setTokenPopup}
-                              setAssetInfo={setAssetInfo}
-                              getBookMark={getBookMark}
-                            />
-                            <PopupBg off={setTokenPopup} />
-                          </>
-                        )}
-
                         <li>
                           <button
                             className="chartBtn"
@@ -347,7 +338,12 @@ export default function Live({ socket, notiOpt }) {
                         className="detBtn"
                         onClick={() => setDetMode(true)}
                       >
-                        <img src={I_barChartWhite} alt="" />
+                        <img src={I_hArw_white} alt="" />
+                        {openedData.length ? (
+                          <span className="existLight" />
+                        ) : (
+                          <></>
+                        )}
                       </button>
                     </div>
 
@@ -476,6 +472,17 @@ export default function Live({ socket, notiOpt }) {
                 </article>
               </section>
             </MbetBox>
+
+            {tokenPopup && (
+              <>
+                <TokenPopup
+                  off={setTokenPopup}
+                  setAssetInfo={setAssetInfo}
+                  getBookMark={getBookMark}
+                />
+                <PopupBg off={setTokenPopup} />
+              </>
+            )}
 
             {detMode && (
               <DetBox
@@ -981,11 +988,21 @@ const MbetBox = styled.main`
             width: 34px;
             height: 34px;
             background: #32323d;
-            border: 1px solid #fff;
             border-radius: 50%;
+            position: relative;
 
             img {
-              height: 14px;
+              width: 16px;
+            }
+
+            .existLight {
+              width: 8px;
+              height: 8px;
+              background: #f7ab1f;
+              border-radius: 50%;
+              position: absolute;
+              top: 1px;
+              right: 1px;
             }
           }
         }

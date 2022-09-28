@@ -32,7 +32,7 @@ export default function MyPosition() {
       .then(({ data }) => {
         let _chartData = [];
         console.log(data.list);
-        console.log(new Date(data.list[0].date));
+
         data.list.map((e, i) => {
           _chartData.push({
             x: new Date(e.date),
