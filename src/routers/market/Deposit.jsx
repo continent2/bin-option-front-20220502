@@ -211,22 +211,22 @@ export default function Deposit({ userData }) {
     return () => io(URL).disconnect();
   }, []);
 
-  useEffect(() => {
-    try {
-      axios
-        .get(API.GET_RECEIVE_AGENTS, {
-          headers: {
-            Authorization: localStorage.getItem("token"),
-          },
-        })
-        .then((res) => {
-          console.log(res);
-          setBankList(res.data.list);
-        });
-    } catch (e) {
-      console.error(e);
-    }
-  }, []);
+  // useEffect(() => {
+  //   try {
+  //     axios
+  //       .get(API.GET_RECEIVE_AGENTS, {
+  //         headers: {
+  //           Authorization: localStorage.getItem("token"),
+  //         },
+  //       })
+  //       .then((res) => {
+  //         console.log(res);
+  //         setBankList(res.data.list);
+  //       });
+  //   } catch (e) {
+  //     console.error(e);
+  //   }
+  // }, []);
 
   if (isMobile)
     return (

@@ -328,5 +328,8 @@
   "Make a request": "요청하기",
   "Quantity": "수량",
   "처리하기": "처리하기",
-  "Confirm": "Confirm"
+  "Confirm": "Confirm",
+  "Rxaddr": "받은계정",
+  "Senderaddr": "보내는계정",
+  "Txhash": "txhash"
 }

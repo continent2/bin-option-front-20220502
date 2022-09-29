@@ -20,6 +20,7 @@ export const D_historyListHeader = [
   "Date",
   "Amount",
   "Method",
+  "Txhash",
   "Type",
   "Status",
 ];
