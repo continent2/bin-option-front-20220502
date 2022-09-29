@@ -63,6 +63,7 @@ export default function CandleChart({ assetInfo, chartOpt, socket, page }) {
         });
 
         console.log("_candle_data", _data);
+        console.log("_data", new Date(_data[_data.length - 1].Date));
         setApiData([..._data]);
       })
       .catch(console.error);
@@ -149,7 +150,7 @@ export default function CandleChart({ assetInfo, chartOpt, socket, page }) {
     var grid = dataItem.get("grid");
     if (grid) {
       grid.setAll({
-        visible: false,
+        visible: true,
         strokeOpacity: 0.8,
         strokeDasharray: [3, 3],
         stroke: color,
