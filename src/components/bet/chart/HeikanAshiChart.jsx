@@ -27,6 +27,7 @@ export default function HeikanAshiChart({ assetInfo, chartOpt, socket, page }) {
   const [currentValueDataItem, setCurrentValueDataItem] = useState();
   const [currentPrice, setCurrentPrice] = useState(0);
   const [initPriceList, setInitPirceList] = useState([]);
+  const [tickerList, setTickerList] = useState([]);
 
   function getPreData() {
     axios
@@ -164,7 +165,10 @@ export default function HeikanAshiChart({ assetInfo, chartOpt, socket, page }) {
     letter,
     color,
     description,
+    expiry,
   }) {
+    if (chartOpt.barSize >= 60000) date = new Date(date).setSeconds(0);
+
     var dataItem = dateAxis.createAxisRange(
       dateAxis.makeDataItem({ value: date })
     );
@@ -188,9 +192,9 @@ export default function HeikanAshiChart({ assetInfo, chartOpt, socket, page }) {
         radius: 10,
         stroke: color,
         fill: am5.color(0x181c25),
-        // tooltipText: description,
-        // tooltip: tooltip,
-        // tooltipY: 0,
+        tooltipText: description,
+        tooltip: tooltip,
+        tooltipY: 0,
       })
     );
 
@@ -212,7 +216,9 @@ export default function HeikanAshiChart({ assetInfo, chartOpt, socket, page }) {
       })
     );
 
-    setTimeout(() => dateAxis.axisRanges.removeValue(dataItem), 10000);
+    setTimeout(() => {
+      dateAxis.axisRanges.removeValue(dataItem);
+    }, moment.unix(expiry).diff());
   }
 
   function makeYevent({ dateAxis, color, description }) {
@@ -232,7 +238,7 @@ export default function HeikanAshiChart({ assetInfo, chartOpt, socket, page }) {
       });
     }
 
-    setTimeout(() => dateAxis.axisRanges.removeValue(dataItem), 10000);
+    // setTimeout(() => dateAxis.axisRanges.removeValue(dataItem), 10000);
   }
 
   useLayoutEffect(() => {
@@ -468,6 +474,7 @@ export default function HeikanAshiChart({ assetInfo, chartOpt, socket, page }) {
 
     openedData
       .filter((v) => v.type === page.toUpperCase())
+      .filter((v) => tickerList.indexOf(v.id) === -1)
       .map((e) => {
         makeXevent({
           dateAxis: dateAxis,
@@ -477,6 +484,7 @@ export default function HeikanAshiChart({ assetInfo, chartOpt, socket, page }) {
           letter: e.side === "HIGH" ? "H" : "L",
           color: am5.color(e.side === "HIGH" ? 0x3fb68b : 0xff5353),
           description: Number(e.startingPrice),
+          expiry: e.expiry,
         });
 
         // makeYevent({
@@ -484,8 +492,10 @@ export default function HeikanAshiChart({ assetInfo, chartOpt, socket, page }) {
         //   color: am5.color(e.side === "HIGH" ? 0x3fb68b : 0xff5353),
         //   description: Number(e.startingPrice).toFixed(2),
         // });
+
+        setTickerList([...tickerList, e.id]);
       });
-  }, [dateAxis, root, tooltip, openedData]);
+  }, [dateAxis, root, tooltip, openedData, chartOpt, tickerList]);
 
   return <AmChartBox id="ChartBox"></AmChartBox>;
 }

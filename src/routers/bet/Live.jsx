@@ -53,8 +53,6 @@ export default function Live({ socket, notiOpt }) {
   const pastPrice = useSelector((state) => state.bet.pastPrice) || 1;
   const dividObj = useSelector((state) => state.bet.dividObj);
 
-  console.log("openedDatalen", openedData.length);
-
   const [assetInfo, setAssetInfo] = useState();
   const [loading, setLoading] = useState(true);
   const [liveTradePopup, setLiveTradePopup] = useState(false);
