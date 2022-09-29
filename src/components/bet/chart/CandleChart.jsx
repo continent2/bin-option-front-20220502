@@ -40,7 +40,7 @@ export default function CandleChart({ assetInfo, chartOpt, socket, page }) {
       })
       .then(({ data }) => {
         let { list } = data;
-
+        list = list.filter((elem) => elem.show);
         let _resData = list || [];
 
         let _data = [];
