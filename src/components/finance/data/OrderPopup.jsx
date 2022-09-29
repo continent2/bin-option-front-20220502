@@ -53,7 +53,7 @@ export default function OrderPopup({ off, totalQuantity, uuids }) {
         <article className="topArea">
           <span className="blank" />
 
-          <p className="title">{t("Add")}</p>
+          <p className="title">{t("Confirm")}</p>
 
           <button className="exitBtn" onClick={() => off()}>
             <img src={I_xWhite} alt="" />
@@ -62,11 +62,24 @@ export default function OrderPopup({ off, totalQuantity, uuids }) {
 
         <article className="contArea">
           <div className="inputCont">
-            <p className="key">{t("Add virtual money on Demo account")}</p>
+            <p className="key">{t("txhash")}</p>
+            <div className="value">
+              <input
+                type="text"
+                value={txhash}
+                onChange={(e) => setTxshash(e.target.value)}
+                placeholder=""
+              />
+
+              <p className="unit"></p>
+            </div>
+          </div>
+          <div className="inputCont">
+            <p className="key">{t("Quantity")}</p>
             <div className="value">
               <input
                 type={"number"}
-                value={amount}
+                value={totalQuantity}
                 onChange={(e) => setAmount(e.target.value)}
                 placeholder=""
               />
@@ -74,8 +87,23 @@ export default function OrderPopup({ off, totalQuantity, uuids }) {
               <p className="unit">USDT</p>
             </div>
           </div>
+          <div className="inputCont">
+            <p className="key">{t("nettype")}</p>
+            <div className="value">
+              <input
+                type="text"
+                value={nettype}
+                // onChange={(e) => setAmount(e.target.value)}
+                placeholder=""
+              />
 
-          <button className="addBtn">{t("Add funds")}</button>
+              <p className="unit"></p>
+            </div>
+          </div>
+
+          <button className="addBtn" onClick={onClickConfirm}>
+            {t("Make a request")}
+          </button>
         </article>
       </MaddPopupBox>
     );
