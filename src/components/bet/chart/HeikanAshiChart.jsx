@@ -176,7 +176,7 @@ export default function HeikanAshiChart({ assetInfo, chartOpt, socket, page }) {
     var grid = dataItem.get("grid");
     if (grid) {
       grid.setAll({
-        visible: false,
+        visible: true,
         strokeOpacity: 0.2,
         strokeDasharray: [3, 3],
         stroke: color,
