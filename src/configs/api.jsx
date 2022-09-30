@@ -73,4 +73,6 @@ export const API = {
   GET_RECEIVE_AGENTS: URL + "/transfers/receiving-agents",
 
   POST_ORDER_REQUEST: URL + `/transfers/processing-request?nettype=${nettype}`,
+
+  GET_FRONT_VER: URL + "/queries/singlerow/settings/name/FRONT_VER",
 };
