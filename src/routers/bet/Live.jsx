@@ -319,17 +319,6 @@ export default function Live({ socket, notiOpt }) {
                             <img src={I_candleChartWhite} alt="" />
                           </button>
                         </li>
-
-                        {chartOptPopup && (
-                          <>
-                            <ChartOptPopup
-                              off={setChartOptPopup}
-                              chartOpt={chartOpt}
-                              setChartOpt={setChartOpt}
-                            />
-                            <PopupBg off={setChartOptPopup} />
-                          </>
-                        )}
                       </ul>
 
                       <button
@@ -337,7 +326,7 @@ export default function Live({ socket, notiOpt }) {
                         onClick={() => setDetMode(true)}
                       >
                         <img src={I_hArw_white} alt="" />
-                        {openedData.length ? (
+                        {openedData.filter((e) => e.type == "LIVE").length ? (
                           <span className="existLight" />
                         ) : (
                           <></>
@@ -479,6 +468,17 @@ export default function Live({ socket, notiOpt }) {
                   getBookMark={getBookMark}
                 />
                 <PopupBg off={setTokenPopup} />
+              </>
+            )}
+
+            {chartOptPopup && (
+              <>
+                <ChartOptPopup
+                  off={setChartOptPopup}
+                  chartOpt={chartOpt}
+                  setChartOpt={setChartOpt}
+                />
+                <PopupBg off={setChartOptPopup} />
               </>
             )}
 

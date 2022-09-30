@@ -15,7 +15,7 @@ import I_percentWhite from "../../img/icon/I_percentWhite.svg";
 import I_highArwGreen from "../../img/icon/I_highArwGreen.svg";
 import I_lowArwRed from "../../img/icon/I_lowArwRed.svg";
 import I_plusWhite from "../../img/icon/I_plusWhite.svg";
-import I_barChartWhite from "../../img/icon/I_barChartWhite.svg";
+import I_hArw_white from "../../img/icon/I_hArw_white.svg";
 import I_candleChartWhite from "../../img/icon/I_candleChartWhite.svg";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import PopupBg from "../../components/common/PopupBg";
@@ -286,17 +286,6 @@ export default function Demo({ socket, notiOpt }) {
                           </button>
                         </li>
 
-                        {tokenPopup && (
-                          <>
-                            <TokenPopup
-                              off={setTokenPopup}
-                              setAssetInfo={setAssetInfo}
-                              getBookMark={getBookMark}
-                            />
-                            <PopupBg off={setTokenPopup} />
-                          </>
-                        )}
-
                         <li>
                           <button
                             className="chartBtn"
@@ -305,24 +294,18 @@ export default function Demo({ socket, notiOpt }) {
                             <img src={I_candleChartWhite} alt="" />
                           </button>
                         </li>
-
-                        {chartOptPopup && (
-                          <>
-                            <ChartOptPopup
-                              off={setChartOptPopup}
-                              chartOpt={chartOpt}
-                              setChartOpt={setChartOpt}
-                            />
-                            <PopupBg off={setChartOptPopup} />
-                          </>
-                        )}
                       </ul>
 
                       <button
                         className="detBtn"
                         onClick={() => setDetMode(true)}
                       >
-                        <img src={I_barChartWhite} alt="" />
+                        <img src={I_hArw_white} alt="" />
+                        {openedData.filter((e) => e.type == "DEMO").length ? (
+                          <span className="existLight" />
+                        ) : (
+                          <></>
+                        )}
                       </button>
                     </div>
 
@@ -447,6 +430,28 @@ export default function Demo({ socket, notiOpt }) {
                 </article>
               </section>
             </MbetBox>
+
+            {tokenPopup && (
+              <>
+                <TokenPopup
+                  off={setTokenPopup}
+                  setAssetInfo={setAssetInfo}
+                  getBookMark={getBookMark}
+                />
+                <PopupBg off={setTokenPopup} />
+              </>
+            )}
+
+            {chartOptPopup && (
+              <>
+                <ChartOptPopup
+                  off={setChartOptPopup}
+                  chartOpt={chartOpt}
+                  setChartOpt={setChartOpt}
+                />
+                <PopupBg off={setChartOptPopup} />
+              </>
+            )}
 
             {detMode && (
               <DetBox
@@ -930,11 +935,21 @@ const MbetBox = styled.main`
             width: 34px;
             height: 34px;
             background: #32323d;
-            border: 1px solid #fff;
             border-radius: 50%;
+            position: relative;
 
             img {
-              height: 14px;
+              width: 16px;
+            }
+
+            .existLight {
+              width: 8px;
+              height: 8px;
+              background: #f7ab1f;
+              border-radius: 50%;
+              position: absolute;
+              top: 1px;
+              right: 1px;
             }
           }
         }
