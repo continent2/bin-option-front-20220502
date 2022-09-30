@@ -617,6 +617,11 @@ export default function Orders() {
                 ))}
               </ul>
             </div>
+            <p className="caution">
+              {t(
+                "* 실제 충전 금액은 요청을 접수하시는 시점의 선택하신 화폐와 USD 간환율을 적용하여 반영됩니다"
+              )}
+            </p>
             <div className="orderBtn" onClick={onClickOrder}>
               <button>{t("처리하기")}</button>
             </div>
@@ -896,6 +901,11 @@ const PordersBox = styled.main`
   @media (max-width: 1440px) {
     max-width: 1020px;
     padding: 70px 40px 70px 80px;
+  }
+
+  .caution {
+    font-size: 12px;
+    color: #f7ab1f;
   }
 
   .innerBox {

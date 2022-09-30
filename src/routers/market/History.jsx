@@ -323,15 +323,13 @@ export default function History() {
             <div className="listBox">
               <ul className="listHeader">
                 {D_historyListHeader.map((v, i) => {
-                  console.log(category);
-                  console.log(v);
                   if (category === 0 && v === "Method") {
                     return (
                       <>
                         <li key={i}>
                           <p>{t(v)}</p>
                         </li>
-                        <li key={i}>
+                        <li key={v.id}>
                           <p>{t("Senderaddr")}</p>
                         </li>
                       </>
@@ -342,7 +340,7 @@ export default function History() {
                         <li key={i}>
                           <p>{t(v)}</p>
                         </li>
-                        <li key={i}>
+                        <li key={v.id}>
                           <p>{t("Rxaddr")}</p>
                         </li>
                       </>

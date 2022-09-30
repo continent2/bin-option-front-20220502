@@ -35,6 +35,9 @@ export const API = {
   NOTI_SET: URL + "/users/notice/set",
   GET_TICKERS: URL + "/tickers",
 
+  GET_DEPOSIT_FEE: URL + "/transactions/info/deposit",
+  GET_FEE_RANGE: URL + "/transactions/info/withdraw",
+
   GET_ASSETS: URL + "/assets/list",
   GET_ASSETS_GROUP: URL + "/assets/groups",
   GET_ASSETS_TICKER_PRICE: URL + "/assets/ticker/price", //:symbol
@@ -47,7 +50,7 @@ export const API = {
   TRANSACTION_BRANCH_LIST: (offset, limit) =>
     _URL(`/transactions/branch/list/${offset}/${limit}`),
   TRANSACTION_BRANCH_TRANSFER: _URL("/transactions/branch/transfer"),
-  TRANS_DEPOSIT: URL + "/transactions/live/DEPOSIT", //:amount
+  TRANS_DEPOSIT: URL + `/transactions/live/DEPOSIT`, //:amount
   LISTEN_TRANSACTION: (type) => _URL(`/transactions/listen/${type}`),
 
   TRANS_DEMO_FUND: (amount) => _URL(`/transactions/demo/fund/${amount}`), //:amount

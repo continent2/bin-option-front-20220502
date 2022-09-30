@@ -26,7 +26,7 @@ export default function WithDrawal() {
   const [address, setAddress] = useState("");
   const [tokenPopup, setTokenPopup] = useState(false);
   const [settings, setSettings] = useState({
-    commision: 0,
+    commision: 1,
     minWithdraw: 5,
     maxTransactions: -1,
   });
@@ -43,6 +43,31 @@ export default function WithDrawal() {
   const [minWithdrawalPopup, setMinWithdrawalPopup] = useState(false);
   const [validAddress, setValidAddress] = useState(false);
   const [confirmPopup, setConfirmPopup] = useState(false);
+  const [commission, setCommission] = useState(1);
+  const [minimumAmount, setMinimumAmount] = useState(5);
+  const [amountErrorMessage, setAmountErrorMessage] = useState("");
+
+  const onChangeAmount = (val) => {
+    if (val > 500000) {
+      setAmount(val);
+      setAmountErrorMessage("The maximum amount is 500,000.");
+      return;
+    } else {
+      setAmountErrorMessage("");
+    }
+
+    if (val >= 500) {
+      setAmount(val);
+      setSettings((prev) => {
+        return { ...prev, commision: 10 };
+      });
+    } else {
+      setAmount(val);
+      setSettings((prev) => {
+        return { ...prev, commision: 1 };
+      });
+    }
+  };
 
   async function onClickConfirmBtn() {
     if (amount < 5) {
@@ -79,6 +104,21 @@ export default function WithDrawal() {
   }
 
   useEffect(() => {
+    try {
+      axios.get(API.GET_FEE_RANGE).then(({ data }) => {
+        console.log(data);
+        setSettings({
+          commision: data.respdata.feeamount,
+          minWithdraw: data.respdata.minimumamount,
+          maxTransactions: -1,
+        });
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  }, []);
+
+  useEffect(() => {
     const re = /^(0x)[0-9A-Fa-f]{40}$/;
     setValidAddress(re.test(address));
   }, [address]);
@@ -88,7 +128,7 @@ export default function WithDrawal() {
       <>
         <DefaultHeader title="Withdrawal" />
 
-        <MwithDrawalBox>
+        <MwithDrawalBox amountError={amountErrorMessage}>
           <section className="innerBox">
             {process ? (
               <article className="onProcess">
@@ -175,12 +215,14 @@ export default function WithDrawal() {
                       <input
                         type="number"
                         value={amount}
-                        onChange={(e) => setAmount(e.target.value)}
+                        // onChange={(e) => setAmount(e.target.value)}
+                        onChange={(e) => onChangeAmount(e.target.value)}
                         placeholder=""
                       />
                       <strong className="unit">USDT</strong>
                     </div>
                   </li>
+                  <p className="errorText">{amountErrorMessage}</p>
 
                   <li className="addressBox">
                     <p className="key">{t("Withdrawal address")}</p>
@@ -199,7 +241,7 @@ export default function WithDrawal() {
                   <ul className="infoList">
                     <li>
                       <p className="key">{t("Commission")}</p>
-                      <p className="value">{settings.commision}%</p>
+                      <p className="value">{settings.commision} Tether</p>
                     </li>
                     <li>
                       <p className="key">{t("Minimum withdraw amount")}</p>
@@ -219,7 +261,14 @@ export default function WithDrawal() {
                     className={`${
                       loader === "drawalBtn" && "loading"
                     } drawalBtn`}
-                    disabled={!(amount && address && validAddress)}
+                    disabled={
+                      !(
+                        amount &&
+                        address &&
+                        validAddress &&
+                        !amountErrorMessage
+                      )
+                    }
                     onClick={() => setConfirmPopup(true)}
                   >
                     <p className="common">{t("Withdrawal")}</p>
@@ -254,7 +303,7 @@ export default function WithDrawal() {
   else
     return (
       <>
-        <PwithDrawalBox>
+        <PwithDrawalBox amountError={amountErrorMessage}>
           <article className="contArea">
             <div className="key">
               <span className="count">1</span>
@@ -298,13 +347,14 @@ export default function WithDrawal() {
                     <input
                       type="number"
                       value={amount}
-                      onChange={(e) => setAmount(e.target.value)}
+                      // onChange={(e) => setAmount(e.target.value)}
+                      onChange={(e) => onChangeAmount(e.target.value)}
                       placeholder=""
                     />
                     <strong className="unit">USDT</strong>
                   </div>
                 </li>
-
+                <p className="errorText">{amountErrorMessage}</p>
                 <li className="addressBox">
                   <p className="key">{t("Withdrawal address")}</p>
 
@@ -322,7 +372,7 @@ export default function WithDrawal() {
                 <ul className="infoList">
                   <li>
                     <p className="key">{t("Commission")}</p>
-                    <p className="value">{settings.commision}%</p>
+                    <p className="value">{settings.commision} Tether</p>
                   </li>
                   <li>
                     <p className="key">{t("Minimum withdraw amount")}</p>
@@ -340,7 +390,9 @@ export default function WithDrawal() {
 
                 <button
                   className={`${loader === "drawalBtn" && "loading"} drawalBtn`}
-                  disabled={!(amount && address && validAddress)}
+                  disabled={
+                    !(amount && address && validAddress && !amountErrorMessage)
+                  }
                   onClick={() => setConfirmPopup(true)}
                 >
                   <p className="common">{t("Withdrawal")}</p>
@@ -452,6 +504,10 @@ const MwithDrawalBox = styled.main`
   padding: 20px;
   height: 100%;
 
+  .errorText {
+    display: ${(props) => (props.amountError ? "block" : "none")};
+    color: red;
+  }
   .innerBox {
     height: 100%;
     overflow-y: scroll;
@@ -655,6 +711,11 @@ const PwithDrawalBox = styled.main`
   align-items: flex-start;
   gap: 100px;
   padding: 70px 140px;
+
+  .errorText {
+    display: ${(props) => (props.amountError ? "block" : "none")};
+    color: red;
+  }
 
   @media (max-width: 1440px) {
     max-width: 1020px;
