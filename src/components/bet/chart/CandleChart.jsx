@@ -28,7 +28,7 @@ export default function CandleChart({ assetInfo, chartOpt, socket, page }) {
   const [currentValueDataItem, setCurrentValueDataItem] = useState();
   const [currentPrice, setCurrentPrice] = useState(0);
   const [tickerList, setTickerList] = useState([]);
-
+const LOGGER=console.log
   function getPreData() {
     axios
       .get(API.GET_TICKERS, {
@@ -39,8 +39,8 @@ export default function CandleChart({ assetInfo, chartOpt, socket, page }) {
         },
       })
       .then(({ data }) => {
-        let { list } = data;
-        list = list.filter((elem) => elem.show);
+        let { list } = data; // LOGGER ( '@tickers' , list )
+        list = list.filter((elem) => elem?.show);
         let _resData = list || [];
 
         let _data = [];
@@ -61,8 +61,7 @@ export default function CandleChart({ assetInfo, chartOpt, socket, page }) {
             Close: Number(e.close),
           });
         });
-
-        console.log("_candle_data", _data);
+//        console.log("_candle_data", _data);
         console.log("_data", new Date(_data[_data.length - 1].Date));
         setApiData([..._data]);
       })
