@@ -26,8 +26,8 @@ export default function History() {
 
   const statusSTR = {
     0: "Pending",
-    1: "Confirmed",
-    2: "Rejected",
+    1: "Success",
+    2: "Fail",
   };
   registerLocale("ko", ko);
 
@@ -192,11 +192,26 @@ export default function History() {
                             </p>
                           </div>
                         </div>
-
+                        {category === 0 && (
+                          <div>
+                            <p className="key">{t("Senderaddr")}</p>
+                            <div className="value">
+                              <p>{v.senderaddr?.substr(0, 12)}</p>
+                            </div>
+                          </div>
+                        )}
+                        {category === 1 && (
+                          <div>
+                            <p className="key">{t("Rxaddr")}</p>
+                            <div className="value">
+                              <p>{v.rxaddr?.substr(0, 12)}</p>
+                            </div>
+                          </div>
+                        )}
                         <div>
                           <p className="key">{t(D_historyListHeader[4])}</p>
                           <div className="value">
-                            <p>{v.typestr}</p>
+                            <p>{v.txhash?.substr(0, 12)}</p>
                           </div>
                         </div>
 
@@ -307,11 +322,37 @@ export default function History() {
 
             <div className="listBox">
               <ul className="listHeader">
-                {D_historyListHeader.map((v, i) => (
-                  <li key={i}>
-                    <p>{t(v)}</p>
-                  </li>
-                ))}
+                {D_historyListHeader.map((v, i) => {
+                  if (category === 0 && v === "Method") {
+                    return (
+                      <>
+                        <li key={i}>
+                          <p>{t(v)}</p>
+                        </li>
+                        <li key={v.id}>
+                          <p>{t("Senderaddr")}</p>
+                        </li>
+                      </>
+                    );
+                  } else if (category === 1 && v === "Method") {
+                    return (
+                      <>
+                        <li key={i}>
+                          <p>{t(v)}</p>
+                        </li>
+                        <li key={v.id}>
+                          <p>{t("Rxaddr")}</p>
+                        </li>
+                      </>
+                    );
+                  } else {
+                    return (
+                      <li key={i}>
+                        <p>{t(v)}</p>
+                      </li>
+                    );
+                  }
+                })}
               </ul>
 
               <ul className="list">
@@ -334,7 +375,19 @@ export default function History() {
                     <span>
                       <p>{v.type == 2 ? "Bank Transfer" : "Blockchain"}</p>
                     </span>
-
+                    {category === 0 && (
+                      <span>
+                        <p>{v.senderaddr?.substr(0, 12)}...</p>
+                      </span>
+                    )}
+                    {category === 1 && (
+                      <span>
+                        <p>{v.rxaddr?.substr(0, 12)}</p>
+                      </span>
+                    )}
+                    <span>
+                      <p>{v.txhash?.substr(0, 12)}...</p>
+                    </span>
                     <span>
                       <p>{v.typestr}</p>
                     </span>
@@ -725,10 +778,10 @@ const PhistoryBox = styled.main`
               &.Pending {
                 color: #ffbf00;
               }
-              &.Confirmed {
+              &.Success {
                 color: #32a869;
               }
-              &.Rejected {
+              &.Fail {
                 color: #ff5353;
               }
             }
@@ -756,34 +809,41 @@ const PhistoryBox = styled.main`
 
           &:nth-of-type(1) {
             justify-content: center;
-            width: 90px;
-            min-width: 90px;
+            max-width: 90px;
+            width: 100%;
           }
 
           &:nth-of-type(2) {
-            width: 170px;
-            min-width: 170px;
+            max-width: 170px;
+            width: 100%;
           }
 
           &:nth-of-type(3) {
             flex: 1;
-            width: 168px;
-            min-width: 168px;
           }
 
           &:nth-of-type(4) {
-            width: 238px;
-            min-width: 238px;
+            max-width: 150px;
+            width: 100%;
           }
 
           &:nth-of-type(5) {
-            width: 158px;
-            min-width: 158px;
+            max-width: 190px;
+            width: 100%;
           }
 
           &:nth-of-type(6) {
-            width: 196px;
-            min-width: 196px;
+            max-width: 190px;
+            width: 100%;
+          }
+          &:nth-of-type(7) {
+            max-width: 90px;
+            width: 100%;
+          }
+          &:nth-of-type(8) {
+            justify-content: center;
+            max-width: 130px;
+            width: 100%;
           }
         }
       }

@@ -27,6 +27,7 @@ import { useTranslation } from "react-i18next";
 import SelectPopup from "../../components/common/SelectPopup";
 import ConfirmUsdt from "../../components/market/deposit/ConfirmUsdt";
 import QRCode from "react-qr-code";
+import { nettype } from "../../configs/nettype";
 
 export default function Deposit({ userData }) {
   const { t } = useTranslation();
@@ -47,6 +48,11 @@ export default function Deposit({ userData }) {
   const [preDepositWarningPopup, setPreDepositWarningPopup] = useState(false);
   const [minDepositPopup, setMinDepositPopup] = useState(false);
   const [enableMeta, setEnableMeta] = useState(true);
+  const [settings, setSettings] = useState({
+    commision: 0,
+    minDeposit: 5,
+    maxTransactions: -1,
+  });
 
   const [bankList, setBankList] = useState([]);
 
@@ -117,7 +123,7 @@ export default function Deposit({ userData }) {
       },
       (txHash) => {
         axios
-          .patch(`${API.TRANS_DEPOSIT}/${amount}`, {
+          .patch(`${API.TRANS_DEPOSIT}/${amount}?nettype=${nettype}`, {
             tokentype: token.type,
             txhash: txHash,
             senderaddr: address[0],
@@ -144,7 +150,7 @@ export default function Deposit({ userData }) {
     if (!branchData) return;
 
     axios
-      .patch(`${API.TRANS_DEPOSIT}/${amount}`, {
+      .patch(`${API.TRANS_DEPOSIT}/${amount}?nettype=${nettype}`, {
         tokentype: token.type,
         ...branchData,
       })
@@ -213,20 +219,34 @@ export default function Deposit({ userData }) {
 
   useEffect(() => {
     try {
-      axios
-        .get(API.GET_RECEIVE_AGENTS, {
-          headers: {
-            Authorization: localStorage.getItem("token"),
-          },
-        })
-        .then((res) => {
-          console.log(res);
-          setBankList(res.data.list);
+      axios.get(API.GET_DEPOSIT_FEE).then(({ data }) => {
+        setSettings({
+          commision: data.respdata.feeamount,
+          minDeposit: data.respdata.minimumamount,
+          maxTransactions: -1,
         });
+      });
     } catch (e) {
       console.error(e);
     }
   }, []);
+
+  // useEffect(() => {
+  //   try {
+  //     axios
+  //       .get(API.GET_RECEIVE_AGENTS, {
+  //         headers: {
+  //           Authorization: localStorage.getItem("token"),
+  //         },
+  //       })
+  //       .then((res) => {
+  //         console.log(res);
+  //         setBankList(res.data.list);
+  //       });
+  //   } catch (e) {
+  //     console.error(e);
+  //   }
+  // }, []);
 
   if (isMobile)
     return (
@@ -329,11 +349,13 @@ export default function Deposit({ userData }) {
                 <ul className="infoList">
                   <li>
                     <p className="key">{t("Commission")}</p>
-                    <p className="value">0%</p>
+                    <p className="value">{settings.commision} Tether</p>
                   </li>
                   <li>
                     <p className="key">{t("Minimum deposit amount")}</p>
-                    <p className="value">5 {token.text}</p>
+                    <p className="value">
+                      {settings.minDeposit} {token.text}
+                    </p>
                   </li>
                   <li>
                     <p className="key">{t("Max amount per transaction")}</p>
@@ -513,11 +535,13 @@ export default function Deposit({ userData }) {
                 <ul className="infoList">
                   <li>
                     <p className="key">{t("Commission")}</p>
-                    <p className="value">0%</p>
+                    <p className="value">{settings.commision} Tether</p>
                   </li>
                   <li>
                     <p className="key">{t("Minimum deposit amount")}</p>
-                    <p className="value">5 {token.text}</p>
+                    <p className="value">
+                      {settings.minDeposit} {token.text}
+                    </p>
                   </li>
                   <li>
                     <p className="key">{t("Max amount per transaction")}</p>

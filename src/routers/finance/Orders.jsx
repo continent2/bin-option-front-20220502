@@ -336,8 +336,9 @@ export default function Orders() {
                           <p className="key">{t(D_ordersListHeader[0])}</p>
                           <div className="value">
                             <p>
-                              {v.user.email ||
-                                (v.user.phone && `0${v.user.phone}`)}
+                              {v.uid}
+                              {/* {v.user.email ||
+                                (v.user.phone && `0${v.user.phone}`)} */}
                             </p>
                           </div>
                         </div>
@@ -345,14 +346,16 @@ export default function Orders() {
                         <div>
                           <p className="key">{t(D_ordersListHeader[1])}</p>
                           <div className="value">
-                            <p>{`${v.user.level} Level`}</p>
+                            {/* <p>{`${v.user.level} Level`}</p> */}
+                            <p> {v.sendername}</p>
                           </div>
                         </div>
 
                         <div>
                           <p className="key">{t(D_ordersListHeader[2])}</p>
                           <div className="value">
-                            <p>{moment(v.createdat).format("YYYY-MM-DD")}</p>
+                            {/* <p>{moment(v.createdat).format("YYYY-MM-DD")}</p> */}
+                            <p>{v.useractiontimeunix}</p>
                           </div>
                         </div>
 
@@ -360,10 +363,11 @@ export default function Orders() {
                           <p className="key">{t(D_ordersListHeader[3])}</p>
                           <div className="value">
                             <p>
-                              {`¥${(v?.localeAmount / 10 ** 6)?.toLocaleString(
+                              {v.amount}
+                              {/* {`¥${(v?.localeAmount / 10 ** 6)?.toLocaleString(
                                 "cn",
                                 "CN"
-                              )}`}
+                              )}`} */}
                             </p>
                           </div>
                         </div>
@@ -372,10 +376,11 @@ export default function Orders() {
                           <p className="key">{t(D_ordersListHeader[4])}</p>
                           <div className="value">
                             <p>
-                              {`${v?.cumulAmount?.toLocaleString(
+                              {v.amountunit}
+                              {/* {`${v?.cumulAmount?.toLocaleString(
                                 "eu",
                                 "US"
-                              )}USDT`}
+                              )}USDT`} */}
                             </p>
                           </div>
                         </div>
@@ -383,14 +388,33 @@ export default function Orders() {
                         <div>
                           <p className="key">{t(D_ordersListHeader[5])}</p>
                           <div className="value">
-                            <p>{`${v.name || "-"}/${v.cardNum || "-"}`}</p>
+                            <p>
+                              {(
+                                v.amount / kvsForex[`USD/${v.amountunit}`]
+                              ).toLocaleString()}
+                              {/* {`${v.name || "-"}/${v.cardNum || "-"}`} */}
+                            </p>
+                          </div>
+                        </div>
+                        <div>
+                          <p className="key">{t(D_ordersListHeader[6])}</p>
+                          <div className="value">
+                            <p>{v.txmemo}</p>
                           </div>
                         </div>
 
                         <div>
-                          <p className="key">{t(D_ordersListHeader[6])}</p>
+                          <p className="key">{t(D_ordersListHeader[7])}</p>
                           <div className="value">
-                            <button
+                            <span>
+                              <input
+                                type="checkbox"
+                                className="m_checkbox"
+                                onClick={() => onClickCheckbox(v.uuid)}
+                                checked={uuids.includes(v.uuid)}
+                              />
+                            </span>
+                            {/* <button
                               className={`${
                                 loader === i && "loading"
                               } depositBtn`}
@@ -400,7 +424,7 @@ export default function Orders() {
                               <p className="common">{t("Deposit")}</p>
 
                               <img className="loader" src={L_loader} alt="" />
-                            </button>
+                            </button> */}
                           </div>
                         </div>
                       </li>
@@ -412,7 +436,11 @@ export default function Orders() {
                   )}
                 </ul>
               </div>
-
+              <div className="processBtn_cont">
+                <button className="processBtn" onClick={onClickOrder}>
+                  {t("처리하기")}
+                </button>
+              </div>
               <div className="pageBox">
                 <button
                   className="arwBtn"
@@ -449,6 +477,16 @@ export default function Orders() {
               </div>
             </article>
           </section>
+          {orderPopup && (
+            <>
+              <OrderPopup
+                off={setOrderPopup}
+                totalQuantity={totalQuantity}
+                uuids={uuids}
+              />
+              <PopupBg off={setOrderPopup} />
+            </>
+          )}
         </MordersBox>
       </>
     );
@@ -579,6 +617,11 @@ export default function Orders() {
                 ))}
               </ul>
             </div>
+            <p className="caution">
+              {t(
+                "* 실제 충전 금액은 요청을 접수하시는 시점의 선택하신 화폐와 USD 간환율을 적용하여 반영됩니다"
+              )}
+            </p>
             <div className="orderBtn" onClick={onClickOrder}>
               <button>{t("처리하기")}</button>
             </div>
@@ -714,7 +757,6 @@ const MordersBox = styled.main`
 
       .listBox {
         padding: 0 20px;
-
         .list {
           li {
             display: flex;
@@ -739,6 +781,12 @@ const MordersBox = styled.main`
               justify-content: space-between;
               align-items: center;
               font-size: 14px;
+
+              .m_checkbox {
+                margin-top: 2px;
+                width: 16px;
+                height: 16px;
+              }
 
               .key {
                 color: rgba(255, 255, 255, 0.6);
@@ -770,6 +818,24 @@ const MordersBox = styled.main`
             font-size: 14px;
             text-align: center;
             opacity: 0.4;
+          }
+        }
+      }
+
+      .processBtn_cont {
+        display: flex;
+        justify-content: center;
+        padding-top: 4px;
+        .processBtn {
+          width: 90%;
+          height: 40px;
+          font-size: 14px;
+          font-weight: 700;
+          border: 1px solid #3b3e45;
+          border-radius: 20px;
+          background: #f7ab1f;
+          &:focus-within {
+            border-color: #fff;
           }
         }
       }
@@ -835,6 +901,11 @@ const PordersBox = styled.main`
   @media (max-width: 1440px) {
     max-width: 1020px;
     padding: 70px 40px 70px 80px;
+  }
+
+  .caution {
+    font-size: 12px;
+    color: #f7ab1f;
   }
 
   .innerBox {

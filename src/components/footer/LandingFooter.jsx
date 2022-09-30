@@ -3,12 +3,42 @@ import styled from "styled-components";
 import L_yellow from "../../img/logo/L_yellow.svg";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
+import { nettype, version } from "../../configs/nettype";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { API } from "../../configs/api";
 
 export default function LandingFooter() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [frontVer, setFrontVer] = useState({});
 
   const isMobile = useSelector((state) => state.common.isMobile);
+
+  useEffect(() => {
+    try {
+      axios.get(API.GET_FRONT_VER).then(({ data }) => {
+        setFrontVer(data.respdata);
+        console.log(data);
+        console.log(data.respdata.value.split("-")[0]);
+        if (version.commitLog.includes(data.respdata.value.split("-")[0])) {
+          console.log("버전 일치함");
+        } else {
+          console.log("버전 안 일치함");
+          window.location.reload();
+        }
+        // if(data.respdata.value !== nettype)
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  }, []);
+
+  // useEffect(() => {
+  //   axios
+  //     .get("https://api.github.com/repos/laravel/framework/releases")
+  //     .then((res) => console.log(res));
+  // }, []);
 
   if (isMobile)
     return (
@@ -44,47 +74,66 @@ export default function LandingFooter() {
             </p>
           </article>
         </section>
+        <section className="version">
+          <p>v{version.commitLog}</p>
+        </section>
       </MlandingFooterBox>
     );
   else
     return (
-      <PlandingFooterBox>
-        <section className="innerBox">
-          <article className="leftArea">
-            <div className="logoBox">
-              <img className="logo" src={L_yellow} alt="" />
+      <>
+        <PlandingFooterBox>
+          <section className="innerBox">
+            <article className="leftArea">
+              <div className="logoBox">
+                <img className="logo" src={L_yellow} alt="" />
 
-              <p className="copyright">
-                {t("© Betbit, 2022. All rights reserved.")}
-              </p>
-            </div>
-          </article>
+                <p className="copyright">
+                  {t("© Betbit, 2022. All rights reserved.")}
+                </p>
+              </div>
+            </article>
 
-          <article className="rightArea">
-            <div className="termBox contBox">
-              <p className="key">{t("Privacy and Regulation")}</p>
+            <article className="rightArea">
+              <div className="termBox contBox">
+                <p className="key">{t("Privacy and Regulation")}</p>
 
-              <nav>
-                <button className="" onClick={() => {}}>
-                  {t("Privacy Policy")}
-                </button>
-                <button className="" onClick={() => {}}>
-                  {t("Terms of Use")}
-                </button>
-              </nav>
-            </div>
+                <nav>
+                  <button className="" onClick={() => {}}>
+                    {t("Privacy Policy")}
+                  </button>
+                  <button className="" onClick={() => {}}>
+                    {t("Terms of Use")}
+                  </button>
+                </nav>
+              </div>
 
-            <div className="supportBox contBox">
-              <p className="key">{t("Support")}</p>
+              <div className="supportBox contBox">
+                <p className="key">{t("Support")}</p>
 
-              <nav>
-                <p>Support@betbit.com</p>
-                <p>help@betbit.com</p>
-              </nav>
-            </div>
-          </article>
+                <nav>
+                  <p>Support@betbit.com</p>
+                  <p>help@betbit.com</p>
+                </nav>
+              </div>
+            </article>
+          </section>
+        </PlandingFooterBox>
+        <section
+          className="version"
+          style={{
+            color: "rgba(255, 255, 255, 0.7)",
+            fontSize: "13px",
+            fontWeight: "300",
+            marginLeft: "20px",
+            marginBottom: "15px",
+          }}
+        >
+          <p>
+            v{version.version} | {version.created} | {version.commitLog}
+          </p>
         </section>
-      </PlandingFooterBox>
+      </>
     );
 }
 
@@ -129,6 +178,12 @@ const MlandingFooterBox = styled.footer`
         color: rgba(255, 255, 255, 0.4);
       }
     }
+  }
+  .version {
+    margin-top: 20px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 10px;
+    font-weight: 300;
   }
 `;
 
