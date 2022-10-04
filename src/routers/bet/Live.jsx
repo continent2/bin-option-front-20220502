@@ -37,6 +37,7 @@ import BarSizePopup from "../../components/bet/BarSizePopup";
 import ChartTypePopup from "../../components/bet/ChartTypePopup";
 import AmChart from "../../components/bet/chart/AmChart";
 import ChartOptPopup from "../../components/bet/ChartOptPopup";
+import { nettype } from "../../configs/nettype";
 
 export default function Live({ socket, notiOpt }) {
   const hoverRef1 = useRef();
@@ -237,7 +238,7 @@ export default function Live({ socket, notiOpt }) {
 
     socket.emit(
       "dividendrate_0913",
-      { assetList: [..._dividList], min: duration },
+      { assetList: [..._dividList], min: duration, nettype: nettype },
       () => {},
       (err) => console.error("timeout", err)
     );

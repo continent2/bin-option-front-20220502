@@ -13,6 +13,7 @@ import { useSelector } from "react-redux";
 import { setToast } from "../../../util/Util";
 import { useTranslation } from "react-i18next";
 import { useEffect } from "react";
+import { nettype } from "../../../configs/nettype";
 
 export default function Signup() {
   const { t } = useTranslation();
@@ -45,7 +46,7 @@ export default function Signup() {
       };
 
     axios
-      .post(`${API.SIGNUP}/${category.value}`, signDataForm)
+      .post(`${API.SIGNUP}/${category.value}?nettype=${nettype}`, signDataForm)
       .then(({ data }) => {
         console.log(data);
 

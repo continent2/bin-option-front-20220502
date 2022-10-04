@@ -1,11 +1,18 @@
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 
-export default function TokenSelectPopup({ off, list, setCont }) {
+export default function TokenSelectPopup({
+  off,
+  list,
+  setCont,
+  asset,
+  setAsset,
+}) {
   const isMobile = useSelector((state) => state.common.isMobile);
-
+  console.log(list);
   function onClickCont(v) {
-    if (setCont) setCont(v);
+    // if (setCont) setCont(v);
+    if (setAsset) setAsset(v);
     if (off) off();
   }
 
@@ -22,13 +29,27 @@ export default function TokenSelectPopup({ off, list, setCont }) {
     );
   else
     return (
+      // <PselectPopupBox className="selectPopup">
+      //   {list.map((v, i) => (
+      //     <li key={i} onClick={() => onClickCont(v)}>
+      //       <img className="icon" src={v.icon} />
+      //       <p>{v.text}</p>
+      //     </li>
+      //   ))}
+      // </PselectPopupBox>
       <PselectPopupBox className="selectPopup">
-        {list.map((v, i) => (
-          <li key={i} onClick={() => onClickCont(v)}>
-            <img className="icon" src={v.icon} />
-            <p>{v.text}</p>
-          </li>
-        ))}
+        {list.map((v, i) => {
+          return (
+            <li key={v.symbol} onClick={() => onClickCont(v)}>
+              <img className="icon" src={v.logourl} />
+              <p>{v.symbol}</p>
+            </li>
+          );
+        })}
+        {/* <li key={asset.symbol} onClick={() => onClickCont(asset)}>
+          <img className="icon" src={asset.logourl} />
+          <p>{asset.symbol}</p>
+        </li> */}
       </PselectPopupBox>
     );
 }

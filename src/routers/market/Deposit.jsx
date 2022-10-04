@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useLayoutEffect, useRef } from "react";
 import styled from "styled-components";
 import I_dnPolWhite from "../../img/icon/I_dnPolWhite.svg";
 import L_loader from "../../img/loader/L_loader.png";
@@ -10,7 +10,11 @@ import axios from "axios";
 import SecurityVerifiPopup from "../../components/market/deposit/SecurityVerifiPopup";
 import CashInPersonPopup from "../../components/market/deposit/CashInPersonPopup";
 import ConfirmCny from "../../components/market/deposit/ConfirmCny";
-import { reqTx, getabistr_forfunction } from "../../util/contractcall";
+import {
+  reqTx,
+  getabistr_forfunction,
+  query_eth_balance,
+} from "../../util/contractcall";
 import TokenSelectPopup from "../../components/common/TokenSelectPopup";
 import contractaddr from "../../configs/contractaddr";
 import { setToast } from "../../util/Util";
@@ -28,6 +32,7 @@ import SelectPopup from "../../components/common/SelectPopup";
 import ConfirmUsdt from "../../components/market/deposit/ConfirmUsdt";
 import QRCode from "react-qr-code";
 import { nettype } from "../../configs/nettype";
+import { getethrep, getweirep } from "../../util/web3-utils";
 
 export default function Deposit({ userData }) {
   const { t } = useTranslation();
@@ -53,8 +58,21 @@ export default function Deposit({ userData }) {
     minDeposit: 5,
     maxTransactions: -1,
   });
+  const [asset, setAsset] = useState({});
+  const [address, setAddress] = useState("");
+  const [ethAmount, setEthAmount] = useState("");
+  const [chargeError, SetChargeError] = useState(false);
+  const [ethCount, setEthCount] = useState(0);
+  const [assetList, setAssetList] = useState([]);
+  const [networkname, setNetworkName] = useState("");
+  const [logonetwork, setLogonetwork] = useState("");
 
   const [bankList, setBankList] = useState([]);
+
+  const ethCountTimer = useRef(null);
+
+  const previousCharge = useRef(null);
+  const [chargeLoding, setChargeLoading] = useState(false);
 
   function getPreDepositReq() {
     axios
@@ -194,6 +212,41 @@ export default function Deposit({ userData }) {
     else getPreDepositReq();
   }
 
+  function onClickChargeBtn() {
+    setChargeLoading(true);
+    try {
+      axios
+        .post(
+          API.POST_CHARGE_GAS,
+          {},
+          {
+            headers: {
+              Authorization: localStorage.getItem("token"),
+            },
+          }
+        )
+        .then((res) => {
+          ethCountTimer.current = setInterval(() => {
+            setEthCount((pre) => pre + 1);
+            getAccount();
+            console.log("타이머 작동");
+          }, 5000);
+        });
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  useEffect(() => {
+    console.log(ethCount);
+    if (ethCount === 20) {
+      console.log("중지");
+      clearInterval(ethCountTimer.current);
+      setEthCount((prev) => 0);
+      setChargeLoading(false);
+    }
+  }, [ethCount]);
+
   useEffect(() => {
     if (!userData) return;
 
@@ -231,21 +284,101 @@ export default function Deposit({ userData }) {
     }
   }, []);
 
+  const getReceiveDepost = () => {
+    try {
+      axios
+        .get(`${API.GET_RECEIVE_DEPOSIT_ASSET}?nettype=${nettype}`, {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        })
+        .then(({ data }) => {
+          console.log(data);
+          console.log(data.respdata.MIN_ETH_BALANCE_REQUIRED);
+          console.log(ethAmount);
+          if (
+            Number(data.respdata.MIN_ETH_BALANCE_REQUIRED) > Number(ethAmount)
+          ) {
+            SetChargeError(true);
+          } else {
+            SetChargeError(false);
+          }
+
+          const asset = data.respdata.listtokens.filter((v, i) => {
+            return v.nettype === nettype;
+          });
+          console.log(asset);
+          setNetworkName(asset[0].networkname);
+          setLogonetwork(asset[0].logonetwork);
+          axios
+            .get(`${API.GET_RECEIVE_AGENTS}`, {
+              headers: {
+                Authorization: localStorage.getItem("token"),
+              },
+            })
+            .then(({ data }) => {
+              console.log(data);
+              console.log(data.list);
+              setAsset(asset[0]);
+              if (data.list) {
+                setAssetList((prev) => [...prev, asset[0], ...data?.list]);
+              } else {
+                setAssetList((prev) => [...prev, asset[0]]);
+              }
+            });
+        });
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  useEffect(() => {
+    if (!ethAmount) {
+      return;
+    }
+    getReceiveDepost();
+  }, [ethAmount]);
+
+  function getAccount() {
+    if (walletAddress) {
+      // web3.eth.getBalance(address, function (error, wei) {
+      //   var balance = web3.utils.fromWei(wei, "ether");
+      //   console.log(balance);
+      // });
+      query_eth_balance(walletAddress).then((res) => {
+        if (previousCharge.current === null) {
+          console.log("값이 다를 때");
+          previousCharge.current = getethrep(res, "");
+          setEthAmount(getethrep(res, ""));
+          return;
+        }
+        console.log(getethrep(res, ""));
+        console.log(previousCharge.current);
+        if (previousCharge.current !== getethrep(res, "")) {
+          console.log("정지함");
+          setEthAmount(getethrep(res, ""));
+          getReceiveDepost();
+          clearInterval(ethCountTimer.current);
+          setEthCount(0);
+          setChargeLoading(false);
+        }
+      });
+    }
+  }
+
+  useEffect(() => {
+    getAccount();
+  }, []);
+
+  // function getAddress() {
+  //   setTimeout(() => {
+  //     console.log(window.ethereum.selectedAddress);
+  //     setAddress(window.ethereum.selectedAddress);
+  //   }, 100);
+  // }
+
   // useEffect(() => {
-  //   try {
-  //     axios
-  //       .get(API.GET_RECEIVE_AGENTS, {
-  //         headers: {
-  //           Authorization: localStorage.getItem("token"),
-  //         },
-  //       })
-  //       .then((res) => {
-  //         console.log(res);
-  //         setBankList(res.data.list);
-  //       });
-  //   } catch (e) {
-  //     console.error(e);
-  //   }
+  //   getAddress();
   // }, []);
 
   if (isMobile)
@@ -426,15 +559,27 @@ export default function Deposit({ userData }) {
               <span className="count">1</span>
 
               <strong className="title">{t("Deposit")}</strong>
+              {asset && (
+                <div className="mainet">
+                  {networkname && <span className="key">{networkname}</span>}
+
+                  {logonetwork && (
+                    <div className="mainetLogoCont">
+                      <img src={logonetwork} alt="" />
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
             <div className="value">
               <ul className="inputList">
                 <li className="tokenBox">
-                  <p className="key">{t("Asset")}</p>
-
+                  <div className="title">
+                    <span className="key">{t("Asset")}</span>
+                  </div>
                   <div className="selectBox">
-                    <button
+                    {/* <button
                       className={`${tokenPopup && "on"} selBtn`}
                       onClick={() => setTokenPopup(true)}
                     >
@@ -442,11 +587,20 @@ export default function Deposit({ userData }) {
                       <strong className="name">{token.text}</strong>
 
                       <img className="arw" src={I_dnPolWhite} />
-                    </button>
+                    </button> */}
 
+                    <button
+                      className={`${tokenPopup && "on"} selBtn`}
+                      onClick={() => setTokenPopup(true)}
+                    >
+                      <img className="token" src={asset.logourl} alt="" />
+                      <strong className="name">{asset.symbol}</strong>
+
+                      <img className="arw" src={I_dnPolWhite} />
+                    </button>
                     {tokenPopup && (
                       <>
-                        <TokenSelectPopup
+                        {/* <TokenSelectPopup
                           off={setTokenPopup}
                           list={
                             isBranch === 1
@@ -454,6 +608,18 @@ export default function Deposit({ userData }) {
                               : D_unBranchTokenList
                           }
                           setCont={setToken}
+                        /> */}
+                        <TokenSelectPopup
+                          off={setTokenPopup}
+                          list={
+                            assetList
+                            // isBranch === 1
+                            //   ? D_branchTokenList
+                            //   : D_unBranchTokenList
+                          }
+                          asset={asset}
+                          setCont={setToken}
+                          setAsset={setAsset}
                         />
                         <PopupBg off={setTokenPopup} index={3} />
                       </>
@@ -550,10 +716,19 @@ export default function Deposit({ userData }) {
                 </ul>
 
                 <button
+                  className={`${chargeLoding && "loading"} chargeBtn`}
+                  disabled={!chargeError}
+                  onClick={onClickChargeBtn}
+                >
+                  <p className="common">{t("Balance Charge")}</p>
+                  <img className="loader" src={L_loader} alt="" />
+                </button>
+
+                <button
                   className={`${
                     loader === "depositBtn" && "loading"
                   } depositBtn`}
-                  disabled={!(amount && enableMeta)}
+                  disabled={!(amount && enableMeta && !chargeError)}
                   onClick={onClickDepositBtn}
                 >
                   <p className="common">{t("Deposit")}</p>
@@ -818,6 +993,23 @@ const MdepositBox = styled.main`
         }
       }
 
+      .chargeBtn {
+        width: 100%;
+        height: 50px;
+        font-size: 16px;
+        font-weight: 700;
+        color: #4e3200;
+        background: linear-gradient(99.16deg, #604719 3.95%, #f7ab1f 52.09%);
+        border-radius: 10px;
+
+        margin-bottom: 4px;
+
+        &:disabled {
+          color: #f7ab1f;
+          background: #fff;
+        }
+      }
+
       .depositBtn {
         width: 100%;
         height: 50px;
@@ -878,6 +1070,24 @@ const PdepositBox = styled.main`
     &.deposit {
       width: 454px;
       min-width: 392px;
+
+      .mainet {
+        display: flex;
+        align-items: flex-end;
+        margin-left: auto;
+        .key {
+          margin-right: 9px;
+        }
+
+        .mainetLogoCont {
+          width: 20px;
+          height: 20px;
+          img {
+            width: 100%;
+            height: 100%;
+          }
+        }
+      }
 
       & > .value {
         display: flex;
@@ -1070,6 +1280,27 @@ const PdepositBox = styled.main`
 
               .value {
               }
+            }
+          }
+
+          .chargeBtn {
+            width: 100%;
+            height: 56px;
+            font-size: 18px;
+            font-weight: 700;
+            color: #4e3200;
+            background: linear-gradient(
+              99.16deg,
+              #604719 3.95%,
+              #f7ab1f 52.09%
+            );
+            border-radius: 10px;
+
+            margin-bottom: 4px;
+
+            &:disabled {
+              color: #f7ab1f;
+              background: #fff;
             }
           }
 

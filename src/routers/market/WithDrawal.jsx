@@ -92,9 +92,9 @@ export default function WithDrawal() {
               //Transaction Success
               setToast({ type: "alarm", cont: "Submission Successful" });
               setProcess(true);
-              setTimeout(() => {
-                window.location.reload(false);
-              }, 3000);
+              // setTimeout(() => {
+              //   window.location.reload(false);
+              // }, 3000);
             }
           }
         })
