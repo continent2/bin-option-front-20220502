@@ -74,5 +74,5 @@ export const API = {
 
   POST_ORDER_REQUEST: URL + `/transfers/processing-request?nettype=${nettype}`,
 
-  GET_FRONT_VER: URL + "/queries/singlerow/settings/name/FRONT_VER",
+  GET_FRONT_VER: URL + "/queries/singlerow/settings/name/FRONT_VER?active=1",
 };
