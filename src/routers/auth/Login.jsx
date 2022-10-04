@@ -12,6 +12,7 @@ import { API } from "../../configs/api";
 import { gCliId } from "../../configs/setting";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
+import { nettype } from "../../configs/nettype";
 
 export default function Login() {
   const { t } = useTranslation();
@@ -58,7 +59,7 @@ export default function Login() {
     console.log(loginDataForm);
 
     axios
-      .post(`${API.LOGIN}/${category.value}`, loginDataForm)
+      .post(`${API.LOGIN}/${category.value}?nettype=${nettype}`, loginDataForm)
       .then(({ data }) => {
         console.log(data);
 

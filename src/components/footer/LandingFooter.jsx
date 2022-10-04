@@ -21,11 +21,11 @@ export default function LandingFooter() {
         setFrontVer(data.respdata);
         console.log(data);
         console.log(data.respdata.value.split("-")[0]);
-        if (version.commitLog?.includes(data.respdata.value.split("-")[0])) {
+        if (version?.includes(data.respdata.value.split("-")[0])) {
           console.log("버전 일치함");
         } else {
           console.log("버전 안 일치함");
-          //          window.location.reload();
+          // window.location.reload()
         }
         // if(data.respdata.value !== nettype)
       });
@@ -75,7 +75,7 @@ export default function LandingFooter() {
           </article>
         </section>
         <section className="version">
-          <p>v | {version}</p>
+          <p>version : {version}</p>
         </section>
       </MlandingFooterBox>
     );
@@ -129,7 +129,7 @@ export default function LandingFooter() {
             marginBottom: "15px",
           }}
         >
-          <p>v | {version}</p>
+          <p>version : {version}</p>
         </section>
       </>
     );

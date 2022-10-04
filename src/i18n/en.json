@@ -332,5 +332,6 @@
   "Rxaddr": "Rxaddr",
   "Senderaddr": "Senderaddr",
   "Txhash": "txhash",
-  "* 실제 충전 금액은 요청을 접수하시는 시점의 선택하신 화폐와 USD 간환율을 적용하여 반영됩니다": "* The actual charge amount is reflected by applying the exchange rate between the selected currency and USD at the time of receipt of the request"
+  "* 실제 충전 금액은 요청을 접수하시는 시점의 선택하신 화폐와 USD 간환율을 적용하여 반영됩니다": "* The actual charge amount is reflected by applying the exchange rate between the selected currency and USD at the time of receipt of the request",
+  "Balance Charge": "Balance Charge"
 }

@@ -36,6 +36,7 @@ import BarSizePopup from "../../components/bet/BarSizePopup";
 import ChartTypePopup from "../../components/bet/ChartTypePopup";
 import { useNavigate } from "react-router-dom";
 import ChartOptPopup from "../../components/bet/ChartOptPopup";
+import { nettype } from "../../configs/nettype";
 
 export default function Demo({ socket, notiOpt }) {
   const hoverRef1 = useRef();
@@ -218,7 +219,7 @@ export default function Demo({ socket, notiOpt }) {
 
     socket.emit(
       "dividendrate_0913",
-      { assetList: [..._dividList], min: duration },
+      { assetList: [..._dividList], min: duration, nettype: nettype },
       () => {},
       (err) => console.error("timeout", err)
     );

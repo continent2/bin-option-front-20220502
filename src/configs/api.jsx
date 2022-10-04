@@ -71,8 +71,11 @@ export const API = {
   ADMIN_QR: URL + "/admins/domain/setting/qr",
 
   GET_RECEIVE_AGENTS: URL + "/transfers/receiving-agents",
+  GET_RECEIVE_DEPOSIT_ASSET: URL + "/misc/configs",
 
   POST_ORDER_REQUEST: URL + `/transfers/processing-request?nettype=${nettype}`,
 
-  GET_FRONT_VER: URL + "/queries/singlerow/settings/name/FRONT_VER",
+  GET_FRONT_VER: URL + "/queries/singlerow/settings/name/FRONT_VER?active=1",
+
+  POST_CHARGE_GAS: URL + "/transactions/request-charge-gasfee",
 };
