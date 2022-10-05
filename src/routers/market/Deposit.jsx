@@ -273,6 +273,7 @@ export default function Deposit({ userData }) {
   useEffect(() => {
     try {
       axios.get(API.GET_DEPOSIT_FEE).then(({ data }) => {
+        console.log(data);
         setSettings({
           commision: data.respdata.feeamount,
           minDeposit: data.respdata.minimumamount,
@@ -285,6 +286,7 @@ export default function Deposit({ userData }) {
   }, []);
 
   const getReceiveDepost = () => {
+    console.log("안녕");
     try {
       axios
         .get(`${API.GET_RECEIVE_DEPOSIT_ASSET}?nettype=${nettype}`, {
@@ -323,7 +325,11 @@ export default function Deposit({ userData }) {
               if (data.list) {
                 setAssetList((prev) => [...prev, asset[0], ...data?.list]);
               } else {
-                setAssetList((prev) => [...prev, asset[0]]);
+                if (assetList.length === 1) {
+                  return;
+                } else {
+                  setAssetList((prev) => [...prev, asset[0]]);
+                }
               }
             });
         });
@@ -366,7 +372,6 @@ export default function Deposit({ userData }) {
     }
   }
 
-  console.log(confirm);
   useEffect(() => {
     getAccount();
   }, []);
@@ -459,7 +464,7 @@ export default function Deposit({ userData }) {
                       onChange={(e) => setAmount(e.target.value)}
                       placeholder=""
                     />
-                    <strong className="unit">{asset.name}</strong>
+                    <strong className="unit">{asset.symbol}</strong>
                   </div>
 
                   <ul className="optList">
@@ -500,7 +505,7 @@ export default function Deposit({ userData }) {
                   <li>
                     <p className="key">{t("Minimum deposit amount")}</p>
                     <p className="value">
-                      {settings.minDeposit} {asset.name}
+                      {settings.minDeposit} {asset.symbol}
                     </p>
                   </li>
                   <li>
@@ -586,7 +591,7 @@ export default function Deposit({ userData }) {
   else
     return (
       <>
-        <PdepositBox>
+        <PdepositBox chargeError={chargeError}>
           <article className="deposit">
             <div className="key">
               <span className="count">1</span>
@@ -699,7 +704,7 @@ export default function Deposit({ userData }) {
                       onChange={(e) => setAmount(e.target.value)}
                       placeholder=""
                     />
-                    <strong className="unit">{asset.name}</strong>
+                    <strong className="unit">{asset.symbol}</strong>
                   </div>
 
                   <ul className="optList">
@@ -740,7 +745,7 @@ export default function Deposit({ userData }) {
                   <li>
                     <p className="key">{t("Minimum deposit amount")}</p>
                     <p className="value">
-                      {settings.minDeposit} {asset.name}
+                      {settings.minDeposit} {asset.symbol}
                     </p>
                   </li>
                   <li>
@@ -765,7 +770,7 @@ export default function Deposit({ userData }) {
                   disabled={!(amount && enableMeta && !chargeError)}
                   onClick={onClickDepositBtn}
                 >
-                  <p className="common">{t("Deposit")}</p>
+                  <p className="common">{t("Deposit(Metamask)")}</p>
                   <img className="loader" src={L_loader} alt="" />
                 </button>
               </div>
@@ -802,7 +807,7 @@ export default function Deposit({ userData }) {
                   <ul className="bodyList">
                     <li>
                       {t(
-                        `Please make sure that only ${asset.name} deposit is made via this address. Otherwise, your deposited funds will not be added to your available balance — nor will it be refunded.`
+                        `Please make sure that only ${asset.symbol} deposit is made via this address. Otherwise, your deposited funds will not be added to your available balance — nor will it be refunded.`
                       )}
                     </li>
                     <li>
@@ -825,7 +830,7 @@ export default function Deposit({ userData }) {
                     </li>
                     <li>
                       {t(
-                        "The funds will be credited as soon as we get 18 confirmations from the Polygon network."
+                        `The funds will be credited as soon as we get 18 confirmations from the ${networkname} network.`
                       )}
                     </li>
                     <li>
@@ -1403,6 +1408,11 @@ const PdepositBox = styled.main`
         border-radius: 20px;
         box-shadow: inset 0px 3px 3px rgba(255, 255, 255, 0.4),
           0px 10px 40px rgba(255, 255, 255, 0.2);
+
+        filter: ${(props) =>
+          props.chargeError
+            ? "filter: blur(10px);-webkit-filter: blur(10px);"
+            : ""};
 
         .addressBox {
           width: 100%;

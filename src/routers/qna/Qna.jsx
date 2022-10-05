@@ -44,7 +44,11 @@ export default function Qna() {
                       </summary>
 
                       <div className="answerBox">
-                        <p>{lorem}</p>
+                        <p>
+                          {t(
+                            "The binary option is an investment product that simply predicts whether it will eventually become larger (HIGH) or smaller (LOW) than the current price set. For example, when a dollar is 1231.50, you're just expecting that it's going to be higher than 1231.50 at the set time."
+                          )}
+                        </p>
                       </div>
                     </details>
                   </li>
@@ -261,7 +265,11 @@ export default function Qna() {
                       </summary>
 
                       <div className="answerBox">
-                        <p>{lorem}</p>
+                        <p>
+                          {t(
+                            "The binary option is an investment product that simply predicts whether it will eventually become larger (HIGH) or smaller (LOW) than the current price set. For example, when a dollar is 1231.50, you're just expecting that it's going to be higher than 1231.50 at the set time."
+                          )}
+                        </p>
                       </div>
                     </details>
                   </li>
@@ -271,11 +279,15 @@ export default function Qna() {
                       <summary>
                         <img src={I_dnArw} alt="" />
 
-                        <p>{t("What is the expiration period of a tra de?")}</p>
+                        <p>{t("Why binary option?")}</p>
                       </summary>
 
                       <div className="answerBox">
-                        <p>{lorem}</p>
+                        <p>
+                          {t(
+                            "The English word [Binary Option] means binary, which means zero or one. Option means choice, so to translate itself, [choose whether to go up or down]. It's exactly the same investment method as the meaning of the word"
+                          )}
+                        </p>
                       </div>
                     </details>
                   </li>
@@ -297,7 +309,7 @@ export default function Qna() {
                       </summary>
 
                       <div className="answerBox">
-                        <p>{lorem}</p>
+                        <p>{t("Users cannot deposit less than 10 BUSD.")}</p>
                       </div>
                     </details>
                   </li>
@@ -311,39 +323,11 @@ export default function Qna() {
                       </summary>
 
                       <div className="answerBox">
-                        <p>{lorem}</p>
-                      </div>
-                    </details>
-                  </li>
-
-                  <li>
-                    <details>
-                      <summary>
-                        <img src={I_dnArw} alt="" />
-
                         <p>
                           {t(
-                            "Do I need to deposit the account of the trading platform and how often do I need to do this?"
+                            "Users can deposit money directly from the user-owned exchange wallet to the user wallet of BETBITYou can also make a deposit through a meta mask."
                           )}
                         </p>
-                      </summary>
-
-                      <div className="answerBox">
-                        <p>{lorem}</p>
-                      </div>
-                    </details>
-                  </li>
-
-                  <li>
-                    <details>
-                      <summary>
-                        <img src={I_dnArw} alt="" />
-
-                        <p>{t("What is the minimum deposit amount?")}</p>
-                      </summary>
-
-                      <div className="answerBox">
-                        <p>{lorem}</p>
                       </div>
                     </details>
                   </li>
@@ -361,7 +345,11 @@ export default function Qna() {
                       </summary>
 
                       <div className="answerBox">
-                        <p>{lorem}</p>
+                        <p>
+                          {t(
+                            "Users can transfer to the BUSD coin from their account to the address they want.However, the fee is 1BUSD."
+                          )}
+                        </p>
                       </div>
                     </details>
                   </li>
@@ -375,7 +363,11 @@ export default function Qna() {
                       </summary>
 
                       <div className="answerBox">
-                        <p>{lorem}</p>
+                        <p>
+                          {t(
+                            "The user can withdraw 10 BUSD with the minimum withdrawal amount."
+                          )}
+                        </p>
                       </div>
                     </details>
                   </li>
@@ -393,12 +385,12 @@ export default function Qna() {
                       </summary>
 
                       <div className="answerBox">
-                        <p>{lorem}</p>
+                        <p>{t("The user does not need any documents.")}</p>
                       </div>
                     </details>
                   </li>
 
-                  <li>
+                  {/* <li>
                     <details>
                       <summary>
                         <img src={I_dnArw} alt="" />
@@ -410,7 +402,7 @@ export default function Qna() {
                         <p>{lorem}</p>
                       </div>
                     </details>
-                  </li>
+                  </li> */}
 
                   <li>
                     <details>
@@ -425,7 +417,11 @@ export default function Qna() {
                       </summary>
 
                       <div className="answerBox">
-                        <p>{lorem}</p>
+                        <p>
+                          {t(
+                            "The user must pay 1 BUSD to the site as a fee when withdrawing."
+                          )}
+                        </p>
                       </div>
                     </details>
                   </li>

@@ -311,15 +311,32 @@ export default function Live({ socket, notiOpt }) {
                             <img src={I_dnPolWhite} alt="" />
                           </button>
                         </li>
-
                         <li>
+                          <button
+                            className="utilBtn"
+                            onClick={() => setBarSizePopup(true)}
+                          >
+                            <p>{chartOpt.barSizeStr}</p>
+                          </button>
+                        </li>
+                        {barSizePopup && (
+                          <>
+                            <BarSizePopup
+                              off={setBarSizePopup}
+                              chartOpt={chartOpt}
+                              setChartOpt={setChartOpt}
+                            />
+                            <PopupBg off={setBarSizePopup} />
+                          </>
+                        )}
+                        {/* <li>
                           <button
                             className="chartBtn"
                             onClick={() => setChartOptPopup(true)}
                           >
                             <img src={I_candleChartWhite} alt="" />
                           </button>
-                        </li>
+                        </li> */}
                       </ul>
 
                       <button
@@ -612,7 +629,7 @@ export default function Live({ socket, notiOpt }) {
                         </>
                       )}
 
-                      <li>
+                      {/* <li>
                         <button
                           className="utilBtn"
                           onClick={() => setChartTypePopup(true)}
@@ -621,8 +638,8 @@ export default function Live({ socket, notiOpt }) {
                         </button>
 
                         <p className="info">{`Chart type : ${chartOpt.typeStr}`}</p>
-                      </li>
-
+                      </li> */}
+                      {/* 
                       {chartTypePopup && (
                         <>
                           <ChartTypePopup
@@ -632,7 +649,7 @@ export default function Live({ socket, notiOpt }) {
                           />
                           <PopupBg off={setChartTypePopup} />
                         </>
-                      )}
+                      )} */}
                     </ul>
 
                     <AmChart
@@ -945,6 +962,26 @@ const MbetBox = styled.main`
               &:hover {
                 .info {
                   display: inline-block;
+                }
+              }
+
+              .utilBtn {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 32px;
+                height: 32px;
+                font-size: 16px;
+                font-weight: 700;
+                background: #32323d;
+                border-radius: 6px;
+
+                &:hover {
+                  background: #474751;
+                }
+
+                img {
+                  width: 23px;
                 }
               }
 

@@ -16,6 +16,7 @@ import MinimumWithdrawalPopup from "../../components/market/withdrawal/MinimumWi
 import { useTranslation } from "react-i18next";
 import { useEffect } from "react";
 import ConfirmPopup from "../../components/market/withdrawal/ConfirmPopup";
+import { nettype } from "../../configs/nettype";
 
 export default function WithDrawal() {
   const { t } = useTranslation();
@@ -46,6 +47,13 @@ export default function WithDrawal() {
   const [commission, setCommission] = useState(1);
   const [minimumAmount, setMinimumAmount] = useState(5);
   const [amountErrorMessage, setAmountErrorMessage] = useState("");
+  const [asset, setAsset] = useState({});
+  const [ethAmount, setEthAmount] = useState("");
+  const [chargeError, SetChargeError] = useState(false);
+  const [ethCount, setEthCount] = useState(0);
+  const [assetList, setAssetList] = useState([]);
+  const [networkname, setNetworkName] = useState("");
+  const [logonetwork, setLogonetwork] = useState("");
 
   const onChangeAmount = (val) => {
     if (val > 500000) {
@@ -103,6 +111,54 @@ export default function WithDrawal() {
     } else setLoader();
   }
 
+  const getReceiveDepost = () => {
+    console.log("안녕");
+    try {
+      axios
+        .get(`${API.GET_RECEIVE_DEPOSIT_ASSET}?nettype=${nettype}`, {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        })
+        .then(({ data }) => {
+          console.log(data);
+
+          const asset = data.respdata.listtokens.filter((v, i) => {
+            return v.nettype === nettype;
+          });
+          console.log(asset);
+          setNetworkName(asset[0].networkname);
+          setLogonetwork(asset[0].logonetwork);
+          axios
+            .get(`${API.GET_RECEIVE_AGENTS}`, {
+              headers: {
+                Authorization: localStorage.getItem("token"),
+              },
+            })
+            .then(({ data }) => {
+              console.log(data);
+              console.log(data.list);
+              setAsset(asset[0]);
+              if (data.list) {
+                setAssetList((prev) => [...prev, asset[0], ...data?.list]);
+              } else {
+                if (assetList.length === 1) {
+                  return;
+                } else {
+                  setAssetList((prev) => [...prev, asset[0]]);
+                }
+              }
+            });
+        });
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  useEffect(() => {
+    getReceiveDepost();
+  }, []);
+
   useEffect(() => {
     try {
       axios.get(API.GET_FEE_RANGE).then(({ data }) => {
@@ -122,6 +178,21 @@ export default function WithDrawal() {
     const re = /^(0x)[0-9A-Fa-f]{40}$/;
     setValidAddress(re.test(address));
   }, [address]);
+
+  // useEffect(() => {
+  //   try {
+  //     axios.get(API.GET_WITHDRAW_FEE).then(({ data }) => {
+  //       console.log(data);
+  //       setSettings({
+  //         commision: data.respdata.feeamount,
+  //         minDeposit: data.respdata.minimumamount,
+  //         maxTransactions: -1,
+  //       });
+  //     });
+  //   } catch (e) {
+  //     console.error(e);
+  //   }
+  // }, []);
 
   if (isMobile)
     return (
@@ -219,7 +290,7 @@ export default function WithDrawal() {
                         onChange={(e) => onChangeAmount(e.target.value)}
                         placeholder=""
                       />
-                      <strong className="unit">USDT</strong>
+                      <strong className="unit">{asset.symbol}</strong>
                     </div>
                   </li>
                   <p className="errorText">{amountErrorMessage}</p>
@@ -245,7 +316,9 @@ export default function WithDrawal() {
                     </li>
                     <li>
                       <p className="key">{t("Minimum withdraw amount")}</p>
-                      <p className="value">{settings.minWithdraw} USDT</p>
+                      <p className="value">
+                        {settings.minWithdraw} {asset.symbol}
+                      </p>
                     </li>
                     <li>
                       <p className="key">{t("Max amount per transaction")}</p>
@@ -309,6 +382,17 @@ export default function WithDrawal() {
               <span className="count">1</span>
 
               <strong className="title">{t("Withdraw")}</strong>
+              {asset && (
+                <div className="mainet">
+                  {networkname && <span className="key">{networkname}</span>}
+
+                  {logonetwork && (
+                    <div className="mainetLogoCont">
+                      <img src={logonetwork} alt="" />
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
             <div className="value">
@@ -317,7 +401,7 @@ export default function WithDrawal() {
                   <p className="key">{t("Asset")}</p>
 
                   <div className="selectBox">
-                    <button
+                    {/* <button
                       className={`${tokenPopup && "on"} selBtn`}
                       onClick={() => setTokenPopup(true)}
                     >
@@ -325,16 +409,38 @@ export default function WithDrawal() {
                       <strong className="name">{token.text}</strong>
 
                       <img className="arw" src={I_dnPolWhite} />
+                    </button> */}
+
+                    <button
+                      className={`${tokenPopup && "on"} selBtn`}
+                      onClick={() => setTokenPopup(true)}
+                    >
+                      <img className="token" src={asset.logourl} alt="" />
+                      <strong className="name">{asset.symbol}</strong>
+
+                      <img className="arw" src={I_dnPolWhite} />
                     </button>
 
                     {tokenPopup && (
                       <>
-                        <TokenSelectPopup
+                        {/* <TokenSelectPopup
                           off={setTokenPopup}
                           list={tokenList}
                           setCont={setToken}
+                        /> */}
+                        <TokenSelectPopup
+                          off={setTokenPopup}
+                          list={
+                            assetList
+                            // isBranch === 1
+                            //   ? D_branchTokenList
+                            //   : D_unBranchTokenList
+                          }
+                          asset={asset}
+                          setCont={setToken}
+                          setAsset={setAsset}
                         />
-                        <PopupBg off={setTokenPopup} />
+                        <PopupBg off={setTokenPopup} index={3} />
                       </>
                     )}
                   </div>
@@ -351,7 +457,7 @@ export default function WithDrawal() {
                       onChange={(e) => onChangeAmount(e.target.value)}
                       placeholder=""
                     />
-                    <strong className="unit">USDT</strong>
+                    <strong className="unit">{asset.symbol}</strong>
                   </div>
                 </li>
                 <p className="errorText">{amountErrorMessage}</p>
@@ -376,7 +482,9 @@ export default function WithDrawal() {
                   </li>
                   <li>
                     <p className="key">{t("Minimum withdraw amount")}</p>
-                    <p className="value">{settings.minWithdraw} USDT</p>
+                    <p className="value">
+                      {settings.minWithdraw} {asset.symbol}
+                    </p>
                   </li>
                   <li>
                     <p className="key">{t("Max amount per transaction")}</p>
@@ -464,7 +572,7 @@ export default function WithDrawal() {
                   </li>
                   <li>
                     {t(
-                      "The funds will be credited as soon as we get 18 confirmations from the Polygon network."
+                      `The funds will be credited as soon as we get 18 confirmations from the ${networkname} network.`
                     )}
                   </li>
                   <li>
@@ -753,6 +861,24 @@ const PwithDrawalBox = styled.main`
     &.contArea {
       width: 454px;
       min-width: 392px;
+
+      .mainet {
+        display: flex;
+        align-items: flex-end;
+        margin-left: auto;
+        .key {
+          margin-right: 9px;
+        }
+
+        .mainetLogoCont {
+          width: 20px;
+          height: 20px;
+          img {
+            width: 100%;
+            height: 100%;
+          }
+        }
+      }
 
       & > .value {
         display: flex;
