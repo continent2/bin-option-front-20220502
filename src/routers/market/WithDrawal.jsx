@@ -30,14 +30,29 @@ export default function WithDrawal() {
     minWithdraw: 5,
     maxTransactions: -1,
   });
-  const [token, setToken] = useState({
+/**   const [token, setToken] = useState({
     icon: T_usdt,
     type: "USDT_BINOPT",
-    text: "USDT",
-  });
-  const [tokenList, setTokenList] = useState([
-    { icon: T_usdt, type: "USDT_BINOPT", text: "USDT" },
-  ]);
+    text: "US DT",
+  }); */
+  let [ token , setToken ] = useState ( { icon :'' , type:'' , text :''  })
+  let [tokenList, setTokenList] = useState( [{ icon :'' , type:'' , text :''  } ] )
+  let jasset= localStorage.getItem ( 'asset' )
+  jasset = JSON.parse ( jasset )
+  let jassettoassign ={ icon :'' , type:'' , text :''  }
+  if ( jasset )
+  { jassettoassign = {
+    icon : jasset[ 'logourl' ] 
+    , type : jasset[ 'symbol' ]
+    , text : jasset[ 'symbol' ]
+  }
+  }
+  useEffect ( _=>{  setToken ( jassettoassign ) } , [] )
+  useEffect ( _=>{  setTokenList ( [ jassettoassign ])    } , [] )
+//   let [tokenList, setTokenList] = useState( [] )
+//  const [tokenList, setTokenList] = useState([
+//    { icon: T_usdt, type: "USDT_BINOPT", text: "US DT" },
+  // ]);
   const [process, setProcess] = useState(false);
   const [loader, setLoader] = useState("");
   const [minWithdrawalPopup, setMinWithdrawalPopup] = useState(false);
@@ -46,7 +61,8 @@ export default function WithDrawal() {
   const [commission, setCommission] = useState(1);
   const [minimumAmount, setMinimumAmount] = useState(5);
   const [amountErrorMessage, setAmountErrorMessage] = useState("");
-
+  const ASSETSYMBOL_DEF = 'BUSD'
+  let [ assetsymbol , setassetsymbol ] = useState ( localStorage.getItem ('assetsymbol') || ASSETSYMBOL_DEF )
   const onChangeAmount = (val) => {
     if (val > 500000) {
       setAmount(val);
@@ -219,7 +235,7 @@ export default function WithDrawal() {
                         onChange={(e) => onChangeAmount(e.target.value)}
                         placeholder=""
                       />
-                      <strong className="unit">USDT</strong>
+                      <strong className="unit"> { assetsymbol }</strong>
                     </div>
                   </li>
                   <p className="errorText">{amountErrorMessage}</p>
@@ -245,7 +261,7 @@ export default function WithDrawal() {
                     </li>
                     <li>
                       <p className="key">{t("Minimum withdraw amount")}</p>
-                      <p className="value">{settings.minWithdraw} USDT</p>
+                      <p className="value">{settings.minWithdraw}  { assetsymbol } </p>
                     </li>
                     <li>
                       <p className="key">{t("Max amount per transaction")}</p>
@@ -351,7 +367,7 @@ export default function WithDrawal() {
                       onChange={(e) => onChangeAmount(e.target.value)}
                       placeholder=""
                     />
-                    <strong className="unit">USDT</strong>
+                    <strong className="unit">  { assetsymbol } </strong>
                   </div>
                 </li>
                 <p className="errorText">{amountErrorMessage}</p>
@@ -376,7 +392,7 @@ export default function WithDrawal() {
                   </li>
                   <li>
                     <p className="key">{t("Minimum withdraw amount")}</p>
-                    <p className="value">{settings.minWithdraw} USDT</p>
+                    <p className="value">{settings.minWithdraw}  { assetsymbol }</p>
                   </li>
                   <li>
                     <p className="key">{t("Max amount per transaction")}</p>
