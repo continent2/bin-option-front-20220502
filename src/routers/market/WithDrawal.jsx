@@ -31,14 +31,33 @@ export default function WithDrawal() {
     minWithdraw: 5,
     maxTransactions: -1,
   });
-  const [token, setToken] = useState({
+  /**   const [token, setToken] = useState({
     icon: T_usdt,
     type: "USDT_BINOPT",
-    text: "USDT",
-  });
-  const [tokenList, setTokenList] = useState([
-    { icon: T_usdt, type: "USDT_BINOPT", text: "USDT" },
-  ]);
+    text: "US DT",
+  }); */
+  let [token, setToken] = useState({ icon: "", type: "", text: "" });
+  let [tokenList, setTokenList] = useState([{ icon: "", type: "", text: "" }]);
+  let jasset = localStorage.getItem("asset");
+  jasset = JSON.parse(jasset);
+  let jassettoassign = { icon: "", type: "", text: "" };
+  if (jasset) {
+    jassettoassign = {
+      icon: jasset["logourl"],
+      type: jasset["symbol"],
+      text: jasset["symbol"],
+    };
+  }
+  useEffect((_) => {
+    setToken(jassettoassign);
+  }, []);
+  useEffect((_) => {
+    setTokenList([jassettoassign]);
+  }, []);
+  //   let [tokenList, setTokenList] = useState( [] )
+  //  const [tokenList, setTokenList] = useState([
+  //    { icon: T_usdt, type: "USDT_BINOPT", text: "US DT" },
+  // ]);
   const [process, setProcess] = useState(false);
   const [loader, setLoader] = useState("");
   const [minWithdrawalPopup, setMinWithdrawalPopup] = useState(false);
@@ -54,7 +73,10 @@ export default function WithDrawal() {
   const [assetList, setAssetList] = useState([]);
   const [networkname, setNetworkName] = useState("");
   const [logonetwork, setLogonetwork] = useState("");
-
+  const ASSETSYMBOL_DEF = "BUSD";
+  let [assetsymbol, setassetsymbol] = useState(
+    localStorage.getItem("asset") || ASSETSYMBOL_DEF
+  );
   const onChangeAmount = (val) => {
     if (val > 500000) {
       setAmount(val);

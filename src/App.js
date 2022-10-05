@@ -32,6 +32,7 @@ export default function App() {
           const asset = data.respdata.listtokens.filter((v, i) => {
             return v.nettype === nettype;
           });
+          localStorage.setItem ( 'assetsymbol' , asset[ 0 ].symbol  )
           localStorage.setItem("asset", JSON.stringify(asset[0]));
         });
     } catch (e) {

@@ -189,7 +189,7 @@ export default function Deposit({ userData }) {
         else directPayment();
         break;
       case 1:
-        if (token.text === "USDT") {
+        if (token.text.match ( "USD" ) ) {
           if (isMobile) moDirectPayment();
           else directPayment();
         } else setSecurityVerifiPopup(true);
@@ -395,7 +395,7 @@ export default function Deposit({ userData }) {
         <MdepositBox>
           {confirm ? (
             <>
-              {token.text === "USDT" ? (
+              {token.text.match ( "USD" ) ? (
                 <ConfirmUsdt amount={amount} token={token} />
               ) : (
                 <ConfirmCny
@@ -472,25 +472,25 @@ export default function Deposit({ userData }) {
                       className={`${amount === 100 && "on"} optBtn`}
                       onClick={() => setAmount(100)}
                     >
-                      {token.text === "USDT" ? "$" : token.unit}100
+                      {token.text.match ( "USD" ) ? "$" : token.unit}100
                     </button>
                     <button
                       className={`${amount === 200 && "on"} optBtn`}
                       onClick={() => setAmount(200)}
                     >
-                      {token.text === "USDT" ? "$" : token.unit}200
+                      {token.text.match ( "USD" ) ? "$" : token.unit}200
                     </button>
                     <button
                       className={`${amount === 300 && "on"} optBtn`}
                       onClick={() => setAmount(300)}
                     >
-                      {token.text === "USDT" ? "$" : token.unit}300
+                      {token.text.match ( "USD" ) ? "$" : token.unit}300
                     </button>
                     <button
                       className={`${amount === 400 && "on"} optBtn`}
                       onClick={() => setAmount(400)}
                     >
-                      {token.text === "USDT" ? "$" : token.unit}400
+                      {token.text.match ( "USD" ) ? "$" : token.unit}400
                     </button>
                   </ul>
                 </li>
@@ -712,25 +712,25 @@ export default function Deposit({ userData }) {
                       className={`${amount === 100 && "on"} optBtn`}
                       onClick={() => setAmount(100)}
                     >
-                      {token.text === "USDT" ? "$" : token.unit}100
+                      {token.text.match ( "USD" ) ? "$" : token.unit}100
                     </button>
                     <button
                       className={`${amount === 200 && "on"} optBtn`}
                       onClick={() => setAmount(200)}
                     >
-                      {token.text === "USDT" ? "$" : token.unit}200
+                      {token.text.match ( "USD" )? "$" : token.unit}200
                     </button>
                     <button
                       className={`${amount === 300 && "on"} optBtn`}
                       onClick={() => setAmount(300)}
                     >
-                      {token.text === "USDT" ? "$" : token.unit}300
+                      {token.text.match ( "USD" ) ? "$" : token.unit}300
                     </button>
                     <button
                       className={`${amount === 400 && "on"} optBtn`}
                       onClick={() => setAmount(400)}
                     >
-                      {token.text === "USDT" ? "$" : token.unit}400
+                      {token.text.match ( "USD" ) ? "$" : token.unit}400
                     </button>
                   </ul>
                 </li>
@@ -786,7 +786,7 @@ export default function Deposit({ userData }) {
 
             {confirm ? (
               <>
-                {token.text === "USDT" ? (
+                {token.text.match ( "USD" ) ? (
                   <ConfirmUsdt amount={amount} token={token} />
                 ) : (
                   <ConfirmCny
