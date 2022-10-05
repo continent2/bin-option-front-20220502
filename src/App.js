@@ -1,8 +1,12 @@
+import axios from "axios";
+import { useEffect } from "react";
 import { HashRouter, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import styled from "styled-components";
 import EventListener from "./components/common/EventListener";
 import GlobalStyle from "./components/common/globalStyle";
+import { API } from "./configs/api";
+import { nettype } from "./configs/nettype";
 import Auth from "./routers/auth/Auth";
 import Bet from "./routers/bet/Bet";
 import Finance from "./routers/finance/Finance";
@@ -15,6 +19,26 @@ import "./util/ReactToastify.css";
 // import "react-toastify/dist/ReactToastify.css";
 
 export default function App() {
+  useEffect(() => {
+    try {
+      axios
+        .get(`${API.GET_RECEIVE_DEPOSIT_ASSET}?nettype=${nettype}`, {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        })
+        .then(({ data }) => {
+          console.log({ data });
+          const asset = data.respdata.listtokens.filter((v, i) => {
+            return v.nettype === nettype;
+          });
+          localStorage.setItem("asset", JSON.stringify(asset[0]));
+        });
+    } catch (e) {
+      console.error(e);
+    }
+  }, []);
+
   return (
     <AppBox className="appBox">
       <link rel="preconnect" href="https://fonts.googleapis.com" />

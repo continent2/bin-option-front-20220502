@@ -19,12 +19,20 @@ export default function TokenSelectPopup({
   if (isMobile)
     return (
       <MselectPopupBox className="selectPopup">
-        {list.map((v, i) => (
+        {/* {list.map((v, i) => (
           <li key={i} onClick={() => onClickCont(v)}>
             <img className="icon" src={v.icon} />
             <p>{v.text}</p>
           </li>
-        ))}
+        ))} */}
+        {list.map((v, i) => {
+          return (
+            <li key={v.symbol} onClick={() => onClickCont(v)}>
+              <img className="icon" src={v.logourl} />
+              <p>{v.symbol}</p>
+            </li>
+          );
+        })}
       </MselectPopupBox>
     );
   else

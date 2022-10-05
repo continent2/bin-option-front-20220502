@@ -366,6 +366,7 @@ export default function Deposit({ userData }) {
     }
   }
 
+  console.log(confirm);
   useEffect(() => {
     getAccount();
   }, []);
@@ -413,15 +414,15 @@ export default function Deposit({ userData }) {
                       className={`${tokenPopup && "on"} selBtn`}
                       onClick={() => setTokenPopup(true)}
                     >
-                      <img className="token" src={token.icon} alt="" />
-                      <strong className="name">{token.text}</strong>
+                      <img className="token" src={asset.logourl} alt="" />
+                      <strong className="name">{asset.symbol}</strong>
 
                       <img className="arw" src={I_dnPolWhite} />
                     </button>
 
                     {tokenPopup && (
                       <>
-                        <TokenSelectPopup
+                        {/* <TokenSelectPopup
                           off={setTokenPopup}
                           list={
                             isBranch === 1
@@ -429,6 +430,18 @@ export default function Deposit({ userData }) {
                               : D_unBranchTokenList
                           }
                           setCont={setToken}
+                        /> */}
+                        <TokenSelectPopup
+                          off={setTokenPopup}
+                          list={
+                            assetList
+                            // isBranch === 1
+                            //   ? D_branchTokenList
+                            //   : D_unBranchTokenList
+                          }
+                          asset={asset}
+                          setCont={setToken}
+                          setAsset={setAsset}
                         />
                         <PopupBg off={setTokenPopup} index={3} />
                       </>
@@ -446,7 +459,7 @@ export default function Deposit({ userData }) {
                       onChange={(e) => setAmount(e.target.value)}
                       placeholder=""
                     />
-                    <strong className="unit">{token.text}</strong>
+                    <strong className="unit">{asset.name}</strong>
                   </div>
 
                   <ul className="optList">
@@ -487,7 +500,7 @@ export default function Deposit({ userData }) {
                   <li>
                     <p className="key">{t("Minimum deposit amount")}</p>
                     <p className="value">
-                      {settings.minDeposit} {token.text}
+                      {settings.minDeposit} {asset.name}
                     </p>
                   </li>
                   <li>
@@ -497,6 +510,26 @@ export default function Deposit({ userData }) {
                 </ul>
 
                 <button
+                  className={`${chargeLoding && "loading"} chargeBtn`}
+                  disabled={!chargeError}
+                  onClick={onClickChargeBtn}
+                >
+                  <p className="common">{t("Balance Charge")}</p>
+                  <img className="loader" src={L_loader} alt="" />
+                </button>
+
+                <button
+                  className={`${
+                    loader === "depositBtn" && "loading"
+                  } depositBtn`}
+                  disabled={!(amount && !chargeError)}
+                  onClick={onClickDepositBtn}
+                >
+                  <p className="common">{t("Deposit")}</p>
+                  <img className="loader" src={L_loader} alt="" />
+                </button>
+                {/* 
+                <button
                   className={`${
                     loader === "depositBtn" && "loading"
                   } depositBtn`}
@@ -505,7 +538,7 @@ export default function Deposit({ userData }) {
                 >
                   <p className="common">{t("Deposit")}</p>
                   <img className="loader" src={L_loader} alt="" />
-                </button>
+                </button> */}
               </article>
             </section>
           )}
@@ -598,6 +631,7 @@ export default function Deposit({ userData }) {
 
                       <img className="arw" src={I_dnPolWhite} />
                     </button>
+
                     {tokenPopup && (
                       <>
                         {/* <TokenSelectPopup
@@ -665,7 +699,7 @@ export default function Deposit({ userData }) {
                       onChange={(e) => setAmount(e.target.value)}
                       placeholder=""
                     />
-                    <strong className="unit">{token.text}</strong>
+                    <strong className="unit">{asset.name}</strong>
                   </div>
 
                   <ul className="optList">
@@ -706,7 +740,7 @@ export default function Deposit({ userData }) {
                   <li>
                     <p className="key">{t("Minimum deposit amount")}</p>
                     <p className="value">
-                      {settings.minDeposit} {token.text}
+                      {settings.minDeposit} {asset.name}
                     </p>
                   </li>
                   <li>
@@ -768,7 +802,7 @@ export default function Deposit({ userData }) {
                   <ul className="bodyList">
                     <li>
                       {t(
-                        `Please make sure that only ${token.text} deposit is made via this address. Otherwise, your deposited funds will not be added to your available balance — nor will it be refunded.`
+                        `Please make sure that only ${asset.name} deposit is made via this address. Otherwise, your deposited funds will not be added to your available balance — nor will it be refunded.`
                       )}
                     </li>
                     <li>

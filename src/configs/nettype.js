@@ -1,8 +1,8 @@
 //테스트 넷일때
-const nettype = "ETH_TESTNET_GOERLI";
+// const nettype = "ETH_TESTNET_GOERLI";
 
 //메인넷 사이트일 때export
-// const nettype = "BSC_MAINNET";
+const nettype = "BSC_MAINNET";
 
 // const nettype = "POLYGON_MAINNET";
 
