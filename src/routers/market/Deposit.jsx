@@ -33,6 +33,7 @@ import ConfirmUsdt from "../../components/market/deposit/ConfirmUsdt";
 import QRCode from "react-qr-code";
 import { nettype } from "../../configs/nettype";
 import { getethrep, getweirep } from "../../util/web3-utils";
+import { jweb3 } from "../../configs/configweb3";
 
 export default function Deposit({ userData }) {
   const { t } = useTranslation();
@@ -189,7 +190,7 @@ export default function Deposit({ userData }) {
         else directPayment();
         break;
       case 1:
-        if (token.text.match ( "USD" ) ) {
+        if (token.text.match("USD")) {
           if (isMobile) moDirectPayment();
           else directPayment();
         } else setSecurityVerifiPopup(true);
@@ -236,6 +237,112 @@ export default function Deposit({ userData }) {
       console.error(e);
     }
   }
+
+  function getAccount() {
+    if (walletAddress) {
+      const web3 = jweb3[nettype];
+      web3.eth.getBalance(walletAddress).then((res) => {
+        console.log(res);
+        if (previousCharge.current === null) {
+          console.log("값이 다를 때");
+          console.log("245라인 res입니다", res);
+          console.log("246라인 walletAddress입니다", walletAddress);
+          console.log("247라인 getEthRep입니다", getethrep(res, ""));
+          previousCharge.current = getethrep(res, "");
+          setEthAmount(getethrep(res, ""));
+          return;
+        }
+
+        if (previousCharge.current !== getethrep(res, "")) {
+          console.log("정지함");
+          console.log("253라인 walletAddress입니다", walletAddress);
+          console.log("255라인 getEthRep입니다", getethrep(res, ""));
+          setEthAmount(getethrep(res, ""));
+          getReceiveDepost();
+          clearInterval(ethCountTimer.current);
+          setEthCount(0);
+          setChargeLoading(false);
+        }
+      });
+
+      // query_eth_balance(walletAddress).then((res) => {
+      //   if (previousCharge.current === null) {
+      //     console.log("값이 다를 때");
+      //     console.log("245라인 res입니다", res);
+      //     console.log("246라인 walletAddress입니다", walletAddress);
+      //     console.log("247라인 getEthRep입니다", getethrep(res, ""));
+      //     previousCharge.current = getethrep(res, "");
+      //     setEthAmount(getethrep(res, ""));
+      //     return;
+      //   }
+
+      //   if (previousCharge.current !== getethrep(res, "")) {
+      //     console.log("정지함");
+      //     console.log("253라인 walletAddress입니다", walletAddress);
+      //     console.log("255라인 getEthRep입니다", getethrep(res, ""));
+      //     setEthAmount(getethrep(res, ""));
+      //     getReceiveDepost();
+      //     clearInterval(ethCountTimer.current);
+      //     setEthCount(0);
+      //     setChargeLoading(false);
+      //   }
+      // });
+    }
+  }
+
+  const getReceiveDepost = () => {
+    console.log("안녕");
+    try {
+      axios
+        .get(`${API.GET_RECEIVE_DEPOSIT_ASSET}?nettype=${nettype}`, {
+          headers: {
+            Authorization: localStorage.getItem("txoken"),
+          },
+        })
+        .then(({ data }) => {
+          console.log("assetData입니다.", data);
+          console.log(data.respdata.MIN_ETH_BALANCE_REQUIRED);
+          console.log(ethAmount);
+          if (
+            Number(data.respdata.MIN_ETH_BALANCE_REQUIRED) > Number(ethAmount)
+          ) {
+            SetChargeError(true);
+          } else {
+            SetChargeError(false);
+          }
+
+          const asset = data.respdata.listtokens.filter((v, i) => {
+            return v.nettype === nettype;
+          });
+          console.log("asset입니다", asset);
+          setNetworkName(asset[0].networkname);
+          setLogonetwork(asset[0].logonetwork);
+          axios
+            .get(`${API.GET_RECEIVE_AGENTS}`, {
+              headers: {
+                Authorization: localStorage.getItem("token"),
+              },
+            })
+            .then(({ data }) => {
+              console.log("agent입니다", data);
+              console.log(data);
+              console.log(data.list);
+              setAsset(asset[0]);
+              if (data.list) {
+                setAssetList((prev) => [...prev, asset[0], ...data?.list]);
+              } else {
+                if (assetList.length === 1) {
+                  return;
+                } else {
+                  setAssetList((prev) => [...prev, asset[0]]);
+                }
+              }
+            });
+        });
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   useEffect(() => {
     console.log(ethCount);
@@ -285,107 +392,17 @@ export default function Deposit({ userData }) {
     }
   }, []);
 
-  const getReceiveDepost = () => {
-    console.log("안녕");
-    try {
-      axios
-        .get(`${API.GET_RECEIVE_DEPOSIT_ASSET}?nettype=${nettype}`, {
-          headers: {
-            Authorization: localStorage.getItem("token"),
-          },
-        })
-        .then(({ data }) => {
-          console.log(data);
-          console.log(data.respdata.MIN_ETH_BALANCE_REQUIRED);
-          console.log(ethAmount);
-          if (
-            Number(data.respdata.MIN_ETH_BALANCE_REQUIRED) > Number(ethAmount)
-          ) {
-            SetChargeError(true);
-          } else {
-            SetChargeError(false);
-          }
-
-          const asset = data.respdata.listtokens.filter((v, i) => {
-            return v.nettype === nettype;
-          });
-          console.log(asset);
-          setNetworkName(asset[0].networkname);
-          setLogonetwork(asset[0].logonetwork);
-          axios
-            .get(`${API.GET_RECEIVE_AGENTS}`, {
-              headers: {
-                Authorization: localStorage.getItem("token"),
-              },
-            })
-            .then(({ data }) => {
-              console.log(data);
-              console.log(data.list);
-              setAsset(asset[0]);
-              if (data.list) {
-                setAssetList((prev) => [...prev, asset[0], ...data?.list]);
-              } else {
-                if (assetList.length === 1) {
-                  return;
-                } else {
-                  setAssetList((prev) => [...prev, asset[0]]);
-                }
-              }
-            });
-        });
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
   useEffect(() => {
     if (!ethAmount) {
       return;
     }
+    console.log("ethAmount입니다", ethAmount);
     getReceiveDepost();
   }, [ethAmount]);
-
-  function getAccount() {
-    if (walletAddress) {
-      // web3.eth.getBalance(address, function (error, wei) {
-      //   var balance = web3.utils.fromWei(wei, "ether");
-      //   console.log(balance);
-      // });
-      query_eth_balance(walletAddress).then((res) => {
-        if (previousCharge.current === null) {
-          console.log("값이 다를 때");
-          previousCharge.current = getethrep(res, "");
-          setEthAmount(getethrep(res, ""));
-          return;
-        }
-        console.log(getethrep(res, ""));
-        console.log(previousCharge.current);
-        if (previousCharge.current !== getethrep(res, "")) {
-          console.log("정지함");
-          setEthAmount(getethrep(res, ""));
-          getReceiveDepost();
-          clearInterval(ethCountTimer.current);
-          setEthCount(0);
-          setChargeLoading(false);
-        }
-      });
-    }
-  }
 
   useEffect(() => {
     getAccount();
   }, []);
-
-  // function getAddress() {
-  //   setTimeout(() => {
-  //     console.log(window.ethereum.selectedAddress);
-  //     setAddress(window.ethereum.selectedAddress);
-  //   }, 100);
-  // }
-
-  // useEffect(() => {
-  //   getAddress();
-  // }, []);
 
   if (isMobile)
     return (
@@ -395,7 +412,7 @@ export default function Deposit({ userData }) {
         <MdepositBox>
           {confirm ? (
             <>
-              {token.text.match ( "USD" ) ? (
+              {token.text.match("USD") ? (
                 <ConfirmUsdt amount={amount} token={token} />
               ) : (
                 <ConfirmCny
@@ -472,25 +489,25 @@ export default function Deposit({ userData }) {
                       className={`${amount === 100 && "on"} optBtn`}
                       onClick={() => setAmount(100)}
                     >
-                      {token.text.match ( "USD" ) ? "$" : token.unit}100
+                      {token.text.match("USD") ? "$" : token.unit}100
                     </button>
                     <button
                       className={`${amount === 200 && "on"} optBtn`}
                       onClick={() => setAmount(200)}
                     >
-                      {token.text.match ( "USD" ) ? "$" : token.unit}200
+                      {token.text.match("USD") ? "$" : token.unit}200
                     </button>
                     <button
                       className={`${amount === 300 && "on"} optBtn`}
                       onClick={() => setAmount(300)}
                     >
-                      {token.text.match ( "USD" ) ? "$" : token.unit}300
+                      {token.text.match("USD") ? "$" : token.unit}300
                     </button>
                     <button
                       className={`${amount === 400 && "on"} optBtn`}
                       onClick={() => setAmount(400)}
                     >
-                      {token.text.match ( "USD" ) ? "$" : token.unit}400
+                      {token.text.match("USD") ? "$" : token.unit}400
                     </button>
                   </ul>
                 </li>
@@ -712,25 +729,25 @@ export default function Deposit({ userData }) {
                       className={`${amount === 100 && "on"} optBtn`}
                       onClick={() => setAmount(100)}
                     >
-                      {token.text.match ( "USD" ) ? "$" : token.unit}100
+                      {token.text.match("USD") ? "$" : token.unit}100
                     </button>
                     <button
                       className={`${amount === 200 && "on"} optBtn`}
                       onClick={() => setAmount(200)}
                     >
-                      {token.text.match ( "USD" )? "$" : token.unit}200
+                      {token.text.match("USD") ? "$" : token.unit}200
                     </button>
                     <button
                       className={`${amount === 300 && "on"} optBtn`}
                       onClick={() => setAmount(300)}
                     >
-                      {token.text.match ( "USD" ) ? "$" : token.unit}300
+                      {token.text.match("USD") ? "$" : token.unit}300
                     </button>
                     <button
                       className={`${amount === 400 && "on"} optBtn`}
                       onClick={() => setAmount(400)}
                     >
-                      {token.text.match ( "USD" ) ? "$" : token.unit}400
+                      {token.text.match("USD") ? "$" : token.unit}400
                     </button>
                   </ul>
                 </li>
@@ -786,7 +803,7 @@ export default function Deposit({ userData }) {
 
             {confirm ? (
               <>
-                {token.text.match ( "USD" ) ? (
+                {token.text.match("USD") ? (
                   <ConfirmUsdt amount={amount} token={token} />
                 ) : (
                   <ConfirmCny

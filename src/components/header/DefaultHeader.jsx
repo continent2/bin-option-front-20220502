@@ -108,37 +108,46 @@ export default function DefaultHeader({ white, border, title, demoToken }) {
           <article className="rightArea">
             {title ? (
               <p className="title">{t(title)}</p>
-            ) : token && location.pathname.indexOf("auth") === -1 ? (
-              <span className="accountBox">
-                <button
-                  className="accountBtn"
-                  onClick={() => setMyBalancePopup(true)}
-                >
-                  {balanceType === "Demo" ? (
-                    <>
-                      <strong className="key">Demo</strong>
-                      <strong className="value">{`${`$${Number(
-                        balance?.DEMO?.avail / 10 ** 6 || 0
-                      ).toFixed(2)}`}`}</strong>
-                    </>
-                  ) : (
-                    <>
-                      <strong className="key">Live</strong>
-                      <strong className="value">
-                        {`$${Number(
-                          balance?.LIVE?.avail / 10 ** 6 || 0
-                        ).toFixed(2)}`}
-                      </strong>
-                    </>
-                  )}
-                </button>
+            ) : location.pathname.indexOf("auth") === -1 ? (
+              token || demoToken ? (
+                <span className="accountBox">
+                  <button
+                    className="accountBtn"
+                    onClick={() => setMyBalancePopup(true)}
+                  >
+                    {balanceType === "Demo" ? (
+                      <>
+                        <strong className="key">Demo</strong>
+                        <strong className="value">{`${`$${Number(
+                          balance?.DEMO?.avail / 10 ** 6 || 0
+                        ).toFixed(2)}`}`}</strong>
+                      </>
+                    ) : (
+                      <>
+                        <strong className="key">Live</strong>
+                        <strong className="value">
+                          {`$${Number(
+                            balance?.LIVE?.avail / 10 ** 6 || 0
+                          ).toFixed(2)}`}
+                        </strong>
+                      </>
+                    )}
+                  </button>
 
-                <button className="depositBtn" onClick={onClickDepositBtn}>
-                  <img src={I_wallet} alt="" />
+                  <button className="depositBtn" onClick={onClickDepositBtn}>
+                    <img src={I_wallet} alt="" />
+                  </button>
+                </span>
+              ) : (
+                <button className="loginBtn" onClick={() => navigate("/auth")}>
+                  {t("LOGIN")}
                 </button>
-              </span>
+              )
             ) : (
               <></>
+              // <button className="loginBtn" onClick={() => navigate("/auth")}>
+              //   {t("LOGIN")}
+              // </button>
             )}
           </article>
         </MdefaultHeaderBox>
@@ -387,6 +396,19 @@ const MdefaultHeaderBox = styled.header`
   .rightArea {
     .title {
       font-size: 16px;
+    }
+
+    .loginBtn {
+      width: 102px;
+      height: 34px;
+      font-weight: 700;
+      border: 1px solid #fff;
+      border-radius: 28px;
+
+      &:hover {
+        color: #f7ab1f;
+        border-color: #f7ab1f;
+      }
     }
 
     .accountBox {

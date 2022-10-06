@@ -247,6 +247,14 @@ export default function ProfPopup({ off, offAll }) {
               {t("Settings")}
             </button>
           </li>
+          {/* <li>
+            <button
+              className="navBtn"
+              onClick={() => onClickNav("/setting/security")}
+            >
+              {t("1:1 inqury answer")}
+            </button>
+          </li> */}
         </ul>
 
         <button className="logOutBtn" onClick={onClickLogOutBtn}>
