@@ -32,7 +32,7 @@ export default function App() {
           const asset = data.respdata.listtokens.filter((v, i) => {
             return v.nettype === nettype;
           });
-          localStorage.setItem ( 'assetsymbol' , asset[ 0 ].symbol  )
+          localStorage.setItem("assetsymbol", asset[0].symbol);
           localStorage.setItem("asset", JSON.stringify(asset[0]));
         });
     } catch (e) {
@@ -76,13 +76,12 @@ export default function App() {
 
         <Routes>
           <Route path="/" element={<Landing />} />
-          <Route path="/auth/*" element={<Auth />} />
+          <Route path="/auth/*" element={<Auth />} />x
           <Route path="/market/*" element={<Market />} />
           <Route path="/bet/*" element={<Bet />} />
           <Route path="/position/*" element={<Position />} />
           <Route path="/finance/*" element={<Finance />} />
           <Route path="/setting/*" element={<Setting />} />
-
           <Route path="/qna" element={<Qna />} />
         </Routes>
       </HashRouter>

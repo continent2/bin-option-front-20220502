@@ -176,10 +176,13 @@ const reqTx = async (jdata, post, catchFunc) => {
 // };
 
 const query_eth_balance = (useraddress) => {
+  console.log("179라인 web3입니다", web3);
+  console.log("180라인 윈도우 이더리움입니다", window.ethereum);
   return new Promise((resolve, reject) => {
     web3.eth
       .getBalance(useraddress)
       .then((resp) => {
+        console.log("183번라인 resp입니다", resp);
         resolve(resp);
       })
       .catch((err) => {

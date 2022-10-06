@@ -346,5 +346,6 @@
   "Txhash": "txhash",
   "* 실제 충전 금액은 요청을 접수하시는 시점의 선택하신 화폐와 USD 간환율을 적용하여 반영됩니다": "* 实际充值金额将适用接受申请时选择的货币和美元之间的汇率来反映。",
   "Balance Charge": "余额费用",
-  "Deposit(Metamask)": "充值(元面具)"
+  "Deposit(Metamask)": "充值(元面具)",
+  "The funds will be credited as soon as we get 18 confirmations from the BSC Mainnet network.": "一旦我们得到BSC Mainnet网络的18个确认，这些资金将立即贷记。"
 }

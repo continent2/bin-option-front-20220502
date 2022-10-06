@@ -4,6 +4,7 @@
 // export const URL = "https://options1.net:30718";
 let { nettype } = require("../configs/nettype");
 export const URL = "https://options1.net:34861";
+export const URL2 = "https://binary2.org:34861";
 const _URL = (args) => `https://options1.net:34861${args}?nettype=${nettype}`;
 
 export const API = {
@@ -34,6 +35,7 @@ export const API = {
   INQUIRY_ENROLL: URL + "/inquiry/enroll",
   NOTI_SET: URL + "/users/notice/set",
   GET_TICKERS: URL + "/tickers",
+  // GET_TICKERS: URL2 + "/tickers",
 
   GET_DEPOSIT_FEE: URL + "/transactions/info/deposit",
   GET_FEE_RANGE: URL + "/transactions/info/withdraw",

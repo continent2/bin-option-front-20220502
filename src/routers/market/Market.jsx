@@ -34,10 +34,9 @@ export default function Market() {
   else
     return (
       <PmarketBox>
+        x
         <DefaultHeader border />
-
         <LeftNav list={D_marketLeftBarList} baseUrl={"market"} />
-
         <Routes>
           <Route path="/deposit" element={<Deposit userData={userData} />} />
           <Route path="/withdrawal" element={<WithDrawal />} />
