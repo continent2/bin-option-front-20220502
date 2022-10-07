@@ -38,7 +38,7 @@ export default function Landing() {
   function getAssetList() {
     axios
       .get(`${API.GET_ASSETS}`, {
-        params: { group: "coin" },
+        params: { group: "coin", activereel: 1 },
       })
       .then(({ data }) => {
         console.log("@asset list", data.resp);

@@ -6,14 +6,20 @@ import { useTranslation } from "react-i18next";
 import axios from "axios";
 import { API } from "../../configs/api";
 import { setToast } from "../../util/Util";
+import { useNavigate } from "react-router-dom";
 
 export default function ReqeustPopup({ off }) {
   const { t } = useTranslation();
   const isMobile = useSelector((state) => state.common.isMobile);
-
   const [cont, setCont] = useState("");
 
+  const navigate = useNavigate();
+
   function onClickSendBtn() {
+    if (!localStorage.getItem("token")) {
+      navigate("/auth");
+    }
+
     axios
       .post(`${API.INQUIRY_ENROLL}`, {
         content: cont,

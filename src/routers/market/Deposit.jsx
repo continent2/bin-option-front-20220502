@@ -34,6 +34,8 @@ import QRCode from "react-qr-code";
 import { nettype } from "../../configs/nettype";
 import { getethrep, getweirep } from "../../util/web3-utils";
 import { jweb3 } from "../../configs/configweb3";
+import AddressCopyPopup from "../../components/market/deposit/AddressCopyPopup";
+import Toast from "../../components/common/Toast";
 
 export default function Deposit({ userData }) {
   const { t } = useTranslation();
@@ -53,6 +55,7 @@ export default function Deposit({ userData }) {
   const [loader, setLoader] = useState("");
   const [preDepositWarningPopup, setPreDepositWarningPopup] = useState(false);
   const [minDepositPopup, setMinDepositPopup] = useState(false);
+  const [addressCopyPopup, setAddressCopyPopup] = useState(false);
   const [enableMeta, setEnableMeta] = useState(true);
   const [settings, setSettings] = useState({
     commision: 0,
@@ -74,6 +77,8 @@ export default function Deposit({ userData }) {
 
   const previousCharge = useRef(null);
   const [chargeLoding, setChargeLoading] = useState(false);
+
+  const [ToastStatus, setToastStatus] = useState(false);
 
   function getPreDepositReq() {
     axios
@@ -125,25 +130,35 @@ export default function Deposit({ userData }) {
     let { ethereum } = window;
 
     let address = await ethereum.enable();
+    console.log("address입니다", address);
 
+    console.log("tokentype입니다", token.type);
+    console.log("contract입니다", asset.contractaddress);
     let abistr = getabistr_forfunction({
-      contractaddress: contractaddr[token.type],
+      // contractaddress: contractaddr[token .type],
+      contractaddress: asset.contractaddress,
       abikind: "ERC20",
       methodname: "transfer",
       aargs: [contractaddr["admin"], amount * 10 ** 6 + ""],
     });
 
+    console.log("abistr입니다", abistr);
     reqTx(
       {
         from: address[0],
-        to: contractaddr[token.type],
+        // to: contractaddr[token.type],
+        to: asset.contractaddress,
         data: abistr,
         gas: 3000000,
       },
       (txHash) => {
+        console.log("txhash값인디다", txHash);
+        console.log("assetsymbol값입니다", asset.symbol);
+        console.log("address[0]값입니다", address[0]);
         axios
           .patch(`${API.TRANS_DEPOSIT}/${amount}?nettype=${nettype}`, {
-            tokentype: token.type,
+            // tokentype: token.type,
+            tokentype: asset.symbol,
             txhash: txHash,
             senderaddr: address[0],
           })
@@ -151,9 +166,9 @@ export default function Deposit({ userData }) {
             if (resp) {
               //Success
               setToast({ type: "alarm", cont: "Submission Successful" });
-              setTimeout(() => {
-                window.location.reload(false);
-              }, 3000);
+              // setTimeout(() => {
+              //   window.location.reload(false);
+              // }, 3000);
             }
           })
           .catch((err) => {
@@ -190,7 +205,10 @@ export default function Deposit({ userData }) {
         else directPayment();
         break;
       case 1:
-        if (token.text.match("USD")) {
+        console.log(asset.symbol.match("USD"));
+        console.log(asset.symbol);
+        if (asset.symbol.match("USD")) {
+          console.log("트루야?");
           if (isMobile) moDirectPayment();
           else directPayment();
         } else setSecurityVerifiPopup(true);
@@ -209,7 +227,7 @@ export default function Deposit({ userData }) {
   }
 
   function onClickDepositBtn() {
-    if (amount < 5) setMinDepositPopup(true);
+    if (amount < 10) setMinDepositPopup(true);
     else getPreDepositReq();
   }
 
@@ -244,19 +262,12 @@ export default function Deposit({ userData }) {
       web3.eth.getBalance(walletAddress).then((res) => {
         console.log(res);
         if (previousCharge.current === null) {
-          console.log("값이 다를 때");
-          console.log("245라인 res입니다", res);
-          console.log("246라인 walletAddress입니다", walletAddress);
-          console.log("247라인 getEthRep입니다", getethrep(res, ""));
           previousCharge.current = getethrep(res, "");
           setEthAmount(getethrep(res, ""));
           return;
         }
 
         if (previousCharge.current !== getethrep(res, "")) {
-          console.log("정지함");
-          console.log("253라인 walletAddress입니다", walletAddress);
-          console.log("255라인 getEthRep입니다", getethrep(res, ""));
           setEthAmount(getethrep(res, ""));
           getReceiveDepost();
           clearInterval(ethCountTimer.current);
@@ -264,34 +275,10 @@ export default function Deposit({ userData }) {
           setChargeLoading(false);
         }
       });
-
-      // query_eth_balance(walletAddress).then((res) => {
-      //   if (previousCharge.current === null) {
-      //     console.log("값이 다를 때");
-      //     console.log("245라인 res입니다", res);
-      //     console.log("246라인 walletAddress입니다", walletAddress);
-      //     console.log("247라인 getEthRep입니다", getethrep(res, ""));
-      //     previousCharge.current = getethrep(res, "");
-      //     setEthAmount(getethrep(res, ""));
-      //     return;
-      //   }
-
-      //   if (previousCharge.current !== getethrep(res, "")) {
-      //     console.log("정지함");
-      //     console.log("253라인 walletAddress입니다", walletAddress);
-      //     console.log("255라인 getEthRep입니다", getethrep(res, ""));
-      //     setEthAmount(getethrep(res, ""));
-      //     getReceiveDepost();
-      //     clearInterval(ethCountTimer.current);
-      //     setEthCount(0);
-      //     setChargeLoading(false);
-      //   }
-      // });
     }
   }
 
   const getReceiveDepost = () => {
-    console.log("안녕");
     try {
       axios
         .get(`${API.GET_RECEIVE_DEPOSIT_ASSET}?nettype=${nettype}`, {
@@ -403,6 +390,12 @@ export default function Deposit({ userData }) {
   useEffect(() => {
     getAccount();
   }, []);
+
+  useEffect(() => {
+    if (ToastStatus) {
+      setTimeout(() => setToastStatus(false), 1000);
+    }
+  }, [ToastStatus]);
 
   if (isMobile)
     return (
@@ -550,6 +543,14 @@ export default function Deposit({ userData }) {
                   <p className="common">{t("Deposit")}</p>
                   <img className="loader" src={L_loader} alt="" />
                 </button>
+
+                <button
+                  className="addressCopyBtn"
+                  onClick={() => setAddressCopyPopup(true)}
+                >
+                  <p className="common">{t("Address Copy")}</p>
+                  <img className="loader" src={L_loader} alt="" />
+                </button>
                 {/* 
                 <button
                   className={`${
@@ -603,6 +604,18 @@ export default function Deposit({ userData }) {
             <PopupBg off={setMinDepositPopup} />
           </>
         )}
+
+        {addressCopyPopup && (
+          <>
+            <AddressCopyPopup
+              off={setAddressCopyPopup}
+              address={walletAddress}
+              setToastStatus={setToastStatus}
+            />
+            <PopupBg off={setMinDepositPopup} />
+          </>
+        )}
+        {ToastStatus && <Toast msg="Copied Successfully" />}
       </>
     );
   else
@@ -1074,11 +1087,23 @@ const MdepositBox = styled.main`
         color: #4e3200;
         background: linear-gradient(99.16deg, #604719 3.95%, #f7ab1f 52.09%);
         border-radius: 10px;
+        margin-bottom: 4px;
 
         &:disabled {
           color: #f7ab1f;
           background: #fff;
         }
+      }
+
+      .addressCopyBtn {
+        width: 100%;
+        height: 50px;
+        font-size: 16px;
+        font-weight: 700;
+        background: white;
+        color: #f7ab1f;
+        border-radius: 10px;
+        margin-bottom: 4px;
       }
     }
   }

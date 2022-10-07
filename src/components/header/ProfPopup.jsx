@@ -7,6 +7,7 @@ import styled from "styled-components";
 import { API } from "../../configs/api";
 import I_x from "../../img/icon/I_x.svg";
 import I_xWhite from "../../img/icon/I_xWhite.svg";
+import I_rightArrow from "../../img/icon/rightArrow.svg";
 import { getBigCount } from "../../util/Util";
 
 export default function ProfPopup({ off, offAll }) {
@@ -15,6 +16,7 @@ export default function ProfPopup({ off, offAll }) {
   const isMobile = useSelector((state) => state.common.isMobile);
 
   const [data, setData] = useState("");
+  const [inquirys, setInquirys] = useState([]);
   let [myinfo, setmyinfo] = useState();
 
   function getData() {
@@ -46,6 +48,29 @@ export default function ProfPopup({ off, offAll }) {
     if (offAll) offAll();
   }
 
+  const getMyInquiry = async () => {
+    try {
+      const result = await axios.get(API.GET_INQUIRY, {
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+      });
+      console.log(result);
+      console.log(result.data);
+      if (result.data.status === "OK") {
+        console.log("호출");
+        setInquirys(result.data.resp);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  useEffect(() => {
+    getMyInquiry();
+  }, []);
+
+  console.log(inquirys);
   if (isMobile)
     return (
       <MprofPopupBox className="profPopup">
@@ -256,7 +281,26 @@ export default function ProfPopup({ off, offAll }) {
             </button>
           </li> */}
         </ul>
-
+        <ul className="inquiryList">
+          {inquirys?.map((v, i) => {
+            if (v.answer)
+              return (
+                <li>
+                  <p>
+                    <button className="exitBtn">
+                      <img src={I_xWhite} alt="" />
+                    </button>
+                  </p>
+                  <p>회원님의 문의 내용:</p>
+                  <p>{v.answer}</p>
+                  <p>
+                    <img src={I_rightArrow} alt="rightArrow" />
+                    회원님의 이메일로 답변드렸습니다!
+                  </p>
+                </li>
+              );
+          })}
+        </ul>
         <button className="logOutBtn" onClick={onClickLogOutBtn}>
           {t("Sign Out")}
         </button>
@@ -511,11 +555,11 @@ const PprofPopupBox = styled.section`
   }
 
   .navList {
-    flex: 1;
     display: flex;
     flex-direction: column;
     padding: 12px 0;
     border-top: 1.4px solid rgba(255, 255, 255, 0.2);
+    margin-bottom: 6px;
 
     li {
       button {
@@ -537,14 +581,46 @@ const PprofPopupBox = styled.section`
     }
   }
 
+  .inquiryList {
+    color: white;
+    min-height: 200px;
+    margin-bottom: 12px;
+    overflow-y: auto;
+
+    li {
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 10px;
+      padding: 10px 18px;
+      font-size: 15px;
+      margin-bottom: 12px;
+
+      p:nth-child(2) {
+        margin-bottom: 2px;
+      }
+      p:nth-child(3) {
+        margin-bottom: 16px;
+      }
+      p:nth-child(4) {
+        display: flex;
+        align-items: center;
+        margin-bottom: 4px;
+        img {
+          margin-right: 6px;
+        }
+      }
+
+      .exitBtn {
+      }
+    }
+  }
+
   .logOutBtn {
     width: 100%;
-    height: 50px;
+    min-height: 50px;
     font-size: 16px;
     color: #fff;
     border: 1.2px solid rgba(255, 255, 255, 0.2);
     border-radius: 10px;
-
     &:hover {
       background: rgba(255, 255, 255, 0.1);
       border-color: #fff;

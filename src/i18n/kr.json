@@ -347,5 +347,7 @@
   "* 실제 충전 금액은 요청을 접수하시는 시점의 선택하신 화폐와 USD 간환율을 적용하여 반영됩니다": "* 실제 충전 금액은 요청을 접수하시는 시점의 선택하신 화폐와 USD 간환율을 적용하여 반영됩니다",
   "Balance Charge": "잔액충전",
   "Deposit(Metamask)": "예치(메타마스크)",
-  "The funds will be credited as soon as we get 18 confirmations from the BSC Mainnet network.": "BSC 메인넷 네트워크로부터 18건의 확인서를 받는 즉시 자금이 입금될 것입니다."
+  "The funds will be credited as soon as we get 18 confirmations from the BSC Mainnet network.": "BSC 메인넷 네트워크로부터 18건의 확인서를 받는 즉시 자금이 입금될 것입니다.",
+  "Address Copy": "주소 복사",
+  "Copy": "복사"
 }

@@ -33,6 +33,7 @@ export const API = {
   NOTI: URL + "/users/notice/setting",
   USER_REFERRAL_HISTORY: URL + "/users/myreferrals/fee/log", //:offset/:limit/id/DESC
   INQUIRY_ENROLL: URL + "/inquiry/enroll",
+  GET_INQUIRY: URL + "/inquiry/my",
   NOTI_SET: URL + "/users/notice/set",
   GET_TICKERS: URL + "/tickers",
   // GET_TICKERS: URL2 + "/tickers",
