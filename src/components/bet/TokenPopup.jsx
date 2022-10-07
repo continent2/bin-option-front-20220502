@@ -55,7 +55,7 @@ export default function TokenPopup({ off, setAssetInfo, getBookMark }) {
 
   function getAssetList() {
     axios
-      .get(`${API.GET_ASSETS}`, { params: { group: category } })
+      .get(`${API.GET_ASSETS}`, { params: { group: category, activebet: 1 } })
       .then(({ data }) => {
         console.log("assets", data.resp);
         setListData(data.resp || []);

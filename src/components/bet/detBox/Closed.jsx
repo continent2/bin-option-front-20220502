@@ -79,6 +79,7 @@ export default function Closed({ page }) {
     getMyBets();
   }, [closedFlag]);
 
+  console.log("data입니다", data);
   if (isMobile)
     return (
       <MclosedBox className="detContList">

@@ -76,7 +76,7 @@ export default function App() {
 
         <Routes>
           <Route path="/" element={<Landing />} />
-          <Route path="/auth/*" element={<Auth />} />x
+          <Route path="/auth/*" element={<Auth />} />
           <Route path="/market/*" element={<Market />} />
           <Route path="/bet/*" element={<Bet />} />
           <Route path="/position/*" element={<Position />} />

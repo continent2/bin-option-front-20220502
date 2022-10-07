@@ -10,15 +10,29 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { API } from "../../configs/api";
+import { useNavigate } from "react-router";
 
 export default function Market() {
   const isMobile = useSelector((state) => state.common.isMobile);
   const [userData, setUserData] = useState({});
+
+  const navigate = useNavigate();
+
   useEffect(() => {
-    axios.get(`${API.AUTH}`).then(({ data }) => {
-      console.log(data.result);
-      setUserData(data.result);
-    });
+    if (!localStorage.getItem("token")) {
+      console.log("토근 없음");
+      navigate("/auth");
+      return;
+    }
+
+    try {
+      axios.get(`${API.AUTH}`).then(({ data }) => {
+        console.log(data.result);
+        setUserData(data.result);
+      });
+    } catch (e) {
+      console.error(e);
+    }
   }, []);
 
   if (isMobile)
@@ -34,7 +48,6 @@ export default function Market() {
   else
     return (
       <PmarketBox>
-        x
         <DefaultHeader border />
         <LeftNav list={D_marketLeftBarList} baseUrl={"market"} />
         <Routes>
