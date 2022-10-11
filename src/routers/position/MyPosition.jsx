@@ -122,19 +122,6 @@ export default function MyPosition() {
                   </li>
 
                   <li>
-                    <p className="key">{t("Average profit")}</p>
-                    <p className="value">${getBigCount(data.average_profit)}</p>
-                  </li>
-                  <li>
-                    <p className="key">{t("Net turnover")}</p>
-                    <p className="value">${getBigCount(data.net_turnover)}</p>
-                  </li>
-                  <li>
-                    <p className="key">{t("Hedged trades")}</p>
-                    <p className="value">${getBigCount(data.hedged_trades)}</p>
-                  </li>
-
-                  <li>
                     <p className="key">{t("Min trade amount")}</p>
                     <p className="value">
                       ${getBigCount(data.min_trade_amount)}
@@ -229,20 +216,7 @@ export default function MyPosition() {
                     <p className="value">{data.total_profit}%</p>
                   </div>
                 </li>
-                <li>
-                  <div>
-                    <p className="key">{t("Average profit")}</p>
-                    <p className="value">${getBigCount(data.average_profit)}</p>
-                  </div>
-                  <div>
-                    <p className="key">{t("Net turnover")}</p>
-                    <p className="value">${getBigCount(data.net_turnover)}</p>
-                  </div>
-                  <div>
-                    <p className="key">{t("Hedged trades")}</p>
-                    <p className="value">${getBigCount(data.hedged_trades)}</p>
-                  </div>
-                </li>
+
                 <li>
                   <div>
                     <p className="key">{t("Min trade amount")}</p>
