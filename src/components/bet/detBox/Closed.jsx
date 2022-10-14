@@ -22,7 +22,7 @@ export default function Closed({ page }) {
 
   function getMyBets() {
     axios
-      .get(`${API.MY_BETS}/history`)
+      .get(`${API.MY_BETS}/history?version=${page}`)
       .then(({ data }) => {
         console.log("closed", data.respdata);
         setData(data.respdata);
