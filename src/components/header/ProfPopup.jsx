@@ -420,6 +420,7 @@ const PprofPopupBox = styled.section`
   bottom: 30px;
   position: fixed;
   z-index: 6;
+  overflow-y: scroll;
 
   .exitBtn {
     display: block;
