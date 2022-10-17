@@ -8,6 +8,7 @@ const nettype = "BSC_MAINNET";
 
 // const nettype = "POLYGON_MAINNET";
 
-const version = "1ffaf8a60-20220930T1824";
+// const version = "1ffaf8a60-20220930T1824";
+const version = 'bf1bffaa0e-20221017T1351' 
 
 module.exports = { nettype, version };

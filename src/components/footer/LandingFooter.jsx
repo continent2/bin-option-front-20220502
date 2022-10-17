@@ -7,7 +7,7 @@ import { nettype, version } from "../../configs/nettype";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { API } from "../../configs/api";
-
+// const FRONTVER  = '' 
 export default function LandingFooter() {
   const { t } = useTranslation();
   const navigate = useNavigate();

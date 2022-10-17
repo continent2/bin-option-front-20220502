@@ -28,6 +28,7 @@ export default function ProfPopup({ off, offAll }) {
         console.log(data);
         setData(data.result);
         setmyinfo(data.myinfo);
+        localStorage.setItem ( 'myinfo' , JSON.stringify ( data?.myinfo ))
       })
       .catch(console.error);
   }
