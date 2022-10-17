@@ -44,6 +44,20 @@ export default function Login() {
     }
   }
 
+  function getmydata() {
+    axios
+      .get(API.MY_POSITION)
+      .then(({ data }) => {
+        console.log(data);
+//        setData(data.result);
+//        setmyinfo(data.myinfo);
+          if ( data.status == 'OK' ) {
+            localStorage.setItem ( 'myinfo' , JSON.stringify ( data.myinfo ) )
+          }
+      })
+      .catch(console.error);
+  }
+
   function onClickLoginBtn() {
     let loginDataForm;
 
@@ -57,13 +71,14 @@ export default function Login() {
       };
 
     console.log(loginDataForm);
-
+// getmydata()
     axios
       .post(`${API.LOGIN}/${category.value}?nettype=${nettype}`, loginDataForm)
       .then(({ data }) => {
         console.log(data);
 
         if (data.message === "TOKEN_CREATED") {
+          localStorage.setItem("myinfo", JSON.stringify(data.myinfo)  ); // result
           localStorage.setItem("token", data.result.tokenId);
           navigate("/");
           return;
@@ -107,13 +122,12 @@ export default function Login() {
 
   function resGLogin(data) {
     axios
-      .post(`${API.LOGIN}/google`, { token: data.tokenId })
+      .post(`${API.LOGIN}/google?nettype=${nettype}`, { token: data.tokenId })
       .then(({ data }) => {
         console.log(data);
         let { isFirstSocial } = data;
-
+        localStorage.setItem("myinfo", JSON.stringify(data.myinfo)  ); // result
         localStorage.setItem("token", data.result.tokenId);
-
         if (isFirstSocial) navigate("/auth/signup/referral");
         else navigate("/");
       })

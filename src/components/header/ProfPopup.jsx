@@ -15,7 +15,11 @@ export default function ProfPopup({ off, offAll }) {
   const isMobile = useSelector((state) => state.common.isMobile);
 
   const [data, setData] = useState("");
-  let [myinfo, setmyinfo] = useState();
+  let myinfolocal = localStorage.getItem ( 'myinfo' )
+  console.log ( `@myinfolocal` , myinfolocal ) 
+  if ( myinfolocal ) { myinfolocal = JSON.parse (myinfolocal ) }
+  else { myinfolocal = {email:'' } }
+  let [myinfo, setmyinfo] = useState( myinfolocal );
 
   function getData() {
     axios
@@ -29,7 +33,8 @@ export default function ProfPopup({ off, offAll }) {
   }
 
   useEffect(() => {
-    getData();
+    if ( myinfolocal && Object.keys( myinfolocal).length >1  ) {}
+    else {  getData(); }
   }, []);
   function onClickLogOutBtn() {
     localStorage.removeItem("token");

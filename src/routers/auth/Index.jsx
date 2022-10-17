@@ -8,7 +8,7 @@ import axios from "axios";
 import { API } from "../../configs/api";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-
+import { nettype } from "../../configs/nettype";
 export default function Index() {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -18,11 +18,12 @@ export default function Index() {
   function resGLogin(data) {
     console.log("googlelogindata", data);
     axios
-      .post(`${API.LOGIN}/google`, { token: data.tokenId })
+      .post(`${API.LOGIN}/google?nettype=${nettype}`, { token: data.tokenId })
       .then(({ data }) => {
         console.log("googlelogindata", data);
         let { isFirstSocial } = data;
 
+        localStorage.setItem("myinfo", JSON.stringify(data.myinfo)  ); // result
         localStorage.setItem("token", data.result.tokenId);
 
         if (isFirstSocial) navigate("/auth/signup/referral");
