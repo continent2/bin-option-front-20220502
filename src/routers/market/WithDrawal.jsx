@@ -58,7 +58,7 @@ export default function WithDrawal() {
   //  const [tokenList, setTokenList] = useState([
   //    { icon: T_usdt, type: "USDT_BINOPT", text: "US DT" },
   // ]);
-  const [process, setProcess] = useState(false);
+  const [process, setProcess] = useState("");
   const [loader, setLoader] = useState("");
   const [minWithdrawalPopup, setMinWithdrawalPopup] = useState(false);
   const [validAddress, setValidAddress] = useState(false);
@@ -106,7 +106,6 @@ export default function WithDrawal() {
     }
 
     setLoader("drawalBtn");
-    setProcess(true);
     const jtoken = localStorage.getItem("token");
 
     if (jtoken) {
@@ -115,13 +114,24 @@ export default function WithDrawal() {
           rxaddr: address,
           tokentype: token.type,
         })
-        .then(async ({ data }) => {
-          console.log(data.payload.resp);
+        .then(({ data }) => {
+          if (data.message === "NOT-ENOUGH-BALANCE") {
+            setToast({ type: "alarm", cont: "Not enough balance" });
+            return;
+          }
+
           if (data.payload.resp.status == "OK") {
             if (data.payload.resp.message) {
               //Transaction Success
+              console.log(data);
               setToast({ type: "alarm", cont: "Submission Successful" });
-              setProcess(true);
+
+              let _processData = data.payload;
+
+              setProcess({
+                amountwithdrawn: _processData.amountwithdrawn,
+                feeamount: _processData.feeamount,
+              });
               // setTimeout(() => {
               //   window.location.reload(false);
               // }, 3000);
@@ -228,7 +238,7 @@ export default function WithDrawal() {
                 <div className="titleBox">
                   <strong className="key">{t("You will get")}</strong>
                   <strong className="value">
-                    {amount} {token.text}
+                    {process.amountwithdrawn || 0} {token.text}
                   </strong>
                 </div>
 
@@ -240,13 +250,15 @@ export default function WithDrawal() {
 
                   <li>
                     <p className="key">{t("Fee")}</p>
-                    <strong className="value">0 {token.text}</strong>
+                    <strong className="value">
+                      {process.feeamount || 0} {token.text}
+                    </strong>
                   </li>
 
                   <li>
                     <p className="key">{t("Withdrawal Amount")}</p>
                     <strong className="value">
-                      {amount} {token.text}
+                      {process.amountwithdrawn || 0} {token.text}
                     </strong>
                   </li>
 
@@ -544,7 +556,7 @@ export default function WithDrawal() {
                 <div className="titleBox">
                   <strong className="key">{t("You will get")}</strong>
                   <strong className="value">
-                    {amount} {token.text}
+                    {process.amountwithdrawn || 0} {token.text}
                   </strong>
                 </div>
 
@@ -556,13 +568,15 @@ export default function WithDrawal() {
 
                   <li>
                     <p className="key">{t("Fee")}</p>
-                    <strong className="value">0 {token.text}</strong>
+                    <strong className="value">
+                      {process.feeamount || 0} {token.text}
+                    </strong>
                   </li>
 
                   <li>
                     <p className="key">{t("Withdrawal Amount")}</p>
                     <strong className="value">
-                      {amount} {token.text}
+                      {process.amountwithdrawn || 0} {token.text}
                     </strong>
                   </li>
 
