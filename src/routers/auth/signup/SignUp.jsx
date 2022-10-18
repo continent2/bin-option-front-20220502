@@ -14,6 +14,7 @@ import { setToast } from "../../../util/Util";
 import { useTranslation } from "react-i18next";
 import { useEffect } from "react";
 import { nettype } from "../../../configs/nettype";
+import { useLayoutEffect } from "react";
 
 export default function Signup() {
   const { t } = useTranslation();
@@ -79,8 +80,12 @@ export default function Signup() {
     });
   }
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     getReferral();
+  }, []);
+
+  useEffect(() => {
+    if (!userData.referral) getReferral();
     getUrlHead();
   }, []);
 
@@ -137,7 +142,7 @@ export default function Signup() {
                               referral: e.target.value,
                             })
                           }
-                          placeholder=""
+                          disabled={params.get("refcode") ? true : false}
                         />
                       </div>
 
@@ -257,7 +262,7 @@ export default function Signup() {
                               referral: e.target.value,
                             })
                           }
-                          placeholder=""
+                          disabled={params.get("refcode") ? true : false}
                         />
                       </div>
 
