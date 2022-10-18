@@ -40,6 +40,7 @@ export const API = {
 
   GET_DEPOSIT_FEE: URL + "/transactions/info/deposit",
   GET_FEE_RANGE: URL + "/transactions/info/withdraw",
+  WITHDRAW_REVERSE: URL + "/transactions/info/withdraw/reserve",
 
   GET_ASSETS: URL + "/assets/list",
   GET_ASSETS_GROUP: URL + "/assets/groups",

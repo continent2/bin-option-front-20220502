@@ -31,11 +31,6 @@ export default function WithDrawal() {
     minWithdraw: 5,
     maxTransactions: -1,
   });
-  /**   const [token, setToken] = useState({
-    icon: T_usdt,
-    type: "USDT_BINOPT",
-    text: "US DT",
-  }); */
   let [token, setToken] = useState({ icon: "", type: "", text: "" });
   let [tokenList, setTokenList] = useState([{ icon: "", type: "", text: "" }]);
   let jasset = localStorage.getItem("asset");
@@ -54,29 +49,17 @@ export default function WithDrawal() {
   useEffect((_) => {
     setTokenList([jassettoassign]);
   }, []);
-  //   let [tokenList, setTokenList] = useState( [] )
-  //  const [tokenList, setTokenList] = useState([
-  //    { icon: T_usdt, type: "USDT_BINOPT", text: "US DT" },
-  // ]);
   const [process, setProcess] = useState("");
   const [loader, setLoader] = useState("");
   const [minWithdrawalPopup, setMinWithdrawalPopup] = useState(false);
   const [validAddress, setValidAddress] = useState(false);
   const [confirmPopup, setConfirmPopup] = useState(false);
-  const [commission, setCommission] = useState(1);
-  const [minimumAmount, setMinimumAmount] = useState(5);
   const [amountErrorMessage, setAmountErrorMessage] = useState("");
   const [asset, setAsset] = useState({});
-  const [ethAmount, setEthAmount] = useState("");
-  const [chargeError, SetChargeError] = useState(false);
-  const [ethCount, setEthCount] = useState(0);
   const [assetList, setAssetList] = useState([]);
   const [networkname, setNetworkName] = useState("");
   const [logonetwork, setLogonetwork] = useState("");
-  const ASSETSYMBOL_DEF = "BUSD";
-  let [assetsymbol, setassetsymbol] = useState(
-    localStorage.getItem("asset") || ASSETSYMBOL_DEF
-  );
+
   const onChangeAmount = (val) => {
     if (val > 500000) {
       setAmount(val);
@@ -100,8 +83,25 @@ export default function WithDrawal() {
   };
 
   async function onClickConfirmBtn() {
-    if (amount < 5) {
+    if (amount < settings.minWithdraw) {
       setMinWithdrawalPopup(true);
+      return;
+    }
+
+    let _reverseRes;
+    try {
+      _reverseRes = await axios.get(API.WITHDRAW_REVERSE, {
+        params: {
+          nettype: nettype,
+        },
+      });
+    } catch (e) {
+      console.error(e);
+      return;
+    }
+
+    if (amount < _reverseRes.data.respdata.tokenbalance) {
+      alert("신청처리불가 (관리자에 문의하세요)");
       return;
     }
 
@@ -210,21 +210,6 @@ export default function WithDrawal() {
     const re = /^(0x)[0-9A-Fa-f]{40}$/;
     setValidAddress(re.test(address));
   }, [address]);
-
-  // useEffect(() => {
-  //   try {
-  //     axios.get(API.GET_WITHDRAW_FEE).then(({ data }) => {
-  //       console.log(data);
-  //       setSettings({
-  //         commision: data.respdata.feeamount,
-  //         minDeposit: data.respdata.minimumamount,
-  //         maxTransactions: -1,
-  //       });
-  //     });
-  //   } catch (e) {
-  //     console.error(e);
-  //   }
-  // }, []);
 
   if (isMobile)
     return (
