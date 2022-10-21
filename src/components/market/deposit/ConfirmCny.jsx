@@ -10,7 +10,13 @@ import PopupBg from "../../common/PopupBg";
 import ConfirmationPopup from "./ConfirmationPopup";
 import TimeOutPopup from "./TimeOutPopup";
 
-export default function ConfirmCny({ setConfirm, amount, token, setOk }) {
+export default function ConfirmCny({
+  setConfirm,
+  amount,
+  token,
+  setOk,
+  asset,
+}) {
   const { t } = useTranslation();
   const isMobile = useSelector((state) => state.common.isMobile);
   let time = 1800;
@@ -198,7 +204,10 @@ export default function ConfirmCny({ setConfirm, amount, token, setOk }) {
 
                   <li>
                     <p className="key">{t("Receive")}</p>
-                    <p className="value">{(amount * rate).toFixed(4)} USDT</p>
+                    {/* <p className="value">{(amount * rate).toFixed(4)} USDT</p> */}
+                    <p className="value">
+                      {(amount * rate).toFixed(4)} {asset?.symbol}
+                    </p>
                   </li>
                 </ul>
               </div>
@@ -210,17 +219,18 @@ export default function ConfirmCny({ setConfirm, amount, token, setOk }) {
                   <ul>
                     <li>
                       <p className="key">{t("BIC")}</p>
-                      <p className="value">CLJUGB21</p>
+                      {/* <p className="value">CLJUGB21</p> */}
+                      <p className="value">{asset?.account}</p>
                     </li>
 
                     <li>
                       <p className="key">{t("Bank Name")}</p>
-                      <p className="value">Clear Junction Limited</p>
+                      <p className="value">{asset?.bankname}</p>
                     </li>
 
                     <li>
                       <p className="key">{t("Bank Address")}</p>
-                      <p className="value">15 Kingsway London Wc2b 6un, UK</p>
+                      <p className="value">{asset?.owner}</p>
                     </li>
                   </ul>
                 ) : (

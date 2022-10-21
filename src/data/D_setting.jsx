@@ -28,7 +28,7 @@ export const D_settingNavList = [
   },
 ];
 
-export const D_referralCategoryList = ["My recommender", "History"];
+export const D_referralCategoryList = ["Referrals", "History"];
 
 export const D_recommenderListHeader = [
   "No",

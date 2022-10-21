@@ -7,6 +7,7 @@ export default function TokenSelectPopup({
   setCont,
   asset,
   setAsset,
+  setConfirm,
 }) {
   const isMobile = useSelector((state) => state.common.isMobile);
   console.log(list);
@@ -14,6 +15,7 @@ export default function TokenSelectPopup({
     // if (setCont) setCont(v);
     if (setAsset) setAsset(v);
     if (off) off();
+    if (setConfirm) setConfirm(true);
   }
 
   if (isMobile)

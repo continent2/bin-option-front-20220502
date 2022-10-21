@@ -457,6 +457,7 @@ export default function Deposit({ userData }) {
                           asset={asset}
                           setCont={setToken}
                           setAsset={setAsset}
+                          setConfirm={setConfirm}
                         />
                         <PopupBg off={setTokenPopup} index={3} />
                       </>
@@ -659,7 +660,7 @@ export default function Deposit({ userData }) {
 
                     <button
                       className={`${tokenPopup && "on"} selBtn`}
-                      onClick={() => setTokenPopup(true)}
+                      onClick={() => setTokenPopup((prev) => !prev)}
                     >
                       <img className="token" src={asset.logourl} alt="" />
                       <strong className="name">{asset.symbol}</strong>
@@ -689,6 +690,7 @@ export default function Deposit({ userData }) {
                           asset={asset}
                           setCont={setToken}
                           setAsset={setAsset}
+                          setConfirm={setConfirm}
                         />
                         <PopupBg off={setTokenPopup} index={3} />
                       </>
@@ -816,10 +818,11 @@ export default function Deposit({ userData }) {
 
             {confirm ? (
               <>
-                {token.text.match("USD") ? (
+                {false && token.text.match("USD") ? (
                   <ConfirmUsdt amount={amount} token={token} />
                 ) : (
                   <ConfirmCny
+                    asset={asset}
                     setConfirm={setConfirm}
                     amount={amount}
                     token={token}
