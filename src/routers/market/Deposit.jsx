@@ -785,26 +785,29 @@ export default function Deposit({ userData }) {
                     <p className="value">{t("no limits")}</p>
                   </li>
                 </ul>
+                {asset.symbol === "BUSD" && (
+                  <>
+                    <button
+                      className={`${chargeLoding && "loading"} chargeBtn`}
+                      disabled={!chargeError}
+                      onClick={onClickChargeBtn}
+                    >
+                      <p className="common">{t("Balance Charge")}</p>
+                      <img className="loader" src={L_loader} alt="" />
+                    </button>
 
-                <button
-                  className={`${chargeLoding && "loading"} chargeBtn`}
-                  disabled={!chargeError}
-                  onClick={onClickChargeBtn}
-                >
-                  <p className="common">{t("Balance Charge")}</p>
-                  <img className="loader" src={L_loader} alt="" />
-                </button>
-
-                <button
-                  className={`${
-                    loader === "depositBtn" && "loading"
-                  } depositBtn`}
-                  disabled={!(amount && enableMeta && !chargeError)}
-                  onClick={onClickDepositBtn}
-                >
-                  <p className="common">{t("Deposit(Metamask)")}</p>
-                  <img className="loader" src={L_loader} alt="" />
-                </button>
+                    <button
+                      className={`${
+                        loader === "depositBtn" && "loading"
+                      } depositBtn`}
+                      disabled={!(amount && enableMeta && !chargeError)}
+                      onClick={onClickDepositBtn}
+                    >
+                      <p className="common">{t("Deposit(Metamask)")}</p>
+                      <img className="loader" src={L_loader} alt="" />
+                    </button>
+                  </>
+                )}
               </div>
             </div>
           </article>
