@@ -312,7 +312,7 @@ export default function Deposit({ userData }) {
             })
             .then(({ data }) => {
               console.log("agent입니다", data);
-              console.log(data);
+              console.log("data", data);
               console.log(data.list);
               setAsset(asset[0]);
               if (data.list) {
