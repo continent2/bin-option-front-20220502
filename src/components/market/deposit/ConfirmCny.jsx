@@ -9,6 +9,7 @@ import I_xCircleYellow from "../../../img/icon/I_xCircleYellow.svg";
 import PopupBg from "../../common/PopupBg";
 import ConfirmationPopup from "./ConfirmationPopup";
 import TimeOutPopup from "./TimeOutPopup";
+import { CURRENCY_DEF , CURRENCY_DISP_DEF } from '../../../configs/setting'
 
 export default function ConfirmCny({
   setConfirm,
@@ -25,24 +26,39 @@ export default function ConfirmCny({
   const [confirmationPopup, setConfirmationPopup] = useState(false);
   const [rate, setRate] = useState(0);
   const [timeOutPopup, setTimeOutPopup] = useState(false);
+  let [ jforexrates , setjforexrates] = useState ({})
+  const LOGGER=console.log
+  const KEYS=Object.keys
 
+  const getforexrates= _=>{
+    axios.get ( `${API.GET_QUERIES_FOREX}`).then ( ({data}) => {
+      console.log ( `@GET_QUERIES_FOREX` , data )
+      let { list } = data
+      if ( list ){ setjforexrates ( list )}
+    }).catch(err=> { LOGGER(err )} )
+  }
   function getRate() {
     axios
       .get(`${API.QUERIES_FOREX}`, { params: { type: `${token.text}/USD` } })
       .then(({ data }) => {
-        console.log(data);
+        console.log( '@QUERIES_FOREX' , data);
         setRate(Number(data.price));
+
       })
       .catch((err) => console.error(err));
   }
 
+  useEffect ( _=>{ let rate 
+    if ( KEYS( jforexrates).length ){} else { return }
+    if ( rate = jforexrates[ `${asset?.symbol}/USD` ] ){ } else { return }
+    setRate( rate ) 
+  } , [ jforexrates ] )
   useEffect(() => {
-    getRate();
-
+    getforexrates()
+//    getRate();
     let intervalId = setInterval(() => {
       time--;
       setLimit(time);
-
       if (time <= 0) {
         setTimeOutPopup(true);
         clearInterval(intervalId);
@@ -79,12 +95,12 @@ export default function ConfirmCny({
                 <ul>
                   <li>
                     <p className="key">{t("Pay")}</p>
-                    <p className="value">{amount} CNY</p>
+                    <p className="value">{amount} {asset?.symbol}</p>
                   </li>
 
                   <li>
                     <p className="key">{t("Receive")}</p>
-                    <p className="value">{(amount * rate).toFixed(4)} USDT</p>
+                    <p className="value">{(amount * rate).toFixed(4)} {CURRENCY_DEF }</p>
                   </li>
                 </ul>
               </div>
@@ -92,21 +108,21 @@ export default function ConfirmCny({
               <div className="listBox">
                 <strong className="title">{t("Bank details")}</strong>
 
-                {limit > 0 ? (
+                { limit > 0 ? (
                   <ul>
                     <li>
-                      <p className="key">{t("BIC")}</p>
-                      <p className="value">CLJUGB21</p>
-                    </li>
-
-                    <li>
                       <p className="key">{t("Bank Name")}</p>
-                      <p className="value">Clear Junction Limited</p>
+                      <p className="value">{asset?.bankname}</p>
                     </li>
 
                     <li>
-                      <p className="key">{t("Bank Address")}</p>
-                      <p className="value">15 Kingsway London Wc2b 6un, UK</p>
+                      <p className="key">{t("Bank Account")}</p>
+                      <p className="value">{asset?.account}</p>
+                    </li>
+
+                    <li>
+                      <p className="key">{t("Bank Account Owner")}</p>
+                      <p className="value">{asset?.owner}</p>
                     </li>
                   </ul>
                 ) : (
@@ -199,14 +215,14 @@ export default function ConfirmCny({
                 <ul>
                   <li>
                     <p className="key">{t("Pay")}</p>
-                    <p className="value">{amount} CNY</p>
+                    <p className="value">{amount}  {asset?.symbol }</p>
                   </li>
 
                   <li>
                     <p className="key">{t("Receive")}</p>
                     {/* <p className="value">{(amount * rate).toFixed(4)} USDT</p> */}
                     <p className="value">
-                      {(amount * rate).toFixed(4)} {asset?.symbol}
+                      {(amount * rate).toFixed(4)} {CURRENCY_DEF }
                     </p>
                   </li>
                 </ul>
@@ -218,18 +234,18 @@ export default function ConfirmCny({
                 {limit > 0 ? (
                   <ul>
                     <li>
-                      <p className="key">{t("BIC")}</p>
-                      {/* <p className="value">CLJUGB21</p> */}
-                      <p className="value">{asset?.account}</p>
-                    </li>
-
-                    <li>
                       <p className="key">{t("Bank Name")}</p>
+                      {/* <p className="value">CLJUGB21</p> */}
                       <p className="value">{asset?.bankname}</p>
                     </li>
 
                     <li>
-                      <p className="key">{t("Bank Address")}</p>
+                      <p className="key">{t("Bank Account")}</p>
+                      <p className="value">{asset?.account}</p>
+                    </li>
+
+                    <li>
+                      <p className="key">{t("Bank Account Owner")}</p>
                       <p className="value">{asset?.owner}</p>
                     </li>
                   </ul>

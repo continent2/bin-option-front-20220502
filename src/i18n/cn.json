@@ -173,8 +173,11 @@
   "Pay": "支付",
   "Receive": "接收金额",
   "Bank details": "银行信息",
-  "BIC": "BIC",
   "Bank Name": "银行名称",
+  "Bank Account" : "账号" ,
+  "Bank Account Owner" : "帐户所有者",
+
+  "BIC": "BIC",
   "Bank Address": "银行地址",
   "Your order has been canceled.": "订单已取消。",
   "Please complete the payment within 15 minute(s). The coins you've bought will be credited to your Funding Account.": "请在15分钟内完成付款。您购买的硬币将记入您的资金账户。",

@@ -511,7 +511,7 @@ export default function Deposit({ userData }) {
                 <ul className="infoList">
                   <li>
                     <p className="key">{t("Commission")}</p>
-                    <p className="value">{settings.commision} Tether</p>
+                    <p className="value">{settings.commision} {asset?.symbol} </p>
                   </li>
                   <li>
                     <p className="key">{t("Minimum deposit amount")}</p>
@@ -772,7 +772,7 @@ export default function Deposit({ userData }) {
                 <ul className="infoList">
                   <li>
                     <p className="key">{t("Commission")}</p>
-                    <p className="value">{settings.commision} Tether</p>
+                    <p className="value">{settings.commision} {asset?.symbol}</p>
                   </li>
                   <li>
                     <p className="key">{t("Minimum deposit amount")}</p>

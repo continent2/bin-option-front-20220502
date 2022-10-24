@@ -173,8 +173,11 @@
   "Pay": "지불",
   "Receive": "받는 금액",
   "Bank details": "은행 정보",
-  "BIC": "BIC",
   "Bank Name": "은행 이름",
+  "Bank Account" : "계좌번호" ,
+  "Bank Account Owner" : "계좌소유자",
+
+  "BIC": "BIC",
   "Bank Address": "은행 주소",
   "Your order has been canceled.": "주문이 취소되었습니다.",
   "Please complete the payment within 15 minute(s). The coins you've bought will be credited to your Funding Account.": "15분 이내에 결제를 완료해주세요. 구매한 코인은 펀딩 계정에 적립됩니다.",
