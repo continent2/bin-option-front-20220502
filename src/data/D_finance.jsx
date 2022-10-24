@@ -212,7 +212,7 @@ export const D_ordersListHeader = [
   "useractiontimeunix",
   "amount",
   "amountunit",
-  "환율적용결과",
+  "exchange amount" , // 환율적용결과",
   "txmemo",
 ];
 

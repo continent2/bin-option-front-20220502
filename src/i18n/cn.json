@@ -176,7 +176,7 @@
   "Bank Name": "银行名称",
   "Bank Account" : "账号" ,
   "Bank Account Owner" : "帐户所有者",
-
+  "Err-Please inquire admin" : "错误 - 请咨询管理者" ,
   "BIC": "BIC",
   "Bank Address": "银行地址",
   "Your order has been canceled.": "订单已取消。",

@@ -176,7 +176,7 @@
   "Bank Name": "Bank Name",
   "Bank Account" : "Account Number" ,
   "Bank Account Owner" : "Account Holder",
-
+  "Err-Please inquire admin" : "Error-Please inquire admin" ,
   "BIC": "BIC",
   "Bank Address": "Bank Address",
   "Your order has been canceled.": "Your order has been canceled.",

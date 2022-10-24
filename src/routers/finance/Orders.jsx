@@ -25,13 +25,12 @@ import ReactTooltip from "react-tooltip";
 import AddPopup from "../../components/header/AddPopup";
 import PopupBg from "../../components/common/PopupBg";
 import OrderPopup from "../../components/finance/data/OrderPopup";
-
+import { nettype } from "../../configs/nettype";
 export default function Orders() {
   registerLocale("ko", ko);
   const { t } = useTranslation();
 
   const walletAddress = localStorage.getItem("walletAddress");
-
   const isMobile = useSelector((state) => state.common.isMobile);
 
   const [startDate, setStartDate] = useState(new Date());
@@ -46,7 +45,7 @@ export default function Orders() {
   const [kvsForex, setKvsForex] = useState({});
   const [uuids, setUuids] = useState([]);
   const [totalQuantity, setTotalQuantity] = useState(0);
-
+  let [ addresstotransferto , setaddresstotransferto] = useState()
   const CustomInput = forwardRef(({ value, onClick }, ref) => (
     <button
       className={`${useDate && "on"} dateBtn`}
@@ -151,7 +150,16 @@ export default function Orders() {
       .get(`${API.QUERIES_FOREX}`, { params: { type } })
       .catch((err) => console.error(err));
   }
-
+const getmasteraddress =_=>{
+  axios.get ( API.MASTER_CRYPTO_DEPOSIT + `?nettype=${nettype}` ).then ( resp=>{
+    if ( resp?.data?.status == 'OK'){
+      setaddresstotransferto ( resp?.data?.respdata )
+    }
+  })
+}
+useEffect ( _=>{
+  getmasteraddress()
+} , [] )
   async function getKvsForex() {
     try {
       const result = await axios.get(API.GET_QUERIES_FOREX);
@@ -621,6 +629,10 @@ export default function Orders() {
               {t(
                 "* 실제 충전 금액은 요청을 접수하시는 시점의 선택하신 화폐와 USD 간환율을 적용하여 반영됩니다"
               )}
+            </p>
+
+            <p className="caution">* Address to transfer to:
+              <div style={{textDecoration:'underline'}}> { addresstotransferto }</div>
             </p>
             <div className="orderBtn" onClick={onClickOrder}>
               <button>{t("처리하기")}</button>

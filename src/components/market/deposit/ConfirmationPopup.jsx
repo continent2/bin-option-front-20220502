@@ -1,15 +1,39 @@
+import axios from "axios";
+import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import I_x from "../../../img/icon/I_x.svg";
 import I_xWhite from "../../../img/icon/I_xWhite.svg";
-
-export default function ConfirmationPopup({ off }) {
+import { API} from '../../../configs/api'
+export default function ConfirmationPopup({ off , amount , asset 
+  , cleardisp
+}) {
   const { t } = useTranslation();
   const isMobile = useSelector((state) => state.common.isMobile);
-
+  console.log ( `@jdata` , {amount , asset} )
+  let token = localStorage.getItem ( 'token')
+  if ( amount && asset && asset.uuid ){}
+  else { alert (`Please set amount`) ; off() ; return }
   function onClickConfirmBtn() {
-    off();
+    axios.post ( API.HANDLE_DEPOSIT + `/${asset?.uuid}` , {
+      amount // : ''
+      , amountunit : asset?.symbol // ''
+      , timestamp : moment().unix()
+      , sendingbank : ''
+      , sendingaccount : ''
+      , sendername  : ''
+    } , {headers:{ 
+      Authorization: token ,
+    }} ).then ( resp=>{
+      if ( resp?.data?.status == 'OK' ){
+        off();
+        alert ( ) ;
+        cleardisp ()
+        return 
+      } else { off();alert ( t('Err-Please inquire admin')) ; return }
+    }).catch ( err=>{ console.log(err) ; off(); return })
+//    off();
   }
 
   if (isMobile)

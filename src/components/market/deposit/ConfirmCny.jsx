@@ -29,7 +29,9 @@ export default function ConfirmCny({
   let [ jforexrates , setjforexrates] = useState ({})
   const LOGGER=console.log
   const KEYS=Object.keys
-
+  const cleardisp=_=>{
+//    set
+  }
   const getforexrates= _=>{
     axios.get ( `${API.GET_QUERIES_FOREX}`).then ( ({data}) => {
       console.log ( `@GET_QUERIES_FOREX` , data )
@@ -175,6 +177,9 @@ export default function ConfirmCny({
                 setConfirmationPopup();
                 setOk(true);
               }}
+              amount={amount}  
+              asset={asset }
+              cleardisp={_=>{cleardisp() }}
             />
             <PopupBg off={setConfirmationPopup} />
           </>
@@ -299,6 +304,9 @@ export default function ConfirmCny({
                 setConfirmationPopup();
                 setOk(true);
               }}
+              amount={amount}  
+              asset={asset }
+              cleardisp={_=>{cleardisp() }}
             />
             <PopupBg off={setConfirmationPopup} />
           </>
