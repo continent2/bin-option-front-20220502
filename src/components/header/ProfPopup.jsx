@@ -38,7 +38,13 @@ export default function ProfPopup({ off, offAll }) {
     else {  getData(); }
   }, []);
   function onClickLogOutBtn() {
+    let token = localStorage.getItem( 'token' )
     localStorage.removeItem("token");
+    localStorage.removeItem("myinfo");
+    localStorage.removeItem("walletAddress");
+    axios.post ( API.LOGOUT , 
+      {headers: {        Authorization: token ,      },}
+    )
     navigate("/");
 
     if (offAll) offAll();
