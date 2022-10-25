@@ -80,6 +80,7 @@ export const API = {
 
   HANDLE_DEPOSIT : URL + '/transfers' , // /:uuid
   POST_ORDER_REQUEST: URL + `/transfers/processing-request?nettype=${nettype}`,
+  POST_ORDER_REQUEST_OFFCHAIN : URL + `/transfers/processing-request/offchain?nettype=${nettype}`,
 
   GET_FRONT_VER: URL + "/queries/singlerow/settings/name/FRONT_VER?active=1",
 

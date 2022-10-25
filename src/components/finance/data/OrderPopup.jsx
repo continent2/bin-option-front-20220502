@@ -27,6 +27,28 @@ export default function OrderPopup({ off, totalQuantity, uuids }) {
 
   async function onClickConfirm() {
     const orderRequest = {
+//      txhash,
+      amount: totalQuantity,
+      arrorderuuids: uuids,
+    };
+    console.log(orderRequest);
+    try {
+      const result = await axios.post(API.POST_ORDER_REQUEST_OFFCHAIN, orderRequest, {
+        headers: {
+          Authorization: token,
+        },
+      });
+      console.log( `@processing-result`,result);
+      if (result.data.status === "OK") {
+        off();
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  async function onClickConfirmOnchain () {
+    const orderRequest = {
       txhash,
       amount: totalQuantity,
       arrorderuuids: uuids,
@@ -61,7 +83,7 @@ export default function OrderPopup({ off, totalQuantity, uuids }) {
         </article>
 
         <article className="contArea">
-          <div className="inputCont">
+          <div className="inputCont" style={{display:'none'}}>
             <p className="key">{t("txhash")}</p>
             <div className="value">
               <input
@@ -121,7 +143,7 @@ export default function OrderPopup({ off, totalQuantity, uuids }) {
         </article>
 
         <article className="contArea">
-          <div className="inputCont">
+          <div className="inputCont" style={{display:'none'}}>
             <p className="key">{t("txhash")}</p>
             <div className="value">
               <input

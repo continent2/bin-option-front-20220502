@@ -631,7 +631,7 @@ useEffect ( _=>{
               )}
             </p>
 
-            <p className="caution">* Address to transfer to:
+            <p className="caution" style={{display:'none'}}>* Address to transfer to:
               <div style={{textDecoration:'underline'}}> { addresstotransferto }</div>
             </p>
             <div className="orderBtn" onClick={onClickOrder}>
