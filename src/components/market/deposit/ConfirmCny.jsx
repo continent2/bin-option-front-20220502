@@ -9,7 +9,7 @@ import I_xCircleYellow from "../../../img/icon/I_xCircleYellow.svg";
 import PopupBg from "../../common/PopupBg";
 import ConfirmationPopup from "./ConfirmationPopup";
 import TimeOutPopup from "./TimeOutPopup";
-import { CURRENCY_DEF , CURRENCY_DISP_DEF } from '../../../configs/setting'
+import { CURRENCY_DEF, CURRENCY_DISP_DEF } from "../../../configs/setting";
 
 export default function ConfirmCny({
   setConfirm,
@@ -26,38 +26,54 @@ export default function ConfirmCny({
   const [confirmationPopup, setConfirmationPopup] = useState(false);
   const [rate, setRate] = useState(0);
   const [timeOutPopup, setTimeOutPopup] = useState(false);
-  let [ jforexrates , setjforexrates] = useState ({})
-  const LOGGER=console.log
-  const KEYS=Object.keys
-  const cleardisp=_=>{
-//    set
-  }
-  const getforexrates= _=>{
-    axios.get ( `${API.GET_QUERIES_FOREX}`).then ( ({data}) => {
-      console.log ( `@GET_QUERIES_FOREX` , data )
-      let { list } = data
-      if ( list ){ setjforexrates ( list )}
-    }).catch(err=> { LOGGER(err )} )
-  }
+  let [jforexrates, setjforexrates] = useState({});
+  const LOGGER = console.log;
+  const KEYS = Object.keys;
+  const cleardisp = (_) => {
+    //    set
+  };
+  const getforexrates = (_) => {
+    axios
+      .get(`${API.GET_QUERIES_FOREX}`)
+      .then(({ data }) => {
+        console.log(`@GET_QUERIES_FOREX`, data);
+        let { list } = data;
+        if (list) {
+          setjforexrates(list);
+        }
+      })
+      .catch((err) => {
+        LOGGER(err);
+      });
+  };
   function getRate() {
     axios
       .get(`${API.QUERIES_FOREX}`, { params: { type: `${token.text}/USD` } })
       .then(({ data }) => {
-        console.log( '@QUERIES_FOREX' , data);
+        console.log("@QUERIES_FOREX", data);
         setRate(Number(data.price));
-
       })
       .catch((err) => console.error(err));
   }
 
-  useEffect ( _=>{ let rate 
-    if ( KEYS( jforexrates).length ){} else { return }
-    if ( rate = jforexrates[ `${asset?.symbol}/USD` ] ){ } else { return }
-    setRate( rate ) 
-  } , [ jforexrates ] )
+  useEffect(
+    (_) => {
+      let rate;
+      if (KEYS(jforexrates).length) {
+      } else {
+        return;
+      }
+      if ((rate = jforexrates[`${asset?.symbol}/USD`])) {
+      } else {
+        return;
+      }
+      setRate(rate);
+    },
+    [jforexrates]
+  );
   useEffect(() => {
-    getforexrates()
-//    getRate();
+    getforexrates();
+    //    getRate();
     let intervalId = setInterval(() => {
       time--;
       setLimit(time);
@@ -76,7 +92,7 @@ export default function ConfirmCny({
         <MconfirmCnyBox className="value on">
           <div className="headArea">
             <strong className="head">
-              {t("Complete Your Payment Within")}
+              {t("Complete Your Payment Within")} asdfasdfasdfweweafw
             </strong>
 
             {limit > 0 && (
@@ -97,12 +113,16 @@ export default function ConfirmCny({
                 <ul>
                   <li>
                     <p className="key">{t("Pay")}</p>
-                    <p className="value">{amount} {asset?.symbol}</p>
+                    <p className="value">
+                      {amount} {asset?.symbol}
+                    </p>
                   </li>
 
                   <li>
                     <p className="key">{t("Receive")}</p>
-                    <p className="value">{(amount * rate).toFixed(4)} {CURRENCY_DEF }</p>
+                    <p className="value">
+                      {(amount * rate).toFixed(4)} {CURRENCY_DEF}
+                    </p>
                   </li>
                 </ul>
               </div>
@@ -110,7 +130,7 @@ export default function ConfirmCny({
               <div className="listBox">
                 <strong className="title">{t("Bank details")}</strong>
 
-                { limit > 0 ? (
+                {limit > 0 ? (
                   <ul>
                     <li>
                       <p className="key">{t("Bank Name")}</p>
@@ -177,9 +197,11 @@ export default function ConfirmCny({
                 setConfirmationPopup();
                 setOk(true);
               }}
-              amount={amount}  
-              asset={asset }
-              cleardisp={_=>{cleardisp() }}
+              amount={amount}
+              asset={asset}
+              cleardisp={(_) => {
+                cleardisp();
+              }}
             />
             <PopupBg off={setConfirmationPopup} />
           </>
@@ -220,14 +242,16 @@ export default function ConfirmCny({
                 <ul>
                   <li>
                     <p className="key">{t("Pay")}</p>
-                    <p className="value">{amount}  {asset?.symbol }</p>
+                    <p className="value">
+                      {amount} {asset?.symbol}
+                    </p>
                   </li>
 
                   <li>
                     <p className="key">{t("Receive")}</p>
                     {/* <p className="value">{(amount * rate).toFixed(4)} USDT</p> */}
                     <p className="value">
-                      {(amount * rate).toFixed(4)} {CURRENCY_DEF }
+                      {(amount * rate).toFixed(4)} {CURRENCY_DEF}
                     </p>
                   </li>
                 </ul>
@@ -304,9 +328,11 @@ export default function ConfirmCny({
                 setConfirmationPopup();
                 setOk(true);
               }}
-              amount={amount}  
-              asset={asset }
-              cleardisp={_=>{cleardisp() }}
+              amount={amount}
+              asset={asset}
+              cleardisp={(_) => {
+                cleardisp();
+              }}
             />
             <PopupBg off={setConfirmationPopup} />
           </>

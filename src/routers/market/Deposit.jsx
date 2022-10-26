@@ -405,10 +405,11 @@ export default function Deposit({ userData }) {
         <MdepositBox>
           {confirm ? (
             <>
-              {token.text.match("USD") ? (
+              {/* {token.text.match("USD") ? (
                 <ConfirmUsdt amount={amount} token={token} />
               ) : (
                 <ConfirmCny
+                  asset={asset}
                   setConfirm={setConfirm}
                   amount={amount}
                   token={token}
@@ -416,7 +417,16 @@ export default function Deposit({ userData }) {
                     e && postLocale();
                   }}
                 />
-              )}
+              )} */}
+              <ConfirmCny
+                asset={asset}
+                setConfirm={setConfirm}
+                amount={amount}
+                token={token}
+                setOk={(e) => {
+                  e && postLocale();
+                }}
+              />
             </>
           ) : (
             <section className="innerBox ">
@@ -511,7 +521,9 @@ export default function Deposit({ userData }) {
                 <ul className="infoList">
                   <li>
                     <p className="key">{t("Commission")}</p>
-                    <p className="value">{settings.commision} {asset?.symbol} </p>
+                    <p className="value">
+                      {settings.commision} {asset?.symbol}{" "}
+                    </p>
                   </li>
                   <li>
                     <p className="key">{t("Minimum deposit amount")}</p>
@@ -772,7 +784,9 @@ export default function Deposit({ userData }) {
                 <ul className="infoList">
                   <li>
                     <p className="key">{t("Commission")}</p>
-                    <p className="value">{settings.commision} {asset?.symbol}</p>
+                    <p className="value">
+                      {settings.commision} {asset?.symbol}
+                    </p>
                   </li>
                   <li>
                     <p className="key">{t("Minimum deposit amount")}</p>
