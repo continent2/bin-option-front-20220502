@@ -118,7 +118,7 @@ export default function Recommender() {
                   <p className="key">{t(D_recommenderListHeader[3])}</p>
 
                   <span className="value">
-                    <p>{t(GetTierByLevel(v.referral_user.level).text)}</p>
+                    <p>{t(GetTierByLevel(v.referral_user.level)?.text)}</p>
                   </span>
                 </div>
 
@@ -270,7 +270,7 @@ export default function Recommender() {
                   </span>
 
                   <span>
-                    <p>{t(GetTierByLevel(v.referral_user.level).text)}</p>
+                    <p>{t(GetTierByLevel(v.referral_user.level)?.text)}</p>
                   </span>
 
                   <span>
