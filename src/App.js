@@ -12,14 +12,18 @@ import Bet from "./routers/bet/Bet";
 import Finance from "./routers/finance/Finance";
 import Landing from "./routers/landing/Landing";
 import Market from "./routers/market/Market";
-import Position from "./routers/position/Position";
+import Position from "./routers/position/Position"
 import Qna from "./routers/qna/Qna";
 import Setting from "./routers/setting/Setting";
 import "./util/ReactToastify.css";
 // import "react-toastify/dist/ReactToastify.css";
 
 export default function App() {
-  useEffect(() => {
+  useEffect(() => {    
+    localStorage.setItem("assetsymbol", 'BTCUSDT');
+    localStorage.setItem("asset", JSON.stringify({ APISymbol : 'BTCUSDT', symbol: 'BTCUSDT', nettype: 'BSC_MAINNET' }));
+    if ( localStorage.getItem("token") ){}
+    else { return }  
     try {
       axios
         .get(`${API.GET_RECEIVE_DEPOSIT_ASSET}?nettype=${nettype}`, {

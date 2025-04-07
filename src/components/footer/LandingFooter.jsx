@@ -16,7 +16,9 @@ export default function LandingFooter() {
   const isMobile = useSelector((state) => state.common.isMobile);
 
   useEffect(() => {
+    setFrontVer('2025-04-06');
     try {
+      return
       axios.get(API.GET_FRONT_VER).then(({ data }) => {
         setFrontVer(data.respdata);
         console.log(data);

@@ -110,13 +110,15 @@ export const D_historyList = [
 
 export const D_unBranchTokenList = [
 //  { icon: T_usdt, type: "USDT_BINOPT", text: "USDT" },
-  { icon: 'https://options1.net/resource/currency/BUSD.png', type: "BUSD", text: "BUSD" },
+//  { icon: 'https://opt ions1.net/resource/currency/BUSD.png', type: "BUSD", text: "BUSD" },
+  { icon: 'https://futures1.xyz/resource/currency/BUSD.png', type: "BUSD", text: "BUSD" },
   // { icon: T_usdc, type: "USDC", text: "USDC" },
 ];
 
 export const D_branchTokenList = [
 //  { icon: T_usdt, type: "USDT_BINOPT", text: "USDT" },
-  { icon: 'https://options1.net/resource/currency/BUSD.png', type: "BUSD", text: "BUSD" },
+//  { icon: 'https://option s1.net/resource/currency/BUSD.png', type: "BUSD", text: "BUSD" },
+  { icon: 'https://futures1.xyz/resource/currency/BUSD.png', type: "BUSD", text: "BUSD" },
   { icon: T_cny, type: "CNY", text: "CNY", unit: "¥" },
   { icon: T_usd, type: "USD", text: "USD", unit: "$" },
   { icon: T_krw, type: "KRW", text: "KRW", unit: "₩" },

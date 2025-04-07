@@ -1,11 +1,15 @@
-//export const URL = "http://options1.net:30708";
+//export const URL = "http://optio ns1.net:30708";
 // export const URL = "http://litriggy.com:30708";
-// export const URL = "https://options1.net:30718";
-// export const URL = "https://options1.net:30718";
+// export const URL = "https://opti ons1.net:30718";
+// export const URL = "https://optio ns1.net:30718";
 let { nettype } = require("../configs/nettype");
-export const URL = "https://options1.net:34861";
-export const URL2 = "https://binary2.org:34861";
-const _URL = (args) => `https://options1.net:34861${args}?nettype=${nettype}`;
+//  export const URL = "https://optio ns1.net:34861";
+//  export const URL2 = "https://binary2.org:34861";
+export const URL = "https://futures1.xyz:34861";
+export const URL2 = "https://futures1.xyz:34861";
+
+// const _URL = (args) => `https://opt ions1.net:34861${args}?nettype=${nettype}`;
+const _URL = (args) => `https://futures1.xyz:34861${args}?nettype=${nettype}`;
 
 export const API = {
   SIGNUP: URL + "/users/signup", //:type

@@ -39,7 +39,7 @@ const LOGGER=console.log
         },
       })
       .then(({ data }) => {
-        let { list } = data; // LOGGER ( '@tickers' , list )
+        let { list } = data; LOGGER ( '@candlechar-tickers' , list )
         list = list.filter((elem) => elem?.show);
         let _resData = list || [];
 
